@@ -457,7 +457,7 @@
 			</CheckButton>
 		</Frames>
 	</Frame>
-	
+
 	<!-- Configuration Frame 1.2: Boss DKP options -->
 	<!-- 20 mans (ZG, AQ20) -->
 	<Frame name="FrameConfigBossDkp" parent="UIParent" inherits="SOTA_ConfigurationFrameTemplate">
@@ -519,7 +519,7 @@
 			</Slider>
 		</Frames>
 	</Frame>
-	
+
 	<!-- Configuration Frame 1.3: Misc. DKP -->
 	<!-- Public Guild Notes, options: 0, 1 -->
 	<Frame name="FrameConfigMiscDkp" parent="UIParent" inherits="SOTA_ConfigurationFrameTemplate">
@@ -1291,7 +1291,7 @@
 					<OnVerticalScroll>
 						--FauxScrollFrame_OnVerticalScroll(20, SOTA_UpdateTextList);
 					</OnVerticalScroll>
-					<OnShow>						
+					<OnShow>
 						--SOTA_UpdateTextList()
 					</OnShow>
 				</Scripts>
@@ -1514,5 +1514,5 @@
 			</OnDragStop>
 		</Scripts>
 	</Frame>
-	
+
 </Ui>

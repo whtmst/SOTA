@@ -86,7 +86,7 @@
 		</Backdrop>
 		<Frames>
 			<!-- Current item frame -->
-			<Frame name="$parentItem">			
+			<Frame name="$parentItem">
 				<Size>
 					<AbsDimension x="430" y="100" />
 				</Size>

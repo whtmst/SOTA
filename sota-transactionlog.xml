@@ -274,7 +274,7 @@
 		</NormalTexture>
 	</Button>
 
-	
+
 
 	<!-- Main Log Frame -->
 	<Frame name="TransactionUIFrame" inherits="SOTAFrame">

@@ -17,13 +17,10 @@ function TitanPanelSOTAButton_OnLoad()
         tooltipTitle = "State of the Art [SotA] Options",
         tooltipTextFunction = "TitanPanelSOTAButton_GetTooltipText",
         frequency = 0,
-	    icon = "Interface\\ICONS\\INV_Misc_Coin_02"
+        icon = "Interface\\ICONS\\INV_Misc_Coin_02"
     };
 end
 
 function TitanPanelSOTAButton_GetTooltipText()
     return "Click to toggle option panel";
 end
-
-
-
