@@ -96,6 +96,9 @@ function SOTA_StartAuction(itemLink)
     SOTA_OpenAuctionUI();
 
     SOTA_SetAuctionState(STATE_AUCTION_RUNNING, SOTA_CONFIG_AuctionTime);
+
+    -- Отправляем ссылку на предмет аддону T-Bidder через addon-канал
+    SendAddonMessage("SOTA_ITEM_LINK", itemLink, "RAID");
 end
 
 --[[
