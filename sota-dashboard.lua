@@ -1,6 +1,5 @@
 --[[
---	SotA - State of the Art DKP Addon
---	By Mimma <VanillaGaming.org>
+--	SotA - State of the Art
 --
 --	Unit: sota-dashboard.lua
 --	This unit displays a minimal UI to control SotA operation.

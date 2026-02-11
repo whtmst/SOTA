@@ -1,7 +1,7 @@
 # SotA - State of the Art
 
 ![Turtle WoW](https://img.shields.io/badge/Server-Turtle%20WoW-green)
-![Version](https://img.shields.io/badge/Version-1.18-blue)
+![Version](https://img.shields.io/badge/Version-1.18.1-blue)
 ![Interface](https://img.shields.io/badge/Interface-11200-orange)
 
 Аддон для управления системой DKP (Dragon Kill Points) в World of Warcraft 1.12.1
@@ -12,7 +12,6 @@
 
 > **Экспериментальная версия от Wht Mst (Misha)**
 >
-> - ⚙️ Обновления попадают из [sota-dev](https://github.com/whtmst/sota-dev) после тестирования
 > - 🐛 **Баг-репорты:** [Issues](https://github.com/whtmst/SOTA/issues)
 > - ⚠️ Автор не гарантирует полное отсутствие ошибок
 
@@ -162,7 +161,7 @@ DKP начисляется игрокам вне инстанса. При DC и�
 
 <div align="center">
 
-**[Сообщить об ошибке](https://github.com/whtmst/SOTA/issues)** • **[Разработка](https://github.com/whtmst/sota-dev)**
+**[Сообщить об ошибке](https://github.com/whtmst/SOTA/issues)**
 
 </div>
 

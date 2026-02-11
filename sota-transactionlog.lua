@@ -1,6 +1,5 @@
 --[[
---	SotA - State of the Art DKP Addon
---	By Mimma <VanillaGaming.org>
+--	SotA - State of the Art
 --
 --	Unit: sota-transactionlog.lua
 --	Transactions can be seen in the transaction UI. Simple DKP handling

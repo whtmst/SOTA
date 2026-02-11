@@ -1,7 +1,6 @@
 --[[
---	SotA - State of the Art DKP Addon
---	By Mimma <VanillaGaming.org>
---
+--	SotA - State of the Art
+-- 
 --	Unit: sota-auction.lua
 --	The Auction UI is controlled by this unit, which includes the Bidding
 --	framework, timing and overall DKP control.

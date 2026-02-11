@@ -1,6 +1,5 @@
 --[[
---	SotA - State of the Art DKP Addon
---	By Mimma <VanillaGaming.org>
+--	SotA - State of the Art
 --
 --	Unit: sota-titanpanel.lua
 --	If Titan Panel is installed, this unit will hook into Titan Panel

@@ -1,6 +1,5 @@
 --[[
---	SotA - State of the Art DKP Addon
---	By Mimma <VanillaGaming.org>
+--	SotA - State of the Art
 --
 --	Unit: sota-core.lua
 --	This unit contains the core functionality such as DKP handling,
