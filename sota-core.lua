@@ -17,6 +17,7 @@ local SOTA_DEBUG_ENABLED      = false;
 SOTA_CHAT_END                 = "|r"
 SOTA_COLOUR_INTRO             = "|c80F0F0F0"
 SOTA_COLOUR_CHAT              = "|c8040A0F8"
+SOTA_COLOUR_MAIN              = "|cFFFF6600"  -- Оранжево-красный
 
 local WARN_CHANNEL            = "RAID_WARNING"
 local RAID_CHANNEL            = "RAID"
@@ -45,6 +46,8 @@ local RaidRosterLazyUpdate    = false;
 -- Table of Queued raid members:			{ Name, QueueID, Role, Class, Guild rank, Offline time }
 SOTA_RaidQueue                = {}
 
+-- Флаг, чтобы знать, что это мы включили галочку "Отображать оффлайн"
+local SOTA_ForcedOfflineMode = false
 
 SOTA_CHANNELS = {
     { 'Raid Warning (/rw)',   WARN_CHANNEL },
@@ -162,6 +165,17 @@ function echo(msg)
     if msg then
         DEFAULT_CHAT_FRAME:AddMessage(SOTA_COLOUR_CHAT .. msg .. SOTA_CHAT_END)
     end
+end
+
+-- Проверяет и включает отображение оффлайн-игроков в гильдии, если нужно
+function SOTA_EnsureOfflineVisible()
+    if GetGuildRosterShowOffline() ~= 1 then
+        SetGuildRosterShowOffline(1)
+        SOTA_ForcedOfflineMode = true
+        DEFAULT_CHAT_FRAME:AddMessage(SOTA_COLOUR_MAIN .. "[SOTA] ВРЕМЕННО ВКЛЮЧЕНО ОТОБРАЖЕНИЕ ОФФЛАЙН ИГРОКОВ ДЛЯ НАЧИСЛЕНИЯ." .. SOTA_CHAT_END)
+        return true
+    end
+    return false
 end
 
 function debugEcho(msg)
@@ -420,6 +434,16 @@ function SOTA_OnGuildRosterUpdate()
             end
 
             JobIsRunning = false
+
+            -- Выключаем отображение оффлайн-игроков, если мы его включали
+            if SOTA_ForcedOfflineMode then
+                -- Проверяем, что галочка ещё включена (защита от повторного вызова)
+                if GetGuildRosterShowOffline() == 1 then
+                    SetGuildRosterShowOffline(0)
+                    SOTA_ForcedOfflineMode = false
+                    DEFAULT_CHAT_FRAME:AddMessage(SOTA_COLOUR_MAIN .. "[SOTA] ОТОБРАЖЕНИЕ ОФФЛАЙН ИГРОКОВ ВОЗВРАЩЕНО В ИСХОДНОЕ СОСТОЯНИЕ." .. SOTA_CHAT_END)
+                end
+            end
         end
     end
 
@@ -679,6 +703,7 @@ end
 --]]
 function SOTA_Call_AddPlayerDKP(playername, dkp)
     if SOTA_CanDoDKP() then
+        SOTA_EnsureOfflineVisible()
         RaidState = RAID_STATE_ENABLED;
         SOTA_RequestMaster();
         SOTA_AddJob(function(job) SOTA_AddPlayerDKP(job[2], job[3]) end, playername, dkp)
@@ -703,6 +728,7 @@ end
 --]]
 function SOTA_Call_SwapPlayersInTransaction(transactionID, newPlayer)
     if SOTA_CanDoDKP(true) then
+        SOTA_EnsureOfflineVisible()
         RaidState = RAID_STATE_ENABLED;
         SOTA_RequestMaster();
         SOTA_AddJob(function(job) SOTA_SwapPlayersInTransaction(job[2], job[3]) end, transactionID, newPlayer)
@@ -744,6 +770,7 @@ end
 --]]
 function SOTA_Call_SubtractPlayerDKP(playername, dkp)
     if SOTA_CanDoDKP() and tonumber(dkp) then
+        SOTA_EnsureOfflineVisible()
         RaidState = RAID_STATE_ENABLED;
         SOTA_RequestMaster();
         SOTA_AddJob(function(job) SOTA_SubtractPlayerDKP(job[2], job[3]) end, playername, dkp)
@@ -765,6 +792,7 @@ end
 
 function SOTA_Call_SubtractPlayerDKPPercent(playername, percent)
     if SOTA_IsInRaid(true) then
+        SOTA_EnsureOfflineVisible()
         RaidState = RAID_STATE_ENABLED;
         SOTA_RequestMaster();
         SOTA_AddJob(function(job) SOTA_SubtractPlayerDKPPercent(job[2], job[3]) end, playername, percent)
@@ -803,6 +831,7 @@ end
 --]]
 function SOTA_Call_AddRaidDKP(dkp)
     if SOTA_IsInRaid(true) then
+        SOTA_EnsureOfflineVisible()
         RaidState = RAID_STATE_ENABLED;
         SOTA_RequestMaster();
         SOTA_AddJob(function(job) SOTA_AddRaidDKP(job[2]) end, dkp, "_")
@@ -887,6 +916,7 @@ end
 --]]
 function SOTA_Call_SubtractRaidDKP(dkp)
     if SOTA_IsInRaid(true) then
+        SOTA_EnsureOfflineVisible()
         RaidState = RAID_STATE_ENABLED;
         SOTA_RequestMaster();
         SOTA_AddJob(function(job) SOTA_SubtractRaidDKP(job[2]) end, dkp, "_")
@@ -940,6 +970,7 @@ end
 --]]
 function SOTA_Call_AddRangedDKP(dkp)
     if SOTA_IsInRaid(true) then
+        SOTA_EnsureOfflineVisible()
         RaidState = RAID_STATE_ENABLED;
         SOTA_RequestMaster();
         SOTA_AddJob(function(job) SOTA_AddRangedDKP(job[2]) end, dkp, "_")
@@ -1065,6 +1096,7 @@ end
 --]]
 function SOTA_Call_ShareDKP(dkp)
     if SOTA_IsInRaid(true) then
+        SOTA_EnsureOfflineVisible()
         RaidState = RAID_STATE_ENABLED;
         SOTA_RequestMaster();
         SOTA_AddJob(function(job) SOTA_ShareDKP(job[2]) end, dkp, "_");
@@ -1106,6 +1138,7 @@ end
 --]]
 function SOTA_Call_ShareRangedDKP(dkp)
     if SOTA_IsInRaid(true) then
+        SOTA_EnsureOfflineVisible()
         RaidState = RAID_STATE_ENABLED;
         SOTA_RequestMaster();
         SOTA_AddJob(function(job) SOTA_ShareRangedDKP(job[2]) end, dkp, "_");
@@ -1202,6 +1235,7 @@ end
 --	This function requires Show Offline Members to be enabled.
 --]]
 function SOTA_Call_DecayDKP(percent)
+    SOTA_EnsureOfflineVisible()
     SOTA_AddJob(function(job) SOTA_DecayDKP(job[2]) end, percent, "_")
     SOTA_RequestUpdateGuildRoster();
 end
@@ -1288,6 +1322,7 @@ end
 --]]
 function SOTA_Call_IncludePlayer(transactionID, playername)
     if SOTA_IsInRaid(true) then
+        SOTA_EnsureOfflineVisible()
         RaidState = RAID_STATE_ENABLED;
         SOTA_AddJob(function(job) SOTA_IncludePlayer(job[2], job[3]) end, transactionID, playername)
         SOTA_RequestUpdateGuildRoster();
@@ -1354,6 +1389,7 @@ end
 --]]
 function SOTA_Call_ExcludePlayer(transactionID, playername)
     if SOTA_IsInRaid(true) then
+        SOTA_EnsureOfflineVisible()
         RaidState = RAID_STATE_ENABLED;
         SOTA_AddJob(function(job) SOTA_ExcludePlayer(job[2], job[3]) end, transactionID, playername)
         SOTA_RequestUpdateGuildRoster();

@@ -1,6 +1,6 @@
 ## Interface: 11200
-## Title: [ |cFFFFFFFFWM|r ] |cFF11A6ECSOTA - State of the Art|r |cFF7FFF7Fv1.18.1|r
-## Version: 1.18.1
+## Title: [ |cFFFFFFFFWM|r ] |cFF11A6ECSOTA - State of the Art|r |cFF7FFF7Fv1.18.2|r
+## Version: 1.18.2
 ## Author: Mikhail Palagin (Wht Mst) (Misha) | Based on version by Mimma @ VanillaGaming.org
 ## Notes: |cFF11A6ECSOTA - State of the Art|r - Addon for managing the DKP (Dragon Kill Points) system in World of Warcraft. Made for |cff00ff00Turtle WoW|r with love by Wht Mst.
 ## SavedVariables: SOTA_CONFIG_UseGuildNotes, SOTA_CONFIG_MinimumBidStrategy, SOTA_CONFIG_DKPStringLength, SOTA_CONFIG_MinimumDKPPenalty, SOTA_CONFIG_BossDKP, SOTA_CONFIG_AuctionTime, SOTA_CONFIG_AuctionExtension, SOTA_CONFIG_EnableOSBidding, SOTA_CONFIG_EnableZoneCheck, SOTA_CONFIG_EnableOnlineCheck, SOTA_CONFIG_DisableDashboard, SOTA_HISTORY_DKP, SOTA_CONFIG_Messages, SOTA_CONFIG_VersionNumber, SOTA_CONFIG_VersionDate, SOTA_CONFIG_SilentBidding
