@@ -117,6 +117,14 @@ function SOTA_OpenConfigurationUI()
         "Пример: Ползунок на 1000 - Мин. ставка: 100 DKP"
     );
 
+    -- Устанавливаем версию аддона в футере (для всех фреймов)
+    local version = GetAddOnMetadata("SOTA", "Version") or "unknown";
+    local footerText = "Версия " .. version .. " от |cFFEC3E08Misha|r (Wht Mst)";
+    getglobal("FrameConfigBiddingFooter"):SetText(footerText);
+    getglobal("FrameConfigBossDkpFooter"):SetText(footerText);
+    getglobal("FrameConfigMiscDkpFooter"):SetText(footerText);
+    getglobal("FrameConfigMessageFooter"):SetText(footerText);
+
     -- Показываем Bidding config по умолчанию
     SOTA_OpenBiddingConfig();
 
@@ -151,11 +159,8 @@ function SOTA_HighlightTab(tabIndex)
         for i = 1, 4 do
             local tabText = getglobal(frameName .. "Tab" .. i .. "Text");
             if tabText then
-                -- Активная вкладка всегда оранжевая, неактивная белая
-                if (frameName == "FrameConfigBidding" and i == 1 and tabIndex == 1) or
-                   (frameName == "FrameConfigBossDkp" and i == 2 and tabIndex == 2) or
-                   (frameName == "FrameConfigMiscDkp" and i == 3 and tabIndex == 3) or
-                   (frameName == "FrameConfigMessage" and i == 4 and tabIndex == 4) then
+                -- Подсвечиваем вкладку с номером tabIndex на ВСЕХ фреймах
+                if i == tabIndex then
                     tabText:SetTextColor(0.925, 0.243, 0.031);  -- Оранжевый #FFEC3E08
                 else
                     tabText:SetTextColor(1, 1, 1);    -- Белый для неактивных
@@ -214,12 +219,13 @@ function SOTA_OnOptionAuctionTimeChanged(object)
 
     local valueString = "" .. SOTA_CONFIG_AuctionTime;
     if SOTA_CONFIG_AuctionTime == 0 then
-        valueString = "(No timer)";
+        valueString = "(|cFFEC3E08БЕЗ ТАЙМЕРА|r)";
     end
 
     local textObj = getglobal(object:GetName() .. "Text");
     textObj:SetText(string.format("Время аукциона: %s сек.", valueString));
     textObj:SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
+    textObj:SetTextColor(1, 1, 1); -- Белый цвет для текст ползунков
 end
 
 function SOTA_OnOptionAuctionExtensionChanged(object)
@@ -227,12 +233,13 @@ function SOTA_OnOptionAuctionExtensionChanged(object)
 
     local valueString = "" .. SOTA_CONFIG_AuctionExtension;
     if SOTA_CONFIG_AuctionExtension == 0 then
-        valueString = "(No extension)";
+        valueString = "(|cFFEC3E08БЕЗ ПРОДЛЕНИЯ|r)";
     end
 
     local textObj = getglobal(object:GetName() .. "Text");
     textObj:SetText(string.format("Продление аукциона: %s сек.", valueString));
     textObj:SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
+    textObj:SetTextColor(1, 1, 1); -- Белый цвет для текст ползунков
 end
 
 function SOTA_OnOptionDKPStringLengthChanged(object)
@@ -240,12 +247,13 @@ function SOTA_OnOptionDKPStringLengthChanged(object)
 
     local valueString = "" .. SOTA_CONFIG_DKPStringLength;
     if SOTA_CONFIG_DKPStringLength == 0 then
-        valueString = "(No limit)";
+        valueString = "(|cFFEC3E08БЕЗ ЛИМИТА|r)";
     end
 
     local textObj = getglobal(object:GetName() .. "Text");
     textObj:SetText(string.format("Длина DKP-строки: %s", valueString));
     textObj:SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
+    textObj:SetTextColor(1, 1, 1); -- Белый цвет для текст ползунков
 end
 
 function SOTA_OnOptionMinimumDKPPenaltyChanged(object)
@@ -253,12 +261,13 @@ function SOTA_OnOptionMinimumDKPPenaltyChanged(object)
 
     local valueString = "" .. SOTA_CONFIG_MinimumDKPPenalty;
     if SOTA_CONFIG_MinimumDKPPenalty == 0 then
-        valueString = "(None)";
+        valueString = "(|cFFEC3E08ОТСУТСТВУЕТ|r)";
     end
 
     local textObj = getglobal(object:GetName() .. "Text");
     textObj:SetText(string.format("Минимальный штраф DKP: %s", valueString));
     textObj:SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
+    textObj:SetTextColor(1, 1, 1); -- Белый цвет для текст ползунков
 end
 
 function SOTA_RefreshBossDKPValues()
@@ -279,33 +288,34 @@ function SOTA_OnOptionBossDKPChanged(object)
 
     if slider == "FrameConfigBossDkp_20Mans" then
         SOTA_SetBossDKPValue("20Mans", value);
-        valueString = string.format("Рейды на 20 человек (ZG, AQ20): %d DKP", value);
+        valueString = string.format("РЕЙДЫ НА 20 ЧЕЛОВЕК (ZG, AQ20): %d DKP", value);
     elseif slider == "FrameConfigBossDkp_MoltenCore" then
         SOTA_SetBossDKPValue("MoltenCore", value);
-        valueString = string.format("Molten Core: %d DKP", value);
+        valueString = string.format("MOLTEN CORE: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_Onyxia" then
         SOTA_SetBossDKPValue("Onyxia", value);
-        valueString = string.format("Onyxia: %d DKP", value);
+        valueString = string.format("ONYXIA: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_EmeraldSanctum" then
         SOTA_SetBossDKPValue("EmeraldSanctum", value);
-        valueString = string.format("Emerald Sanctum: %d DKP", value);
+        valueString = string.format("EMERALD SANCTUM: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_BlackwingLair" then
         SOTA_SetBossDKPValue("BlackwingLair", value);
-        valueString = string.format("Blackwing Lair: %d DKP", value);
+        valueString = string.format("BLACKWING LAIR: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_AQ40" then
         SOTA_SetBossDKPValue("AQ40", value);
-        valueString = string.format("Temple of Ahn'Qiraj: %d DKP", value);
+        valueString = string.format("TEMPLE OF AHN'QIRAJ: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_Naxxramas" then
         SOTA_SetBossDKPValue("Naxxramas", value);
-        valueString = string.format("Naxxramas: %d DKP", value);
+        valueString = string.format("NAXXRAMAS: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_WorldBosses" then
         SOTA_SetBossDKPValue("WorldBosses", value);
-        valueString = string.format("Мировые боссы: %d DKP", value);
+        valueString = string.format("МИРОВЫЕ БОССЫ: %d DKP", value);
     end
 
     local textObj = getglobal(slider .. "Text");
     textObj:SetText(valueString);
     textObj:SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
+    textObj:SetTextColor(1, 1, 1); -- Белый цвет для текст ползунков
 end
 
 function SOTA_InitializeConfigSettings()
