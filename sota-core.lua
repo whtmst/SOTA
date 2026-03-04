@@ -1093,6 +1093,13 @@ function SOTA_ShareBossDKP()
     -- local bossDkp = "".. (SOTA_GetMinimumBid() * 10);
 
     if SOTA_CanDoDKP(true) then
+        -- Закрываем все открытые попапы перед открытием нового
+        StaticPopup_Hide("SOTA_POPUP_WELCOME_DKP");
+        StaticPopup_Hide("SOTA_POPUP_NO_WIPE_DKP");
+        StaticPopup_Hide("SOTA_POPUP_NO_DEATH_DKP");
+        StaticPopup_Hide("SOTA_POPUP_RECORD_DKP");
+        StaticPopup_Hide("SOTA_POPUP_SHARE_DKP");
+
         StaticPopupDialogs["SOTA_POPUP_SHARE_DKP"] = {
             -- text = "Разделить следующее количество DKP между участниками рейда:",
             text = "Добавить указанное количество DKP |cFFFF6600каждому участнику|r рейда:",
@@ -1157,6 +1164,13 @@ end
 --]]
 function SOTA_WelcomeDKP()
     if SOTA_CanDoDKP(true) then
+        -- Закрываем все открытые попапы перед открытием нового
+        StaticPopup_Hide("SOTA_POPUP_WELCOME_DKP");
+        StaticPopup_Hide("SOTA_POPUP_NO_WIPE_DKP");
+        StaticPopup_Hide("SOTA_POPUP_NO_DEATH_DKP");
+        StaticPopup_Hide("SOTA_POPUP_RECORD_DKP");
+        StaticPopup_Hide("SOTA_POPUP_SHARE_DKP");
+
         StaticPopupDialogs["SOTA_POPUP_WELCOME_DKP"] = {
             text = "Будет начислен приветственный бонус: |cFFFF6600"..SOTA_WELCOME_DKP_AMOUNT.." DKP всем участникам|r рейда",
             hasEditBox = false,
@@ -1200,6 +1214,13 @@ end
 --]]
 function SOTA_NoWipeDKP()
     if SOTA_CanDoDKP(true) then
+        -- Закрываем все открытые попапы перед открытием нового
+        StaticPopup_Hide("SOTA_POPUP_WELCOME_DKP");
+        StaticPopup_Hide("SOTA_POPUP_NO_WIPE_DKP");
+        StaticPopup_Hide("SOTA_POPUP_NO_DEATH_DKP");
+        StaticPopup_Hide("SOTA_POPUP_RECORD_DKP");
+        StaticPopup_Hide("SOTA_POPUP_SHARE_DKP");
+
         StaticPopupDialogs["SOTA_POPUP_NO_WIPE_DKP"] = {
             text = "|cFFFF6600ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за проход без вайпов: |cFFFF6600"..SOTA_NO_WIPE_DKP_AMOUNT.." DKP всем участникам|r рейда",
             hasEditBox = false,
@@ -1243,6 +1264,13 @@ end
 --]]
 function SOTA_NoDeathDKP()
     if SOTA_CanDoDKP(true) then
+        -- Закрываем все открытые попапы перед открытием нового
+        StaticPopup_Hide("SOTA_POPUP_WELCOME_DKP");
+        StaticPopup_Hide("SOTA_POPUP_NO_WIPE_DKP");
+        StaticPopup_Hide("SOTA_POPUP_NO_DEATH_DKP");
+        StaticPopup_Hide("SOTA_POPUP_RECORD_DKP");
+        StaticPopup_Hide("SOTA_POPUP_SHARE_DKP");
+
         StaticPopupDialogs["SOTA_POPUP_NO_DEATH_DKP"] = {
             text = "|cFFFF6600ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за проход без смертей (в том числе на треше): |cFFFF6600"..SOTA_NO_DEATH_DKP_AMOUNT.." DKP всем участникам|r рейда",
             hasEditBox = false,
@@ -1286,6 +1314,13 @@ end
 --]]
 function SOTA_RecordDKP()
     if SOTA_CanDoDKP(true) then
+        -- Закрываем все открытые попапы перед открытием нового
+        StaticPopup_Hide("SOTA_POPUP_WELCOME_DKP");
+        StaticPopup_Hide("SOTA_POPUP_NO_WIPE_DKP");
+        StaticPopup_Hide("SOTA_POPUP_NO_DEATH_DKP");
+        StaticPopup_Hide("SOTA_POPUP_RECORD_DKP");
+        StaticPopup_Hide("SOTA_POPUP_SHARE_DKP");
+
         StaticPopupDialogs["SOTA_POPUP_RECORD_DKP"] = {
             text = "|cFFFF6600ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за побитый рекорд времени прохождения рейда на 2 и более минуты: |cFFFF6600"..SOTA_RECORD_DKP_AMOUNT.." DKP всем участникам|r рейда",
             hasEditBox = false,

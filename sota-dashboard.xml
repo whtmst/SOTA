@@ -292,8 +292,11 @@
 						<NormalTexture file="Interface\ICONS\INV_Misc_QuestionMark.blp" />
 						<PushedTexture file="Interface\ICONS\INV_Misc_QuestionMark.blp" />
 						<Scripts>
+							<OnClick>
+								SOTA_PlaceholderButton();
+							</OnClick>
 							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "СВОБОДНАЯ КНОПКА (ЗАГЛУШКА)");
+								SOTA_ShowDashboardToolTip(this, "НЕ НАЖИМАТЬ!");
 							</OnEnter>
 							<OnLeave>
 								SOTA_HideDashboardToolTip(this);
