@@ -136,14 +136,14 @@ SOTA_CONFIG_VersionDate       = nil; -- Date of last change!
 -- Pane 2:
 SOTA_CONFIG_BossDKP               = {}
 local SOTA_CONFIG_DEFAULT_BossDKP = {
-    { "20Mans",        400 },
+    { "20Mans",        200 },
     { "MoltenCore",    600 },
     { "Onyxia",        600 },
     { "EmeraldSanctum", 1000 },
     { "BlackwingLair", 600 },
     { "AQ40",          600 },
     { "Naxxramas",     600 },
-    { "WorldBosses",   400 }
+    { "WorldBosses",   0 }
 }
 -- Pane 3:
 SOTA_CONFIG_Modified              = false; -- If TRUE, then config number has been updated; FALSE: not.

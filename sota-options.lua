@@ -217,7 +217,9 @@ function SOTA_OnOptionAuctionTimeChanged(object)
         valueString = "(No timer)";
     end
 
-    getglobal(object:GetName() .. "Text"):SetText(string.format("Auction Time: %s seconds", valueString))
+    local textObj = getglobal(object:GetName() .. "Text");
+    textObj:SetText(string.format("Время аукциона: %s сек.", valueString));
+    textObj:SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
 end
 
 function SOTA_OnOptionAuctionExtensionChanged(object)
@@ -228,7 +230,9 @@ function SOTA_OnOptionAuctionExtensionChanged(object)
         valueString = "(No extension)";
     end
 
-    getglobal(object:GetName() .. "Text"):SetText(string.format("Auction Extension: %s seconds", valueString))
+    local textObj = getglobal(object:GetName() .. "Text");
+    textObj:SetText(string.format("Продление аукциона: %s сек.", valueString));
+    textObj:SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
 end
 
 function SOTA_OnOptionDKPStringLengthChanged(object)
@@ -239,7 +243,9 @@ function SOTA_OnOptionDKPStringLengthChanged(object)
         valueString = "(No limit)";
     end
 
-    getglobal(object:GetName() .. "Text"):SetText(string.format("DKP String Length: %s", valueString))
+    local textObj = getglobal(object:GetName() .. "Text");
+    textObj:SetText(string.format("Длина DKP-строки: %s", valueString));
+    textObj:SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
 end
 
 function SOTA_OnOptionMinimumDKPPenaltyChanged(object)
@@ -250,7 +256,9 @@ function SOTA_OnOptionMinimumDKPPenaltyChanged(object)
         valueString = "(None)";
     end
 
-    getglobal(object:GetName() .. "Text"):SetText(string.format("Minimum DKP penalty: %s", valueString))
+    local textObj = getglobal(object:GetName() .. "Text");
+    textObj:SetText(string.format("Минимальный штраф DKP: %s", valueString));
+    textObj:SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
 end
 
 function SOTA_RefreshBossDKPValues()
@@ -271,7 +279,7 @@ function SOTA_OnOptionBossDKPChanged(object)
 
     if slider == "FrameConfigBossDkp_20Mans" then
         SOTA_SetBossDKPValue("20Mans", value);
-        valueString = string.format("20 mans (ZG, AQ20): %d DKP", value);
+        valueString = string.format("Рейды на 20 человек (ZG, AQ20): %d DKP", value);
     elseif slider == "FrameConfigBossDkp_MoltenCore" then
         SOTA_SetBossDKPValue("MoltenCore", value);
         valueString = string.format("Molten Core: %d DKP", value);
@@ -292,10 +300,12 @@ function SOTA_OnOptionBossDKPChanged(object)
         valueString = string.format("Naxxramas: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_WorldBosses" then
         SOTA_SetBossDKPValue("WorldBosses", value);
-        valueString = string.format("World Bosses: %d DKP", value);
+        valueString = string.format("Мировые боссы: %d DKP", value);
     end
 
-    getglobal(slider .. "Text"):SetText(valueString);
+    local textObj = getglobal(slider .. "Text");
+    textObj:SetText(valueString);
+    textObj:SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
 end
 
 function SOTA_InitializeConfigSettings()

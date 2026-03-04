@@ -3,7 +3,7 @@
 
 	<!-- Кирилические шрифты -->
 	<Font name="SOTA_Font_Title" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
-		<FontHeight val="12" />
+		<FontHeight val="16" />
 		<Color r="1" g="1" b="1" />
 		<Shadow>
 			<Offset>
@@ -13,7 +13,7 @@
 		</Shadow>
 	</Font>
 	<Font name="SOTA_Font_Normal" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
-		<FontHeight val="10" />
+		<FontHeight val="12" />
 		<Color r="1" g="1" b="1" />
 		<Shadow>
 			<Offset>
@@ -23,7 +23,7 @@
 		</Shadow>
 	</Font>
 	<Font name="SOTA_Font_Small" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
-		<FontHeight val="8" />
+		<FontHeight val="10" />
 		<Color r="0.7" g="0.7" b="0.7" />
 		<Shadow>
 			<Offset>
@@ -33,7 +33,7 @@
 		</Shadow>
 	</Font>
 	<Font name="SOTA_Font_Orange" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
-		<FontHeight val="10" />
+		<FontHeight val="12" />
 		<Color r="0.925" g="0.243" b="0.031" />
 		<Shadow>
 			<Offset>
@@ -61,11 +61,11 @@
 			<EdgeSize>
 				<AbsValue val="16" />
 			</EdgeSize>
-			<Color r="0.1" g="0.1" b="0.1" a="1" />
+			<Color r="0.075" g="0.075" b="0.075" a="1" />
 		</Backdrop>
 		<Layers>
 			<Layer level="ARTWORK">
-				<FontString name="$parentTitle" inherits="SOTA_Font_Title" text="НАСТРОЙКИ АДДОНА |cFFEC3E08Misha|r (Wht Mst)">
+				<FontString name="$parentTitle" inherits="SOTA_Font_Title" text="НАСТРОЙКИ АДДОНА | |cFFEC3E08Misha|r (Wht Mst)">
 					<Anchors>
 						<Anchor point="TOP">
 							<Offset>
@@ -249,11 +249,11 @@
 		</Size>
 		<Scripts>
 			<OnLoad>
-				getglobal(this:GetName().."Low"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 8);
-				getglobal(this:GetName().."High"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 8);
-				getglobal(this:GetName().."Low"):SetText("0")
-				getglobal(this:GetName().."High"):SetText("5000")
-				getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
+				getglobal(this:GetName().."Low"):SetText("0");
+				getglobal(this:GetName().."Low"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+				getglobal(this:GetName().."High"):SetText("5000");
+				getglobal(this:GetName().."High"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+				getglobal(this:GetName().."Text"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
 			</OnLoad>
 			<OnValueChanged>
 				SOTA_OnOptionBossDKPChanged(this);
@@ -346,7 +346,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Bidding">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СТАВКИ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -365,7 +365,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Boss DKP">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="DKP">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -384,7 +384,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Misc DKP">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="ПРОЧЕЕ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -403,7 +403,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Messages">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СООБЩЕНИЯ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -427,11 +427,11 @@
 				</Size>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Low"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 8);
-						getglobal(this:GetName().."High"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 8);
-						getglobal(this:GetName().."Low"):SetText("0")
-						getglobal(this:GetName().."High"):SetText("60")
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
+						getglobal(this:GetName().."Low"):SetText("0");
+						getglobal(this:GetName().."Low"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+						getglobal(this:GetName().."High"):SetText("60");
+						getglobal(this:GetName().."High"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+						getglobal(this:GetName().."Text"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
 					</OnLoad>
 					<OnValueChanged>
 						SOTA_OnOptionAuctionTimeChanged(this);
@@ -450,11 +450,11 @@
 				</Size>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Low"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 8);
-						getglobal(this:GetName().."High"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 8);
-						getglobal(this:GetName().."Low"):SetText("0")
-						getglobal(this:GetName().."High"):SetText("20")
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
+						getglobal(this:GetName().."Low"):SetText("0");
+						getglobal(this:GetName().."Low"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+						getglobal(this:GetName().."High"):SetText("20");
+						getglobal(this:GetName().."High"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+						getglobal(this:GetName().."Text"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
 					</OnLoad>
 					<OnValueChanged>
 						SOTA_OnOptionAuctionExtensionChanged(this);
@@ -468,10 +468,22 @@
 						<Offset x="40" y="-195" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Включить приоритет МС над ОС">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Enable MS/OS bidding (Mainspec over Offspec)");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_HandleCheckbox(this);
@@ -485,10 +497,22 @@
 						<Offset x="40" y="-225" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Включить проверку зоны рейдовой очереди">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Enable Raid Queue Zone Check");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_HandleCheckbox(this);
@@ -502,10 +526,22 @@
 						<Offset x="40" y="-255" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Включить проверку онлайна рейдовой очереди">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Enable Raid Queue Online Check");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_HandleCheckbox(this);
@@ -519,10 +555,22 @@
 						<Offset x="40" y="-285" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Разрешить игрокам отменять их последнюю ставку">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Allow players to pass");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_HandleCheckbox(this);
@@ -536,10 +584,22 @@
 						<Offset x="40" y="-315" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+					<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Скрыть панель управления">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Disable (hide) Dashboard");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_HandleCheckbox(this);
@@ -585,7 +645,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Bidding">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СТАВКИ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -604,7 +664,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Boss DKP">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="DKP">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -623,7 +683,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Misc DKP">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="ПРОЧЕЕ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -642,7 +702,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Messages">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СООБЩЕНИЯ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -732,7 +792,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Bidding">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СТАВКИ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -751,7 +811,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Boss DKP">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="DKP">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -770,7 +830,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Misc DKP">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="ПРОЧЕЕ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -789,7 +849,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Messages">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СООБЩЕНИЯ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -807,10 +867,22 @@
 						<Offset x="40" y="-90" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Хранить DKP в общедоступных заметках гильдии">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Store DKP in Public Guild Notes");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_HandleCheckbox(this);
@@ -824,10 +896,22 @@
 						<Offset x="40" y="-120" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Без правил минимальной ставки">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("No minimum bid rules");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_HandleCheckbox(this);
@@ -837,13 +921,25 @@
 			<CheckButton name="$parentMinBidStrategy1" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="32" y="-176" />
+						<Offset x="40" y="-150" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Минимальный шаг 10 DKP">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Minimum increase by 10 DKP");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_HandleCheckbox(this);
@@ -853,13 +949,25 @@
 			<CheckButton name="$parentMinBidStrategy2" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="32" y="-198" />
+						<Offset x="40" y="-180" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Минимальный шаг 10%">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Minimum increase by 10%");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_HandleCheckbox(this);
@@ -869,13 +977,25 @@
 			<CheckButton name="$parentMinBidStrategy3" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="32" y="-220" />
+						<Offset x="40" y="-210" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Правила GGC (0-200: +10, >200: +50, >1k: +100)">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("GGC Rules (0-200: +10, >200: +50, >1k: +100)");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_HandleCheckbox(this);
@@ -885,13 +1005,25 @@
 			<CheckButton name="$parentMinBidStrategy4" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="32" y="-242" />
+						<Offset x="40" y="-240" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Правила Deja Vu (100-4999: +100, 5K+: +1000)">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Deja Vu Rules (100-4999: +100, 5K+: +1000)");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_HandleCheckbox(this);
@@ -899,17 +1031,28 @@
 				</Scripts>
 			</CheckButton>
 			<!--
-			<CheckButton name="$parentMinBidStrategy5" inherits="SOTA_ModernCheckButtonTemplate">
+			<CheckButton name="$parentMinBidStrategy5" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="32" y="-264"/>
+						<Offset x="40" y="-270" />
 					</Anchor>
 				</Anchors>
-				<NormalText inherits="SOTA_Font_Normal" />
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Пользовательские правила ставок">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Custom bid rules")
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_HandleCheckbox(this);
@@ -929,11 +1072,11 @@
 				</Size>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Low"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 8);
-						getglobal(this:GetName().."High"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 8);
-						getglobal(this:GetName().."Low"):SetText("0")
-						getglobal(this:GetName().."High"):SetText("8")
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
+						getglobal(this:GetName().."Low"):SetText("0");
+						getglobal(this:GetName().."Low"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+						getglobal(this:GetName().."High"):SetText("8");
+						getglobal(this:GetName().."High"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+						getglobal(this:GetName().."Text"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
 					</OnLoad>
 					<OnValueChanged>
 						SOTA_OnOptionDKPStringLengthChanged(this);
@@ -952,11 +1095,11 @@
 				</Size>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Low"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 8);
-						getglobal(this:GetName().."High"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 8);
-						getglobal(this:GetName().."Low"):SetText("0")
-						getglobal(this:GetName().."High"):SetText("500")
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
+						getglobal(this:GetName().."Low"):SetText("0");
+						getglobal(this:GetName().."Low"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+						getglobal(this:GetName().."High"):SetText("500");
+						getglobal(this:GetName().."High"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+						getglobal(this:GetName().."Text"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
 					</OnLoad>
 					<OnValueChanged>
 						SOTA_OnOptionMinimumDKPPenaltyChanged(this);
@@ -985,7 +1128,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Bidding">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СТАВКИ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -1004,7 +1147,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Boss DKP">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="DKP">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -1023,7 +1166,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Misc DKP">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="ПРОЧЕЕ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -1042,7 +1185,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Messages">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СООБЩЕНИЯ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -1176,7 +1319,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Bidding">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СТАВКИ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -1195,7 +1338,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Boss DKP">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="DKP">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -1214,7 +1357,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Misc DKP">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="ПРОЧЕЕ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -1233,7 +1376,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Messages">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СООБЩЕНИЯ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -1729,7 +1872,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Bidding">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СТАВКИ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -1748,7 +1891,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Boss DKP">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="DKP">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -1767,7 +1910,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Misc DKP">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="ПРОЧЕЕ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -1786,7 +1929,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="Messages">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СООБЩЕНИЯ">
 							<Anchors>
 								<Anchor point="CENTER" />
 							</Anchors>
@@ -1915,10 +2058,22 @@
 						<Offset x="32" y="-64" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Объявление рейду (/RW)">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Raid Warning (/RW)");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_OnEventCheckboxClick(this);
@@ -1931,10 +2086,22 @@
 						<Offset x="32" y="-88" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Рейд-чат (/R)">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Raid Chat (/R)");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_OnEventCheckboxClick(this);
@@ -1947,10 +2114,22 @@
 						<Offset x="32" y="-112" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Гильд-чат (/G)">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Guild Chat (/G)");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_OnEventCheckboxClick(this);
@@ -1963,10 +2142,22 @@
 						<Offset x="32" y="-136" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Крик (/Y)">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Yell (/Y)");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_OnEventCheckboxClick(this);
@@ -1979,10 +2170,22 @@
 						<Offset x="32" y="-160" />
 					</Anchor>
 				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentCustomLabel" inherits="SOTA_Font_Normal" text="Сказать (/S)">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="5" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetFont("Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf", 10);
-						getglobal(this:GetName().."Text"):SetText("Say (/S)");
+						getglobal(this:GetName().."Text"):Hide();
 					</OnLoad>
 					<OnClick>
 						SOTA_OnEventCheckboxClick(this);

@@ -89,7 +89,7 @@
 							</OnLeave>
 						</Scripts>
 					</Button>
-					<!-- Button 3: Раздать ДКП ("Coins") -->
+					<!-- Button 3: Раздать DKP ("Coins") -->
 					<Button name="$parentShareDKPButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
 						<Size>
 							<AbsDimension x="32" y="32" />
