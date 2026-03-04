@@ -1,7 +1,7 @@
 # SOTA - State of the Art
 
 ![Turtle WoW](https://img.shields.io/badge/Server-Turtle%20WoW-green)
-![Version](https://img.shields.io/badge/Version-1.18.1-blue)
+![Version](https://img.shields.io/badge/Version-1.18.2-blue)
 ![Interface](https://img.shields.io/badge/Interface-11200-orange)
 
 Аддон для управления системой DKP (Dragon Kill Points) в World of Warcraft 1.12.1
@@ -35,6 +35,9 @@
 ### 1️⃣ DKP Assignment
 
 Начисление/списание DKP через командную строку.
+
+**Автоматическое управление оффлайн-игроками:**
+Аддон самостоятельно включает отображение оффлайн-игроков в гильдии перед операциями с ДКП и возвращает настройку обратно после завершения операции. Это позволяет начислять ДКП игрокам в рейде независимо от их местоположения и статуса онлайна - после убийства босса можно сразу уйти в оффлайн или в другой инстанс, ДКП всё равно будет начислено.
 
 ### 2️⃣ Auctions
 
