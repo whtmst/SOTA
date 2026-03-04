@@ -629,21 +629,10 @@ function SOTA_RequestSOTAMaster()
 end
 
 -- Заглушки для новых кнопок бонусов DKP
-function SOTA_WelcomeDKP()
-    localEcho("Функция начисления приветственного DKP (в разработке)");
-end
-
-function SOTA_NoWipeDKP()
-    localEcho("Функция начисления DKP за проход без вайпов (в разработке)");
-end
-
-function SOTA_NoDeathDKP()
-    localEcho("Функция начисления DKP за проход без смертей (в разработке)");
-end
-
-function SOTA_RecordDKP()
-    localEcho("Функция начисления DKP за рекорд времени (в разработке)");
-end
+-- SOTA_WelcomeDKP() реализована в sota-core.lua
+-- SOTA_NoWipeDKP() реализована в sota-core.lua
+-- SOTA_NoDeathDKP() реализована в sota-core.lua
+-- SOTA_RecordDKP() реализована в sota-core.lua
 
 function SOTA_RequestMaster(silentmode)
     local playername = UnitName("player")

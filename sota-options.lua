@@ -111,10 +111,10 @@ function SOTA_OpenConfigurationUI()
 
     -- Устанавливаем текст подсказки для Boss DKP (две строки)
     getglobal("FrameConfigBossDkpExplanationLine1"):SetText(
-        "Минимальная ставка в рейде = Значение ползунка / 10"
+        "МИНИМАЛЬНАЯ СТАВКА В РЕЙДЕ = ЗНАЧЕНИЕ ПОЛЗУНКА / 10"
     );
     getglobal("FrameConfigBossDkpExplanationLine2"):SetText(
-        "Пример: Ползунок на 1000 - Мин. ставка: 100 DKP"
+        "ПРИМЕР: ПОЛЗУНОК НА 1000 - МИН. СТАВКА: 100 DKP"
     );
 
     -- Устанавливаем версию аддона в футере (для всех фреймов)

@@ -14,6 +14,12 @@ SOTA_TITAN_TITLE              = "SOTA - DKP Distribution"
 
 local SOTA_DEBUG_ENABLED      = false;
 
+-- Значения DKP для бонусных кнопок
+local SOTA_WELCOME_DKP_AMOUNT = 60    -- Приветственное DKP
+local SOTA_NO_WIPE_DKP_AMOUNT = 60    -- DKP за проход без вайпов
+local SOTA_NO_DEATH_DKP_AMOUNT = 100  -- DKP за проход без смертей
+local SOTA_RECORD_DKP_AMOUNT = 100    -- DKP за рекорд времени
+
 SOTA_CHAT_END                 = "|r"
 SOTA_COLOUR_INTRO             = "|c80F0F0F0"
 SOTA_COLOUR_CHAT              = "|c8040A0F8"
@@ -1129,6 +1135,178 @@ function SOTA_ShareSelectedBossDKP(text)
     if dkp then
         -- SOTA_Call_ShareDKP(dkp);
         SOTA_Call_AddRaidDKP(dkp);
+    end
+end
+
+--[[
+--	Начислить приветственное DKP всем участникам рейда
+--]]
+function SOTA_WelcomeDKP()
+    if SOTA_CanDoDKP(true) then
+        StaticPopupDialogs["SOTA_POPUP_WELCOME_DKP"] = {
+            text = "Будет начислен приветственный бонус: |cFFFF6600"..SOTA_WELCOME_DKP_AMOUNT.." DKP всем участникам|r рейда",
+            hasEditBox = false,
+            button1 = "Добавить",
+            button2 = "Отмена",
+            timeout = 0,
+            whileDead = true,
+            hideOnEscape = true,
+            preferredIndex = 3,
+            OnShow = function()
+                local frameName = this:GetName();
+                local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+                -- Текст заголовка
+                local textElement = getglobal(frameName .. "Text");
+                if textElement then
+                    textElement:SetFont(fontPath, 12);
+                end
+
+                -- Кнопки
+                local button1 = getglobal(frameName .. "Button1");
+                if button1 then
+                    button1:SetFont(fontPath, 12);
+                end
+
+                local button2 = getglobal(frameName .. "Button2");
+                if button2 then
+                    button2:SetFont(fontPath, 12);
+                end
+            end,
+            OnAccept = function()
+                SOTA_Call_AddRaidDKP(SOTA_WELCOME_DKP_AMOUNT);
+            end
+        }
+        StaticPopup_Show("SOTA_POPUP_WELCOME_DKP");
+    end
+end
+
+--[[
+--	Начислить DKP за проход без вайпов
+--]]
+function SOTA_NoWipeDKP()
+    if SOTA_CanDoDKP(true) then
+        StaticPopupDialogs["SOTA_POPUP_NO_WIPE_DKP"] = {
+            text = "|cFFFF6600ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за проход без вайпов: |cFFFF6600"..SOTA_NO_WIPE_DKP_AMOUNT.." DKP всем участникам|r рейда",
+            hasEditBox = false,
+            button1 = "Добавить",
+            button2 = "Отмена",
+            timeout = 0,
+            whileDead = true,
+            hideOnEscape = true,
+            preferredIndex = 3,
+            OnShow = function()
+                local frameName = this:GetName();
+                local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+                -- Текст заголовка
+                local textElement = getglobal(frameName .. "Text");
+                if textElement then
+                    textElement:SetFont(fontPath, 12);
+                end
+
+                -- Кнопки
+                local button1 = getglobal(frameName .. "Button1");
+                if button1 then
+                    button1:SetFont(fontPath, 12);
+                end
+
+                local button2 = getglobal(frameName .. "Button2");
+                if button2 then
+                    button2:SetFont(fontPath, 12);
+                end
+            end,
+            OnAccept = function()
+                SOTA_Call_AddRaidDKP(SOTA_NO_WIPE_DKP_AMOUNT);
+            end
+        }
+        StaticPopup_Show("SOTA_POPUP_NO_WIPE_DKP");
+    end
+end
+
+--[[
+--	Начислить DKP за проход без смертей
+--]]
+function SOTA_NoDeathDKP()
+    if SOTA_CanDoDKP(true) then
+        StaticPopupDialogs["SOTA_POPUP_NO_DEATH_DKP"] = {
+            text = "|cFFFF6600ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за проход без смертей (в том числе на треше): |cFFFF6600"..SOTA_NO_DEATH_DKP_AMOUNT.." DKP всем участникам|r рейда",
+            hasEditBox = false,
+            button1 = "Добавить",
+            button2 = "Отмена",
+            timeout = 0,
+            whileDead = true,
+            hideOnEscape = true,
+            preferredIndex = 3,
+            OnShow = function()
+                local frameName = this:GetName();
+                local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+                -- Текст заголовка
+                local textElement = getglobal(frameName .. "Text");
+                if textElement then
+                    textElement:SetFont(fontPath, 12);
+                end
+
+                -- Кнопки
+                local button1 = getglobal(frameName .. "Button1");
+                if button1 then
+                    button1:SetFont(fontPath, 12);
+                end
+
+                local button2 = getglobal(frameName .. "Button2");
+                if button2 then
+                    button2:SetFont(fontPath, 12);
+                end
+            end,
+            OnAccept = function()
+                SOTA_Call_AddRaidDKP(SOTA_NO_DEATH_DKP_AMOUNT);
+            end
+        }
+        StaticPopup_Show("SOTA_POPUP_NO_DEATH_DKP");
+    end
+end
+
+--[[
+--	Начислить DKP за рекорд времени
+--]]
+function SOTA_RecordDKP()
+    if SOTA_CanDoDKP(true) then
+        StaticPopupDialogs["SOTA_POPUP_RECORD_DKP"] = {
+            text = "|cFFFF6600ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за побитый рекорд времени прохождения рейда на 2 и более минуты: |cFFFF6600"..SOTA_RECORD_DKP_AMOUNT.." DKP всем участникам|r рейда",
+            hasEditBox = false,
+            button1 = "Добавить",
+            button2 = "Отмена",
+            timeout = 0,
+            whileDead = true,
+            hideOnEscape = true,
+            preferredIndex = 3,
+            OnShow = function()
+                local frameName = this:GetName();
+                local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+                -- Текст заголовка
+                local textElement = getglobal(frameName .. "Text");
+                if textElement then
+                    textElement:SetFont(fontPath, 12);
+                end
+
+                -- Кнопки
+                local button1 = getglobal(frameName .. "Button1");
+                if button1 then
+                    button1:SetFont(fontPath, 12);
+                end
+
+                local button2 = getglobal(frameName .. "Button2");
+                if button2 then
+                    button2:SetFont(fontPath, 12);
+                end
+            end,
+            OnAccept = function()
+                SOTA_Call_AddRaidDKP(SOTA_RECORD_DKP_AMOUNT);
+            end
+        }
+        StaticPopup_Show("SOTA_POPUP_RECORD_DKP");
     end
 end
 
