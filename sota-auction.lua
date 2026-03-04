@@ -58,7 +58,7 @@ end
 function SOTA_StartAuction(itemLink)
     local rank = SOTA_GetRaidRank(UnitName("player"));
     if rank < 1 then
-        localEcho("You need to be Raid Assistant or Raid Leader to start auctions.");
+        localEcho("Вы должны быть помощником или лидером рейда, чтобы начинать аукционы.");
         return;
     end
 
@@ -71,7 +71,7 @@ function SOTA_StartAuction(itemLink)
     -- Extract ItemId from itemLink string:
     local _, _, itemId = string.find(itemLink, "item:(%d+):")
     if not itemId then
-        localEcho("Item was not found: " .. itemLink);
+        localEcho("Предмет не найден: " .. itemLink);
         return;
     end
 
@@ -107,7 +107,7 @@ end
 function SOTA_CheckAuctionState()
     local state = SOTA_GetAuctionState();
 
-    debugEcho(string.format("SOTA_CheckAuctionState called, state = %d", STATE_AUCTION_PAUSED));
+    debugEcho(string.format("SOTA_CheckAuctionState вызвана, состояние = %d", STATE_AUCTION_PAUSED));
 
     if state == STATE_NONE or state == STATE_AUCTION_PAUSED then
         return;
@@ -238,7 +238,7 @@ end
 function SOTA_HandlePlayerBid(sender, message)
     local playerInfo = SOTA_GetGuildPlayerInfo(sender);
     if not playerInfo then
-        SOTA_whisper(sender, "You need to be in the guild to do bidding!");
+        SOTA_whisper(sender, "Вы должны состоять в гильдии, чтобы делать ставки!");
         -- The sender of the message was not in the raid; must be a normal whisper.
         return;
     end
@@ -276,7 +276,7 @@ function SOTA_HandlePlayerBid(sender, message)
         if arg == "min" then
             local minimumBid = SOTA_GetMinimumBid(bidtype);
             if not minimumBid then
-                SOTA_whisper(sender, "You cannot OS bid if an MS bid is already made.");
+                SOTA_whisper(sender, "Вы не можете сделать ставку на OS (офф-спек), если уже сделана ставка на MS (мэйн-спек).");
                 return;
             end
             dkp = minimumBid;
@@ -288,7 +288,7 @@ function SOTA_HandlePlayerBid(sender, message)
     end
 
     if not (AuctionState == STATE_AUCTION_RUNNING) then
-        SOTA_whisper(sender, "There is currently no auction running - bid was ignored.");
+        SOTA_whisper(sender, "В данный момент нет активных аукционов - ставка проигнорирована.");
         return;
     end
 
@@ -346,7 +346,7 @@ function SOTA_HandlePlayerBid(sender, message)
     if not userWentAllIn then
         local minimumBid = SOTA_GetMinimumBid(bidtype);
         if not minimumBid then
-            SOTA_whisper(sender, "You cannot OS bid if an MS bid is already made.");
+            SOTA_whisper(sender, "Нельзя ставить на OS (офф-спек), если уже есть ставка на MS (мэйн-спек).");
             return;
         end
 
@@ -510,12 +510,12 @@ end
 --]]
 function SOTA_HandlePlayerPass(playername)
     if (SOTA_CONFIG_AllowPlayerPass == 0) then
-        SOTA_whisper(playername, "Sorry, but you cannot pass once you've made a bid!");
+        SOTA_whisper(playername, "Извините, нельзя пасовать, если ставка уже сделана.");
         return;
     end;
 
     if not (AuctionState == STATE_AUCTION_RUNNING) then
-        SOTA_whisper(playername, "There is currently no auction running - pass was ignored.");
+        SOTA_whisper(playername, "Нет активных аукционов - пас проигнорирован.");
         return;
     end;
 
@@ -524,21 +524,22 @@ function SOTA_HandlePlayerPass(playername)
     local size = table.getn(IncomingBidsTable);
 
     if (size == 0) then
-        SOTA_whisper(playername, "There are no bids for this action to pass.");
+        SOTA_whisper(playername, "Нет активных ставок, нечего пасовать.");
         return;
     end;
 
     local lastbid = IncomingBidsTable[1];
     if not (playername == lastbid[1]) then
-        SOTA_whisper(playername, "You can only pass if you have the latest bid!");
+        SOTA_whisper(playername, "Вы можете пасовать, только если ваша ставка была последней!");
         return;
     end;
 
     if (size > 1) then
         local nextbid = IncomingBidsTable[2];
-        raidEcho(string.format("%s passed; highest bid is now by %s for %d DKP", playername, nextbid[1], nextbid[2]));
+        -- TODO Нужно также добавить это в парсер Т-Биддера, на случай если включаем возможность пасовать.
+        raidEcho(string.format("%s пасанул; максимальная ставка теперь у %s - %d DKP", playername, nextbid[1], nextbid[2]));
     else
-        raidEcho(string.format("%s passed; there are currently no active bids.", playername));
+        raidEcho(string.format("%s пасанул; на данный момент активных ставок нет.", playername));
     end;
 
     SOTA_UnregisterBid(lastbid[1], lastbid[2]);

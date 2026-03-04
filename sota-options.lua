@@ -39,7 +39,7 @@ function SOTA_getConfigurableMessage(msgKey, item, dkp, bidder, rank, param1, pa
     local msgInfo = SOTA_GetEventText(msgKey);
 
     if (not msgInfo) then
-        localEcho("*** Oops, SOTA_CONFIG_Messages[" .. msgKey .. "] was not found");
+        localEcho("*** Упс, SOTA_CONFIG_Messages[" .. msgKey .. "] не найден");
         return nil;
     end;
 
@@ -383,42 +383,43 @@ end
 function SOTA_VerifyEventMessages()
     -- Syntax: [index] = { EVENT_NAME, CHANNEL, TEXT }
     -- Channel value: 0: Off, 1: RW, 2: Raid, 3: Guild, 4: Yell, 5: Say
+    -- TODO: Нужно перевести в T-Bidder весь парсинг на руссий, после чего тут перевести оставшиеся фразы.
     local defaultMessages = {
         { SOTA_MSG_OnOpen,               1, "Auction open for $i" },
-        { SOTA_MSG_OnAnnounceBid,        2, "/w $s bid <your bid>" },
+        { SOTA_MSG_OnAnnounceBid,        2, "Пишите /w $s bid <ваша ставка>" },
         { SOTA_MSG_OnAnnounceMinBid,     2, "Minimum bid: $m DKP" },
-        { SOTA_MSG_On10SecondsLeft,      1, "10 seconds left for $i" },
-        { SOTA_MSG_On9SecondsLeft,       0, "9 seconds left" },
-        { SOTA_MSG_On8SecondsLeft,       0, "8 seconds left" },
-        { SOTA_MSG_On7SecondsLeft,       0, "7 seconds left" },
-        { SOTA_MSG_On6SecondsLeft,       0, "6 seconds left" },
-        { SOTA_MSG_On5SecondsLeft,       1, "5 seconds left / CURRENT BID: $d DKP for $i from $b" },
-        { SOTA_MSG_On5SecondsLeftNoBid,  1, "5 seconds left (No bids yet)" },
-        { SOTA_MSG_On4SecondsLeft,       2, "4 seconds left" },
-        { SOTA_MSG_On3SecondsLeft,       2, "3 seconds left" },
-        { SOTA_MSG_On2SecondsLeft,       2, "2 seconds left" },
-        { SOTA_MSG_On1SecondLeft,        2, "1 second left" },
+        { SOTA_MSG_On10SecondsLeft,      1, "Осталось 10 секунд для $i" },
+        { SOTA_MSG_On9SecondsLeft,       0, "Осталось 9 секунд" },
+        { SOTA_MSG_On8SecondsLeft,       0, "Осталось 8 секунд" },
+        { SOTA_MSG_On7SecondsLeft,       0, "Осталось 7 секунд" },
+        { SOTA_MSG_On6SecondsLeft,       0, "Осталось 6 секунд" },
+        { SOTA_MSG_On5SecondsLeft,       1, "Осталось 5 секунд / ТЕКУЩАЯ СТАВКА: $d DKP за $i от $b" },
+        { SOTA_MSG_On5SecondsLeftNoBid,  1, "Осталось 5 секунд (Ставок пока нет)" },
+        { SOTA_MSG_On4SecondsLeft,       2, "Осталось 4 секунды" },
+        { SOTA_MSG_On3SecondsLeft,       2, "Осталось 3 секунды" },
+        { SOTA_MSG_On2SecondsLeft,       2, "Осталось 2 секунды" },
+        { SOTA_MSG_On1SecondLeft,        2, "Осталась 1 секунда" },
         { SOTA_MSG_OnMainspecBid,        1, "$b ($r) is bidding $d DKP for $i" },
         { SOTA_MSG_OnOffspecBid,         1, "$b is bidding $d Off-spec for $i" },
         { SOTA_MSG_OnMainspecMaxBid,     1, "$b ($r) went all in ($d DKP) for $i" },
         { SOTA_MSG_OnOffspecMaxBid,      1, "$b went all in ($d) Off-spec for $i" },
-        { SOTA_MSG_OnComplete,           2, "$i sold to $b for $d DKP." },
+        { SOTA_MSG_OnComplete,           2, "$i sold to $b for $d DKP" },
         { SOTA_MSG_OnPause,              2, "Auction has been Paused" },
         { SOTA_MSG_OnResume,             2, "Auction has been Resumed" },
         { SOTA_MSG_OnClose,              1, "Auction for $i is over" },
         { SOTA_MSG_OnCancel,             1, "Auction was Cancelled" },
-        { SOTA_MSG_OnDKPAdded,           1, "$d DKP was added to $b" },
-        { SOTA_MSG_OnDKPAddedRaid,       1, "$d DKP was added to all players in raid" },
-        { SOTA_MSG_OnDKPAddedRange,      1, "$d DKP has been added for $1 players in range." },
-        { SOTA_MSG_OnDKPAddedQueue,      1, "$d DKP has been added for $1 players in range (incl $2 in queue)." },
-        { SOTA_MSG_OnDKPSubtract,        1, "$d DKP was subtracted from $b" },
-        { SOTA_MSG_OnDKPSubtractRaid,    1, "$d DKP was subtracted from all players in raid" },
-        { SOTA_MSG_OnDKPPercent,         1, "$1 % ($d DKP) was subtracted from $b" },
-        { SOTA_MSG_OnDKPShared,          1, "$1 DKP was shared ($d DKP per player)" },
-        { SOTA_MSG_OnDKPSharedQueue,     1, "$1 DKP was shared ($d DKP per player plus $2 in queue)" },
-        { SOTA_MSG_OnDKPSharedRange,     1, "$1 DKP was shared for $2 players in range ($d DKP per player)" },
-        { SOTA_MSG_OnDKPSharedRangeQ,    1, "$1 DKP was shared for $2 players in range ($d DKP per player, incl $3 in queue)" },
-        { SOTA_MSG_OnDKPReplaced,        1, "$1 was replaced with $2 ($d DKP)" }
+        { SOTA_MSG_OnDKPAdded,           1, "$d DKP добавлено игроку $b" },
+        { SOTA_MSG_OnDKPAddedRaid,       1, "$d DKP добавлено всем игрокам в рейде" },
+        { SOTA_MSG_OnDKPAddedRange,      1, "$d DKP добавлено для $1 игроков в радиусе" },
+        { SOTA_MSG_OnDKPAddedQueue,      1, "$d DKP добавлено для $1 игроков в радиусе (включая $2 в очереди)." },
+        { SOTA_MSG_OnDKPSubtract,        1, "$d DKP снято с игрока $b" },
+        { SOTA_MSG_OnDKPSubtractRaid,    1, "$d DKP снято со всех игроков в рейде" },
+        { SOTA_MSG_OnDKPPercent,         1, "$1 % ($d DKP) вычтено из $b" },
+        { SOTA_MSG_OnDKPShared,          1, "$1 DKP распределено ($d DKP на игрока)" },
+        { SOTA_MSG_OnDKPSharedQueue,     1, "$1 DKP распределено ($d DKP на игрока плюс $2 в очереди)" },
+        { SOTA_MSG_OnDKPSharedRange,     1, "$1 DKP распределено для $2 игроков в радиусе ($d DKP на игрока)" },
+        { SOTA_MSG_OnDKPSharedRangeQ,    1, "$1 DKP распределено для $2 игроков в радиусе ($d DKP на игрока, включая $3 в очереди)" },
+        { SOTA_MSG_OnDKPReplaced,        1, "$1 заменен на $2 ($d DKP)" }
     }
 
     -- Merge default messages into saved messages; in case we added some new event names.
@@ -681,7 +682,7 @@ function SOTA_RefreshVisibleTextList(offset)
 
         local frame = getglobal("FrameConfigMessageTableListEntry" .. n);
         if (not frame) then
-            echo("*** Oops, frame is nil");
+            echo("*** Упс, frame равен nil");
             return;
         end;
 

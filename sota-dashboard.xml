@@ -1,6 +1,48 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Script file="sota-dashboard.lua" />
 
+	<!-- Кириллические шрифты -->
+	<Font name="SOTA_Font_Title" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="16" />
+		<Color r="1" g="1" b="1" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+	<Font name="SOTA_Font_Normal" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="12" />
+		<Color r="1" g="1" b="1" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+	<Font name="SOTA_Font_Small" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="10" />
+		<Color r="0.7" g="0.7" b="0.7" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+	<Font name="SOTA_Font_Orange" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="12" />
+		<Color r="0.925" g="0.243" b="0.031" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+
 	<!-- SOTA Dashboard -->
 	<Frame name="DashboardUIFrame" parent="UIParent" toplevel="true" hidden="true">
 		<Size>
@@ -24,7 +66,11 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true" bgFile="Interface\DialogFrame\UI-DialogBox-Background">
+				<Backdrop
+                    edgeFile="Interface\Tooltips\UI-Tooltip-Border"
+                    tile="true"
+                    bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                >
 					<BackgroundInsets>
 						<AbsInset left="4" right="4" top="4" bottom="4" />
 					</BackgroundInsets>
@@ -56,7 +102,7 @@
 								SOTA_RequestSOTAMaster();
 							</OnClick>
 							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "Request SOTA Master status");
+								SOTA_ShowDashboardToolTip(this, "Запросить статус мастер-лутера SOTA");
 							</OnEnter>
 							<OnLeave>
 								SOTA_HideDashboardToolTip(this);
@@ -82,7 +128,7 @@
 								SOTA_OpenTransauctionUI();
 							</OnClick>
 							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "Open Transaction Log");
+								SOTA_ShowDashboardToolTip(this, "Открыть журнал транзакций");
 							</OnEnter>
 							<OnLeave>
 								SOTA_HideDashboardToolTip(this);
@@ -108,7 +154,7 @@
 								SOTA_ShareBossDKP();
 							</OnClick>
 							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "Add DKP across Raid and Queue");
+								SOTA_ShowDashboardToolTip(this, "Добавить введенное кол-во DKP каждому участнику рейда");
 							</OnEnter>
 							<OnLeave>
 								SOTA_HideDashboardToolTip(this);
@@ -134,7 +180,7 @@
 								SOTA_OpenRaidQueueUI();
 							</OnClick>
 							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "Open Raid Queue");
+								SOTA_ShowDashboardToolTip(this, "Открыть очередь в рейд");
 							</OnEnter>
 							<OnLeave>
 								SOTA_HideDashboardToolTip(this);
@@ -160,7 +206,7 @@
 								SOTA_OpenConfigurationUI();
 							</OnClick>
 							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "Open Configuration screen");
+								SOTA_ShowDashboardToolTip(this, "Открыть окно настроек");
 							</OnEnter>
 							<OnLeave>
 								SOTA_HideDashboardToolTip(this);
@@ -170,7 +216,7 @@
 				</Frames>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString inherits="GameFontNormal" text="SOTA Master:">
+						<FontString inherits="SOTA_Font_Normal" text="МАСТЕР ЛУТЕР:">
 							<Anchors>
 								<Anchor point="LEFT">
 									<Offset>
@@ -179,7 +225,7 @@
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<FontString name="SOTA_MasterName" inherits="GameFontNormal" text="(none)">
+						<FontString name="SOTA_MasterName" inherits="SOTA_Font_Normal" text="(отсутствует)">
 							<Anchors>
 								<Anchor point="LEFT">
 									<Offset>
@@ -227,5 +273,47 @@
 				end
 			</OnUpdate>
 		</Scripts>
+	</Frame>
+
+	<!-- SOTA Tooltip Frame -->
+	<Frame name="SOTA_TooltipFrame" parent="UIParent" toplevel="true" hidden="true">
+		<Size>
+			<AbsDimension x="200" y="50" />
+		</Size>
+		<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true" bgFile="Interface\Tooltips\UI-Tooltip-Background">
+			<BackgroundInsets>
+				<AbsInset left="4" right="4" top="4" bottom="4" />
+			</BackgroundInsets>
+			<EdgeSize>
+				<AbsValue val="16" />
+			</EdgeSize>
+			<TileSize>
+				<AbsValue val="16" />
+			</TileSize>
+			<Color r="0.1" g="0.1" b="0.1" a="1" />
+		</Backdrop>
+		<Scripts>
+			<OnShow>
+				this:SetBackdropColor(0.1, 0.1, 0.1, 1);
+			</OnShow>
+		</Scripts>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="SOTA_TooltipText" inherits="SOTA_Font_Orange" justifyH="LEFT">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="12" y="-6" />
+							</Offset>
+						</Anchor>
+						<Anchor point="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="-8" y="8" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
 	</Frame>
 </Ui>

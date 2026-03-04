@@ -162,9 +162,10 @@ SOTA_HISTORY_DKP                  = {}     -- { timestamp, tid, author, descript
 --[[
 --	ECHO functions:
 --]]
-function echo(msg)
+function echo(msg, color)
     if msg then
-        DEFAULT_CHAT_FRAME:AddMessage(SOTA_COLOUR_CHAT .. msg .. SOTA_CHAT_END)
+        local textColor = color or SOTA_COLOUR_CHAT;
+        DEFAULT_CHAT_FRAME:AddMessage(textColor .. msg .. SOTA_CHAT_END)
     end
 end
 
@@ -308,7 +309,7 @@ end
 function SOTA_IsInRaid(silentMode)
     local result = (GetNumRaidMembers() > 0)
     if not silentMode and not result then
-        localEcho("You must be in a raid!");
+        localEcho("Вы должны находиться в рейде!");
     end
     return result
 end
@@ -654,15 +655,15 @@ function SOTA_Call_CheckPlayerDKP(playername, sender)
     if dkp then
         dkp = 1 * dkp;
         if sender then
-            SOTA_whisper(sender, string.format("%s have %d DKP.", playername, dkp));
+            SOTA_whisper(sender, string.format("У %s в наличии %d DKP.", playername, dkp));
         else
-            localEcho(string.format("%s have %d DKP.", playername, dkp));
+            localEcho(string.format("У %s в наличии %d DKP.", playername, dkp));
         end
     else
         if sender then
-            SOTA_whisper(sender, string.format("There are no DKP information for %s.", playername));
+            SOTA_whisper(sender, string.format("Данные о DKP для %s не найдены.", playername));
         else
-            localEcho(string.format("There are no DKP information for %s.", playername));
+            localEcho(string.format("Данные о DKP для %s не найдены.", playername));
         end
     end
 end
@@ -684,14 +685,14 @@ function SOTA_Call_CheckClassDKP(playerclass, sender)
     SOTA_SortTableDescending(classtable, 2);
 
     if sender then
-        SOTA_whisper(sender, string.format("Top %d DKP for %ss:", MAX_CLASS_DKP_WHISPERED, playerclass));
+        SOTA_whisper(sender, string.format("Топ %d по DKP среди %ss:", MAX_CLASS_DKP_WHISPERED, playerclass));
         for n = 1, table.getn(classtable), 1 do
             if n <= MAX_CLASS_DKP_WHISPERED then
                 SOTA_whisper(sender, string.format("%d - %s: %d DKP", n, classtable[n][1], 1 * (classtable[n][2])));
             end
         end
     else
-        localEcho(string.format("Top %d DKP for %ss:", MAX_CLASS_DKP_DISPLAYED, playerclass));
+        localEcho(string.format("Топ %d по DKP среди %ss:", MAX_CLASS_DKP_DISPLAYED, playerclass));
         for n = 1, table.getn(classtable), 1 do
             if n <= MAX_CLASS_DKP_DISPLAYED then
                 localEcho(string.format("%d - %s: %d DKP", n, classtable[n][1], 1 * (classtable[n][2])));
@@ -837,7 +838,7 @@ function SOTA_SubtractPlayerDKPPercent(playername, percent, silentmode)
         SOTA_LogSingleTransaction("%Player", playername, -1 * abs(minus));
     else
         if not silentmode then
-            localEcho(string.format("Player %s was not found", playername));
+            localEcho(string.format("Игрок %s не найден", playername));
         end
     end
 end
@@ -895,14 +896,14 @@ function SOTA_AddRaidDKP(dkp, silentmode, callMethod)
 
                 -- Player is OFFLINE, skip if not allowed
                 if guildInfo[5] == 0 and onlinecheck == 1 then
-                    localEcho(string.format("No queue DKP for %s (Offline)", SOTA_RaidQueue[n][1]));
+                    localEcho(string.format("Игрок %s исключен из очереди на DKP (оффлайн)", SOTA_RaidQueue[n][1]));
                     eligibleForDKP = false;
                 end
 
                 -- Player is not in raid zone
                 if eligibleForDKP and guildInfo[5] == 1 and zonecheck == 1 then
                     if not (guildInfo[6] == instance or guildInfo[6] == zonename) then
-                        localEcho(string.format("No queue DKP for %s (location: %s)", SOTA_RaidQueue[n][1], guildInfo[6]));
+                        localEcho(string.format("Игрок %s исключен из очереди на DKP (локация: %s)", SOTA_RaidQueue[n][1], guildInfo[6]));
                         eligibleForDKP = false;
                     end;
                 end;
@@ -917,7 +918,7 @@ function SOTA_AddRaidDKP(dkp, silentmode, callMethod)
         end
 
         if not silentmode then
-            --			publicEcho(string.format("%d DKP was added to all players in raid", dkp));
+            --			publicEcho(string.format("Все игроки в рейде получили по %d DKP", dkp));
             SOTA_EchoEvent(SOTA_MSG_OnDKPAddedRaid, "", dkp);
         end
 
@@ -1073,22 +1074,46 @@ function SOTA_ShareBossDKP()
 
     if SOTA_CanDoDKP(true) then
         StaticPopupDialogs["SOTA_POPUP_SHARE_DKP"] = {
-            -- text = "Share the following DKP across raid:",
-            text = "Add the following DKP to raid:",
+            -- text = "Разделить следующее количество DKP между участниками рейда:",
+            text = "Добавить введенное количество DKP рейду:",
             hasEditBox = true,
             maxLetters = 6,
-            button1 = "Add",
-            button2 = "Cancel",
+            button1 = "Добавить",
+            button2 = "Отмена",
             OnAccept = function() SOTA_ExcludePlayerFromTransaction(SOTA_selectedTransactionID, playername) end,
             timeout = 0,
             whileDead = true,
             hideOnEscape = true,
             preferredIndex = 3,
             OnShow = function()
-                local c = getglobal(this:GetName() .. "EditBox");
-                -- c:SetText(bossDkp);
-                c:SetText("");
-                c:SetFocus();
+                local frameName = this:GetName();
+                -- Устанавливаем шрифт с поддержкой кириллицы для всех элементов
+                local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+                -- Текст заголовка
+                local textElement = getglobal(frameName .. "Text");
+                if textElement then
+                    textElement:SetFont(fontPath, 12);
+                end
+
+                -- Поле ввода
+                local editBox = getglobal(frameName .. "EditBox");
+                if editBox then
+                    editBox:SetText("");
+                    editBox:SetFont(fontPath, 12);
+                    editBox:SetFocus();
+                end
+
+                -- Кнопки
+                local button1 = getglobal(frameName .. "Button1");
+                if button1 then
+                    button1:SetFont(fontPath, 12);
+                end
+
+                local button2 = getglobal(frameName .. "Button2");
+                if button2 then
+                    button2:SetFont(fontPath, 12);
+                end
             end,
             OnAccept = function(self, data)
                 local c = getglobal(this:GetParent():GetName() .. "EditBox");
@@ -1202,7 +1227,7 @@ function SOTA_Decaytest(percent, silentmode)
     end
 
     if not tonumber(percent) then
-        localEcho("Guild Decay test cancelled: Percent is not a valid number: " .. percent);
+        localEcho("Тест среза DKP гильдии отменен: некорректно указан процент: " .. percent);
         return false;
     end
 
@@ -1240,8 +1265,8 @@ function SOTA_Decaytest(percent, silentmode)
         end
     end
 
-    localEcho("Testing Guild DKP decay using a " .. percent .. "% decay value.");
-    localEcho("Decay will remove a total of " .. reducedDkp .. " DKP from " .. playerCount .. " players.")
+    localEcho("Тестирование среза DKP гильдии: установленное значение - " .. percent .. "%.");
+    localEcho("Срез удалит в общей сложности " .. reducedDkp .. " DKP у " .. playerCount .. " игроков.")
 
     return true;
 end
@@ -1267,7 +1292,7 @@ function SOTA_DecayDKP(percent, silentmode)
 
     if not tonumber(percent) then
         if not silentmode then
-            localEcho("Guild Decay cancelled: Percent is not a valid number: " .. percent);
+            localEcho("Срез DKP гильдии отменен: некорректно указан процент: " .. percent);
         end
         return false;
     end
@@ -1278,7 +1303,7 @@ function SOTA_DecayDKP(percent, silentmode)
     --	Otherwise offline members will not get decayed!
     if not GetGuildRosterShowOffline() == 1 then
         if not silentmode then
-            localEcho("Guild Decay cancelled: You need to enable Offline Guild Members in the guild roster first.")
+            localEcho("Срез DKP гильдии отменен: сначала нужно включить отображение оффлайн-игроков в списке гильдии.")
         end
         return false;
     end
@@ -1324,8 +1349,8 @@ function SOTA_DecayDKP(percent, silentmode)
     end
 
     if not silentmode then
-        guildEcho("Guild DKP decay by " .. percent .. "% was performed by " .. UnitName("player") .. ".")
-        guildEcho("Guild DKP removed a total of " .. reducedDkp .. " DKP from " .. playerCount .. " players.")
+        guildEcho("Срез DKP гильдии на " .. percent .. "% выполнен игроком " .. UnitName("player") .. ".")
+        guildEcho("В общей сложности было срезано " .. reducedDkp .. " DKP у " .. playerCount .. " игроков.")
     end
 
     SOTA_LogMultipleTransactions("-Decay", tidChanges)
@@ -1348,13 +1373,13 @@ end
 function SOTA_IncludePlayer(transactionID, playername, silentmode, skipApplyDkp)
     local transaction = SOTA_GetTransaction(transactionID);
     if not transaction then
-        debugEcho(string.format("SOTA_IncludePlayer: Transaction not found, TID=%s", transactionID));
+        debugEcho(string.format("SOTA_IncludePlayer: транзакция не найдена, TID=%s", transactionID));
         return;
     end
 
     if not (table.getn(transaction[6]) > 0) then
         debugEcho(string.format(
-            "SOTA_IncludePlayer: There must be at least one person already, since DKP value is stored there! TID=%s",
+            "SOTA_IncludePlayer: Должен быть хотя бы один человек, так как там хранится значение DKP! TID=%s",
             transactionID));
         return;
     end
@@ -1375,27 +1400,26 @@ function SOTA_IncludePlayer(transactionID, playername, silentmode, skipApplyDkp)
         end
     end
     if not found then
-        debugEcho(string.format("SOTA_IncludePlayer: Invalid transaction type in TID=%s : %s", transactionID, trType));
+        debugEcho(string.format("SOTA_IncludePlayer: некорректный тип транзакции в TID=%s : %s", transactionID, trType));
         return;
     end
 
     -- Check player is not in the transaction already:
     for n = 1, table.getn(transaction[6]), 1 do
         if transaction[6][n][1] == playername then
-            debugEcho(string.format("SOTA_IncludePlayer: Player %s already exists in transaction TID=%s", playername,
-                transactionID));
+            debugEcho(string.format("SOTA_IncludePlayer: игрок %s уже есть в транзакции TID=%s", playername, transactionID));
             return;
         end
     end
 
     transaction[6][table.getn(transaction[6]) + 1] = { playername, dkpValue };
-    debugEcho(string.format("SOTA_IncludePlayer: Player %s included in TID=%s", playername, transactionID));
+    debugEcho(string.format("SOTA_IncludePlayer: игрок %s добавлен в TID=%s", playername, transactionID));
 
     if not skipApplyDkp then
         if SOTA_ApplyPlayerDKP(playername, dkpValue) then
             SOTA_LogIncludeExcludeTransaction("Include", playername, transactionID, dkpValue);
 
-            localEcho(string.format("%s was included in transaction %d for %d DKP", playername, transactionID, dkpValue));
+            localEcho(string.format("%s был добавлен в транзакцию %d на %d DKP", playername, transactionID, dkpValue));
         end
     end
 end
@@ -1418,7 +1442,7 @@ function SOTA_ExcludePlayer(transactionID, playername, silentmode, skipApplyDkp)
         if not transactionID then
             transactionID = "(NIL)";
         end
-        debugEcho(string.format("Transaction with TID=%s was not found; cannot exclude player", transactionID));
+        debugEcho(string.format("Транзакция с TID=%s не найдена; исключить игрока невозможно", transactionID));
         return;
     end
 
@@ -1435,7 +1459,7 @@ function SOTA_ExcludePlayer(transactionID, playername, silentmode, skipApplyDkp)
         end
     end
     if not found then
-        debugEcho("Invalid transaction type: " .. trType);
+        debugEcho("Некорректный тип транзакции: " .. trType);
         return;
     end
 
@@ -1458,15 +1482,14 @@ function SOTA_ExcludePlayer(transactionID, playername, silentmode, skipApplyDkp)
         if not transactionID then
             transactionID = "(NIL)";
         end
-        debugEcho(string.format("The player %s was not found in the transaction with TID=%s; cannot exclude player",
-            playername, transactionID));
+        debugEcho(string.format("Игрок %s не найден в транзакции с TID=%s; исключить игрока невозможно", playername, transactionID));
         return;
     end
 
     if not skipApplyDkp then
         if SOTA_ApplyPlayerDKP(playername, -1 * dkpValue) then
             SOTA_LogIncludeExcludeTransaction("Exclude", playername, transactionID, dkpValue);
-            localEcho(string.format("%s was excluded from transaction %d for %d DKP", playername, transactionID, dkpValue));
+            localEcho(string.format("%s был исключен из транзакции %d на %d DKP", playername, transactionID, dkpValue));
         end
     end
 end
@@ -1510,7 +1533,7 @@ function SOTA_ApplyPlayerDKP(playername, dkpValue, silentmode)
     end
 
     if not silentmode then
-        localEcho(string.format("%s was not found in the guild; DKP was not updated.", playername));
+        localEcho(string.format("%s не найден в гильдии; DKP не обновлено.", playername));
     end
     return false;
 end
@@ -1628,14 +1651,33 @@ function SOTA_ToggleIncludePlayerInTransaction(playername)
         elseif multiPlayerTransaction then
             --	Multiplayer transaction, clicked on current player. Offer to exclude player:
             StaticPopupDialogs["SOTA_POPUP_TRANSACTION_PLAYER"] = {
-                text = string.format("Do you want to exclude %s from this transaction?", playername),
-                button1 = "Yes",
-                button2 = "No",
+                text = string.format("Вы хотите исключить %s из этой транзакции?", playername),
+                button1 = "Да",
+                button2 = "Нет",
                 OnAccept = function() SOTA_ExcludePlayerFromTransaction(SOTA_selectedTransactionID, playername) end,
                 timeout = 0,
                 whileDead = true,
                 hideOnEscape = true,
                 preferredIndex = 3,
+                OnShow = function()
+                    local frameName = this:GetName();
+                    local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+                    local textElement = getglobal(frameName .. "Text");
+                    if textElement then
+                        textElement:SetFont(fontPath, 12);
+                    end
+
+                    local button1 = getglobal(frameName .. "Button1");
+                    if button1 then
+                        button1:SetFont(fontPath, 12);
+                    end
+
+                    local button2 = getglobal(frameName .. "Button2");
+                    if button2 then
+                        button2:SetFont(fontPath, 12);
+                    end
+                end,
             }
             StaticPopup_Show("SOTA_POPUP_TRANSACTION_PLAYER");
         end
@@ -1643,9 +1685,9 @@ function SOTA_ToggleIncludePlayerInTransaction(playername)
         if singlePlayerTransaction then
             --	Single-player transaction, clicked on Other player; offer to replace player:
             StaticPopupDialogs["SOTA_POPUP_TRANSACTION_PLAYER"] = {
-                text = string.format("Do you want to replace %s with %s ?", currentPlayername, playername),
-                button1 = "Yes",
-                button2 = "No",
+                text = string.format("Вы хотите заменить %s на %s ?", currentPlayername, playername),
+                button1 = "Да",
+                button2 = "Нет",
                 OnAccept = function()
                     SOTA_ReplacePlayerInTransaction(SOTA_selectedTransactionID, currentPlayername,
                         playername)
@@ -1654,19 +1696,57 @@ function SOTA_ToggleIncludePlayerInTransaction(playername)
                 whileDead = true,
                 hideOnEscape = true,
                 preferredIndex = 3,
+                OnShow = function()
+                    local frameName = this:GetName();
+                    local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+                    local textElement = getglobal(frameName .. "Text");
+                    if textElement then
+                        textElement:SetFont(fontPath, 12);
+                    end
+
+                    local button1 = getglobal(frameName .. "Button1");
+                    if button1 then
+                        button1:SetFont(fontPath, 12);
+                    end
+
+                    local button2 = getglobal(frameName .. "Button2");
+                    if button2 then
+                        button2:SetFont(fontPath, 12);
+                    end
+                end,
             }
             StaticPopup_Show("SOTA_POPUP_TRANSACTION_PLAYER");
         elseif multiPlayerTransaction then
             --	Multiplayer transaction, clicked on current player. Offer to exclude player:
             StaticPopupDialogs["SOTA_POPUP_TRANSACTION_PLAYER"] = {
-                text = string.format("Do you want to include %s to this transaction?", playername),
-                button1 = "Yes",
-                button2 = "No",
+                text = string.format("Вы хотите добавить %s в эту транзакцию?", playername),
+                button1 = "Да",
+                button2 = "Нет",
                 OnAccept = function() SOTA_IncludePlayerInTransaction(SOTA_selectedTransactionID, playername) end,
                 timeout = 0,
                 whileDead = true,
                 hideOnEscape = true,
                 preferredIndex = 3,
+                OnShow = function()
+                    local frameName = this:GetName();
+                    local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+                    local textElement = getglobal(frameName .. "Text");
+                    if textElement then
+                        textElement:SetFont(fontPath, 12);
+                    end
+
+                    local button1 = getglobal(frameName .. "Button1");
+                    if button1 then
+                        button1:SetFont(fontPath, 12);
+                    end
+
+                    local button2 = getglobal(frameName .. "Button2");
+                    if button2 then
+                        button2:SetFont(fontPath, 12);
+                    end
+                end,
             }
             StaticPopup_Show("SOTA_POPUP_TRANSACTION_PLAYER");
         end

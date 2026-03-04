@@ -197,7 +197,7 @@ function SOTA_HandleSOTACommand(msg)
         if SOTA_IsInRaid(true) then
             addonEcho("TX_VERSION##");
         else
-            localEcho(string.format("%s is using SOTA version %s", UnitName("player"),
+            localEcho(string.format("%s использует версию SOTA %s", UnitName("player"),
                 GetAddOnMetadata("SOTA", "Version")));
         end
         return;
@@ -262,7 +262,7 @@ function SOTA_HandleSOTACommand(msg)
             end
             return SOTA_AddToRaidQueueByName(arg);
         else
-            localEcho("You must be promoted for adding people to the raid queue.");
+            localEcho("Для добавления людей в очередь рейда вы должны быть повышены в звании.");
         end
         return;
     end
@@ -301,7 +301,7 @@ function SOTA_HandleSOTACommand(msg)
             arg = string.sub(arg, 2);
             return SOTA_Call_AddRaidDKP(arg);
         else
-            localEcho("DKP must be written as +999 or -999");
+            localEcho("DKP должно быть указано как +999 или -999");
             return;
         end
     end
@@ -325,7 +325,7 @@ function SOTA_HandleSOTACommand(msg)
         if not arg or arg == "" then
             arg = SOTA_GetMinimumBid() * 10;
             if arg == 0 then
-                localEcho("Boss DKP value could not be calculated - DKP was not shared.");
+                localEcho("Значение DKP за босса не было рассчитано - DKP не распределено.");
                 return;
             end
         else
@@ -347,7 +347,7 @@ function SOTA_HandleSOTACommand(msg)
         if not arg or arg == "" then
             arg = SOTA_GetMinimumBid() * 10;
             if arg == 0 then
-                localEcho("Boss DKP value could not be calculated - DKP was not shared.");
+                localEcho("Значение DKP за босса не удалось рассчитать - DKP не распределено.");
                 return;
             end
         else
@@ -401,58 +401,56 @@ function SOTA_HandleSOTACommand(msg)
         end
     end
 
-    localEcho("Unknown command: " .. msg);
+    localEcho("Неизвестная команда: " .. msg);
 end
 
 function SOTA_DisplayHelp()
-    localEcho(string.format("SOTA version %s options:", GetAddOnMetadata("SOTA", "Version")));
-    localEcho("Syntax: /sota [option], where options are:");
+    localEcho(string.format("Настройки SOTA версии %s:", GetAddOnMetadata("SOTA", "Version")));
+    localEcho("Синтаксис: " .. SOTA_COLOUR_MAIN .. "/sota [опция]" .. SOTA_COLOUR_CHAT .. ", возможные опции:");
     --	DKP request options:
-    localEcho("DKP Requests:");
-    echo("  DKP <p>    Show how much DKP the player <p> currently have. Default is current player.");
-    echo("  Class <c>    Show top 10 DKP for the class <c>. Default is the current player's class.");
+    localEcho("ЗАПРОСЫ DKP:");
+    echo(SOTA_COLOUR_MAIN .. "      DKP <p>" .. SOTA_COLOUR_CHAT .. " | Показать текущее количество DKP игрока <p>. По умолчанию - ваш персонаж.");
+    echo(SOTA_COLOUR_MAIN .. "      Class <c>" .. SOTA_COLOUR_CHAT .. " | Топ 10 игроков по DKP для класса <c>. По умолчанию - класс вашего персонажа.");
     echo("");
     --	Player DKP:
-    localEcho("Player DKP:");
-    echo("  +<dkp> <p>    Add <dkp> to the player <p>.");
-    echo("  -<dkp> <p>    Subtract <dkp> from the player <p>.");
-    echo(
-    "  -<pct>% <p>   Subtract <pct> % DKP from the player <p>. A minimum subtracted amount can be configured in the DKP options.");
+    localEcho("DKP ИГРОКОВ:");
+    echo(SOTA_COLOUR_MAIN .. "      +<dkp> <p>" .. SOTA_COLOUR_CHAT .. " | Добавить <dkp> игроку <p>.");
+    echo(SOTA_COLOUR_MAIN .. "      -<dkp> <p>" .. SOTA_COLOUR_CHAT .. " | Вычесть <dkp> у игрока <p>.");
+    echo(SOTA_COLOUR_MAIN .. "      -<pct>% <p>" .. SOTA_COLOUR_CHAT .. " | Вычесть <pct>% DKP у игрока <p>. Минимальная сумма вычета настраивается в опциях DKP.");
     echo("");
     --	Raid DKP:
-    localEcho("Raid DKP:");
-    echo("  raid +<dkp>    Add <dkp> to all players in raid and in raid queue.");
-    echo("  raid -<dkp>    Subtract <dkp> from all players in raid and in raid queue.");
-    echo("  range +<dkp>    Add <dkp> to all players in 100 yards range.");
-    echo(
-    "  share +<dkp>    Share <dkp> to all players in raid and in raid queue. Every player gets (<dkp> / <number of players in raid>) DKP.");
-    echo("  decay <pct>%    Remove <pct> percent DKP from every player in the guild.");
+    localEcho("DKP РЕЙДА:");
+    echo(SOTA_COLOUR_MAIN .. "      raid +<dkp>" .. SOTA_COLOUR_CHAT .. " | Добавить <dkp> всем участникам рейда и игрокам в очереди.");
+    echo(SOTA_COLOUR_MAIN .. "      raid -<dkp>" .. SOTA_COLOUR_CHAT .. " | Вычесть <dkp> у всех участников рейда и игроков в очереди.");
+    echo(SOTA_COLOUR_MAIN .. "      range +<dkp>" .. SOTA_COLOUR_CHAT .. " | Добавить <dkp> всем игрокам в радиусе 100 ярдов.");
+    echo(SOTA_COLOUR_MAIN .. "      share +<dkp>" .. SOTA_COLOUR_CHAT .. " | Распределить <dkp> между всеми участниками рейда и очереди. Каждый получит (<dkp> / количество игроков) DKP.");
+    echo(SOTA_COLOUR_MAIN .. "      decay <pct>%" .. SOTA_COLOUR_CHAT .. " | Списать <pct> процентов DKP у каждого игрока в гильдии.");
     echo("");
     --	Queue options:
-    localEcho("Raid Queue:");
-    echo("  queue    Get current queue status (number of people in queue)");
-    echo("  addqueue <p> <r>    Manually add the player <p> to the raid queue with role <r>.");
+    localEcho("ОЧЕРЕДЬ РЕЙДА:");
+    echo(SOTA_COLOUR_MAIN .. "      queue" .. SOTA_COLOUR_CHAT .. " | Текущий статус очереди (количество человек в очереди)");
+    echo(SOTA_COLOUR_MAIN .. "      addqueue <p> <r>" .. SOTA_COLOUR_CHAT .. " | Добавить игрока <p> в очередь рейда с ролью <r> вручную.");
     echo("");
     --	Misc:
-    localEcho("Miscellaneous:");
-    echo("  Config    Open the SOTA configuration screen.");
-    echo("  Log    Open the SOTA transaction log screen.");
-    echo("  Master    Request SOTA master status.");
-    echo("  Silent    Toggle silent bidding mode (suppress whisper confirmations).");
-    echo("  <item>    Start an auction for <item>.");
-    echo("  Version    Display the SOTA client version.");
-    echo("  Help    (default) This help!");
+    localEcho("РАЗНОЕ:");
+    echo(SOTA_COLOUR_MAIN .. "      Config" .. SOTA_COLOUR_CHAT .. " | Открыть окно настроек SOTA.");
+    echo(SOTA_COLOUR_MAIN .. "      Log" .. SOTA_COLOUR_CHAT .. " | Открыть журнал транзакций SOTA.");
+    echo(SOTA_COLOUR_MAIN .. "      Master" .. SOTA_COLOUR_CHAT .. " | Запросить статус Мастер-лутера SOTA.");
+    echo(SOTA_COLOUR_MAIN .. "      Silent" .. SOTA_COLOUR_CHAT .. " | Переключить режим скрытых ставок (отключить подтверждения в шепот).");
+    echo(SOTA_COLOUR_MAIN .. "      <item>" .. SOTA_COLOUR_CHAT .. " | Начать аукцион за <item>.");
+    echo(SOTA_COLOUR_MAIN .. "      Version" .. SOTA_COLOUR_CHAT .. " | Показать версию клиента SOTA.");
+    echo(SOTA_COLOUR_MAIN .. "      Help" .. SOTA_COLOUR_CHAT .. " | (по умолчанию) Эта справка!");
     echo("");
     --	Chat options (Guild chat and Raid chat):
-    localEcho("Guild/Raid chat commands:");
-    echo("  !queue    Get current queue status (number of people in queue)");
-    echo("  !queue <r>    Queue as role <r>; <r> can be tank, melee, ranged or healer");
-    echo("  !leave    Leave the raid queue.");
-    echo("  !listqueue    Returns a list of people who are currently in queue.");
-    echo("  !bid <dkp>    Bid <dkp> for item currently being on auction.");
-    echo("  !bid min    Bid the minimum bid on item currently being on auction.");
-    echo("  !bid max    Bid everything (go all out) on item currently being on auction");
-    echo("  !Pass    Cancel a bid. Only allowed if the cancelled bid is the current active bid.");
+    localEcho("КОМАНДЫ ЧАТА ГИЛЬДИИ/РЕЙДА:");
+    echo(SOTA_COLOUR_MAIN .. "      !queue" .. SOTA_COLOUR_CHAT .. " | Текущий статус очереди (количество человек в очереди)");
+    echo(SOTA_COLOUR_MAIN .. "      !queue <r>" .. SOTA_COLOUR_CHAT .. " | Встать в очередь как <r>; <r> может быть tank, melee, ranged или healer");
+    echo(SOTA_COLOUR_MAIN .. "      !leave" .. SOTA_COLOUR_CHAT .. " | Покинуть очередь рейда.");
+    echo(SOTA_COLOUR_MAIN .. "      !listqueue" .. SOTA_COLOUR_CHAT .. " | Показать список игроков, находящихся в очереди.");
+    echo(SOTA_COLOUR_MAIN .. "      !bid <dkp>" .. SOTA_COLOUR_CHAT .. " | Сделать ставку <dkp> на текущий лот.");
+    echo(SOTA_COLOUR_MAIN .. "      !bid min" .. SOTA_COLOUR_CHAT .. " | Сделать минимальную ставку на текущий лот.");
+    echo(SOTA_COLOUR_MAIN .. "      !bid max" .. SOTA_COLOUR_CHAT .. " | Поставить все (ва-банк) на текущий лот");
+    echo(SOTA_COLOUR_MAIN .. "      !Pass" .. SOTA_COLOUR_CHAT .. " | Отменить ставку. Допустимо, только если отменяемая ставка является активной.");
     return false;
 end
 
@@ -465,13 +463,60 @@ function SOTA_CloseDashboard()
 end
 
 function SOTA_ShowDashboardToolTip(object, message)
-    GameTooltip:SetOwner(object, "ANCHOR_PRESERVE");
-    GameTooltip:AddLine(message, 1, 1, 1);
-    GameTooltip:Show();
+    local tooltip = SOTA_TooltipFrame;
+    local tooltipText = getglobal("SOTA_TooltipText");
+
+    -- Устанавливаем текст
+    tooltipText:SetText(message);
+
+    -- Подгоняем размер по содержимому (увеличенные отступы)
+    local textWidth = tooltipText:GetStringWidth();
+    local textHeight = tooltipText:GetHeight();
+    tooltip:SetWidth(textWidth + 25);
+    tooltip:SetHeight(textHeight + 20);
+
+    -- Позиционируем тултип с умной проверкой границ экрана
+    tooltip:ClearAllPoints();
+
+    -- Получаем координаты экрана
+    local screenWidth = GetScreenWidth();
+    local screenHeight = GetScreenHeight();
+    local tooltipWidth = tooltip:GetWidth();
+
+    -- Вычисляем левую позицию объекта
+    local objectLeft = object:GetLeft();
+    local objectRight = object:GetRight();
+    local objectTop = object:GetTop();
+
+    -- Центр объекта
+    local objectCenterX = (objectLeft + objectRight) / 2;
+
+    -- Вычисляем позиции краёв тултипа
+    local tooltipLeft = objectCenterX - (tooltipWidth / 2);
+    local tooltipRight = objectCenterX + (tooltipWidth / 2);
+
+    -- Проверяем, не выходит ли тултип за правый край
+    if tooltipRight > screenWidth then
+        -- Если выходит - прижимаем к правому краю объекта
+        tooltip:SetPoint("BOTTOMRIGHT", object, "TOPRIGHT", -5, 5);
+    -- Проверяем, не выходит ли тултип за левый край
+    elseif tooltipLeft < 0 then
+        -- Если выходит - прижимаем к левому краю объекта
+        tooltip:SetPoint("BOTTOMLEFT", object, "TOPLEFT", 5, 5);
+    -- Проверяем, не выходит ли тултип за верхний край
+    elseif objectTop and (objectTop + tooltip:GetHeight() + 10) > screenHeight then
+        -- Если выходит - показываем ПОД объектом
+        tooltip:SetPoint("TOP", object, "BOTTOM", 0, -5);
+    else
+        -- Всё в порядке - показываем НАД объектом по центру
+        tooltip:SetPoint("BOTTOM", object, "TOP", 0, 5);
+    end
+
+    tooltip:Show();
 end
 
 function SOTA_HideDashboardToolTip()
-    GameTooltip:Hide();
+    SOTA_TooltipFrame:Hide();
 end
 
 --
@@ -577,7 +622,7 @@ end
 --]]
 function SOTA_RequestSOTAMaster()
     if CLIENT_STATE == CLIENT_STATE_MASTER then
-        localEcho("You are already SOTA Master.");
+        localEcho("Вы уже являетесь мастер-лутером SOTA.");
     else
         SOTA_RequestMaster();
     end
@@ -589,9 +634,9 @@ function SOTA_RequestMaster(silentmode)
     --	Requires at least Assistant!
     if rank < 1 then
         if silentmode then
-            debugEcho(string.format("Player %s have raid rank %d", playername, rank));
+            debugEcho(string.format("Игрок %s имеет ранг рейда %d", playername, rank));
         else
-            localEcho("You must be promoted before you can be a SOTA Master!");
+        localEcho("Для получения прав мастер-лутера SOTA вы должны быть повышены!");
         end
         return;
     end
@@ -600,7 +645,7 @@ function SOTA_RequestMaster(silentmode)
 
     if not silentmode then
         if not CLIENT_STATE == CLIENT_STATE_MASTER then
-            localEcho("You are now SOTA Master.");
+            localEcho("Теперь вы являетесь мастер-лутером SOTA.");
         end
     end
 
@@ -612,7 +657,7 @@ function SOTA_SetMasterState(mastername, masterstate)
     CLIENT_STATE = masterstate;
 
     if not mastername then
-        mastername = "(none)";
+        mastername = "(отсутствует)";
     end
 
     --echo(string.format("Master: %s, state= %d", mastername, CLIENT_STATE));
@@ -685,14 +730,14 @@ function SOTA_CanDoDKP(silentmode)
 
     if not SOTA_CanWriteNotes() then
         if not silentmode then
-            localEcho("You do not have access to change notes!");
+            localEcho("У вас нет прав на изменение заметок!");
         end
         return false;
     end
 
     if not SOTA_IsPromoted() then
         if not silentmode then
-            localEcho("You are not promoted!");
+            localEcho("Вы не повышены!");
         end
         return false;
     end
@@ -788,7 +833,7 @@ end
 --	A version response (RX) was received. The version information is displayed locally.
 --]]
 local function SOTA_HandleRXVersion(message, sender)
-    localEcho(string.format("%s is using %s version %s", sender, SOTA_TITLE, message));
+    localEcho(string.format("%s использует %s версии %s", sender, SOTA_TITLE, message));
 end
 
 
@@ -1079,7 +1124,7 @@ function SOTA_HandleRXConfigSyncRequest(message, sender)
     local _, _, senderVersion, senderDate = string.find(message, "([^,]*),([^,]*)")
 
     -- TODO: Add this message to list of known versions:
-    echo(string.format("Sender=%s, version=%s, date=%s", sender, senderVersion, senderDate));
+    echo(string.format("Отправитель=%s, версия=%s, дата=%s", sender, senderVersion, senderDate));
 end;
 
 function SOTA_OnChatMsgAddon(event, prefix, msg, channel, sender)
@@ -1212,9 +1257,9 @@ function SOTA_OnZoneChanged()
                 return;
             end
 
-            localEcho(string.format("Instance: " .. SOTA_COLOUR_INTRO .. "%s" .. SOTA_COLOUR_CHAT, zonetext));
-            localEcho(string.format("Boss value: " .. SOTA_COLOUR_INTRO .. "%s" .. SOTA_COLOUR_CHAT .. " DKP", dkp * 10));
-            localEcho(string.format("Minimum bid: " .. SOTA_COLOUR_INTRO .. "%s" .. SOTA_COLOUR_CHAT .. " DKP", min));
+            localEcho(string.format("Подземелье: " .. SOTA_COLOUR_INTRO .. "%s" .. SOTA_COLOUR_CHAT, zonetext));
+            localEcho(string.format("Награда за босса: " .. SOTA_COLOUR_INTRO .. "%s" .. SOTA_COLOUR_CHAT .. " DKP", dkp * 10));
+            localEcho(string.format("Минимальная ставка: " .. SOTA_COLOUR_INTRO .. "%s" .. SOTA_COLOUR_CHAT .. " DKP", min));
         end
     end
 end
@@ -1230,7 +1275,7 @@ function SOTA_HandleGuildChatMessage(event, message, sender)
     -- Only respond if you are master, or no master has yet been assigned:
     if SOTA_IsMaster() or (not (SOTA_Master) and SOTA_IsPromoted()) then
         local command = string.sub(message, 2)
-        debugEcho("Master: Processing GChat command: " .. command);
+        debugEcho("Мастер: Обработка команды GChat: " .. command);
         SOTA_OnChatWhisper(event, command, sender);
     end
 end
@@ -1245,7 +1290,7 @@ function SOTA_HandleRaidChatMessage(event, message, sender)
 
     if SOTA_IsMaster() then
         local command = string.sub(message, 2)
-        debugEcho("Master: Processing RChat command: " .. command);
+        debugEcho("Мастер: Обработка команды RChat: " .. command);
         SOTA_OnChatWhisper(event, command, sender);
     end
 end
@@ -1278,7 +1323,7 @@ function SOTA_OnChatWhisper(event, message, sender)
         if SOTA_RemoveFromRaidQueue(sender) then
             local guildInfo = SOTA_GetGuildPlayerInfo(sender);
             if (guildInfo and guildInfo[5] == 1) then
-                SOTA_whisper(sender, "You have left the Raid Queue.")
+                SOTA_whisper(sender, "Вы покинули очередь в рейд.")
             end
         end
     end
@@ -1303,7 +1348,7 @@ function SOTA_OnEvent(event, arg1, arg2, arg3, arg4, arg5)
 end
 
 function SOTA_OnLoad()
-    localEcho(string.format("Loot Distribution Addon version %s by %s", GetAddOnMetadata("SOTA", "Version"),
+    localEcho(string.format("Аддон распределения лута версии %s от %s", GetAddOnMetadata("SOTA", "Version"),
         GetAddOnMetadata("SOTA", "Author")));
 
     this:RegisterEvent("VARIABLES_LOADED");
