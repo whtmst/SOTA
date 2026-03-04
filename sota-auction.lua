@@ -1,6 +1,6 @@
 --[[
 --	SOTA - State of the Art
--- 
+--
 --	Unit: sota-auction.lua
 --	The Auction UI is controlled by this unit, which includes the Bidding
 --	framework, timing and overall DKP control.
@@ -548,8 +548,31 @@ end;
 --
 --	UI functions
 --
+
+-- Кириллический шрифт для кнопок
+local CYRILLIC_FONT_PATH = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+-- Установка кириллического шрифта для кнопок аукциона
+function SOTA_SetupAuctionButtonsFont()
+    local buttons = {
+        "PauseAuctionButton",
+        "FinishAuctionButton",
+        "RestartAuctionButton",
+        "AcceptBidButton",
+        "CancelAuctionButton"
+    };
+
+    for _, buttonName in ipairs(buttons) do
+        local button = getglobal(buttonName);
+        if button then
+            button:SetFont(CYRILLIC_FONT_PATH, 12);
+        end
+    end;
+end
+
 function SOTA_OpenAuctionUI()
     SOTA_ClearSelectedPlayer();
+    SOTA_SetupAuctionButtonsFont(); -- Устанавливаем кириллический шрифт для кнопок
     AuctionUIFrame:Show();
 end
 
@@ -650,17 +673,17 @@ function SOTA_RefreshButtonStates()
         getglobal("FinishAuctionButton"):Enable();
         if isAuctionPaused then
             getglobal("PauseAuctionButton"):Enable();
-            getglobal("PauseAuctionButton"):SetText("Resume Auction");
+            getglobal("PauseAuctionButton"):SetText("ПРОДОЛЖИТЬ");
         else
             getglobal("PauseAuctionButton"):Enable();
-            getglobal("PauseAuctionButton"):SetText("Pause Auction");
+            getglobal("PauseAuctionButton"):SetText("ПАУЗА");
         end
     else
         getglobal("CancelAuctionButton"):Enable();
         getglobal("RestartAuctionButton"):Enable();
         getglobal("FinishAuctionButton"):Disable();
         getglobal("PauseAuctionButton"):Disable();
-        getglobal("PauseAuctionButton"):SetText("Pause Auction");
+        getglobal("PauseAuctionButton"):SetText("ПАУЗА");
     end
 end
 
