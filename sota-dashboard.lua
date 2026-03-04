@@ -444,7 +444,7 @@ function SOTA_DisplayHelp()
     --	Chat options (Guild chat and Raid chat):
     localEcho("КОМАНДЫ ЧАТА ГИЛЬДИИ/РЕЙДА:");
     echo(SOTA_COLOUR_MAIN .. "      !queue" .. SOTA_COLOUR_CHAT .. " | Текущий статус очереди (количество человек в очереди)");
-    echo(SOTA_COLOUR_MAIN .. "      !queue <r>" .. SOTA_COLOUR_CHAT .. " | Встать в очередь как <r>; <r> может быть tank, melee, ranged или healer");
+    echo(SOTA_COLOUR_MAIN .. "      !queue <r>" .. SOTA_COLOUR_CHAT .. " | Встать в очередь как <r>; <r> может быть tank (танк), melee (мдд), ranged (рдд) или healer (хиллер)");
     echo(SOTA_COLOUR_MAIN .. "      !leave" .. SOTA_COLOUR_CHAT .. " | Покинуть очередь рейда.");
     echo(SOTA_COLOUR_MAIN .. "      !listqueue" .. SOTA_COLOUR_CHAT .. " | Показать список игроков, находящихся в очереди.");
     echo(SOTA_COLOUR_MAIN .. "      !bid <dkp>" .. SOTA_COLOUR_CHAT .. " | Сделать ставку <dkp> на текущий лот.");

@@ -13,7 +13,7 @@ function TitanPanelSOTAButton_OnLoad()
         id = SOTA_ID,
         menuText = SOTA_TITAN_TITLE,
         buttonTextFunction = nil,
-        tooltipTitle = "State of the Art [SOTA] Options",
+        tooltipTitle = "State of the Art [SOTA] Настройки",
         tooltipTextFunction = "TitanPanelSOTAButton_GetTooltipText",
         frequency = 0,
         icon = "Interface\\ICONS\\INV_Misc_Coin_02"
@@ -21,5 +21,5 @@ function TitanPanelSOTAButton_OnLoad()
 end
 
 function TitanPanelSOTAButton_GetTooltipText()
-    return "Click to toggle option panel";
+    return "Нажми, чтобы открыть панель настроек";
 end

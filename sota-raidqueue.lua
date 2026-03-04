@@ -6,6 +6,7 @@
 --	It is possible to invite people from the raid queue using the UI.
 --]]
 
+-- TODO: Нужно разобраться полностью с командами и работой данного модуля.
 
 -- Unique number for each queued raid member. Used for Sorting.
 local QueueID             = 1;
@@ -107,10 +108,10 @@ function SOTA_RefreshRaidQueue(role)
         end
     end
 
-    SOTA_UpdateRaidQueueTable("Tanks", "RaidQueueFrameTankListEntry", tQueue);
-    SOTA_UpdateRaidQueueTable("Melee", "RaidQueueFrameMeleeListEntry", mQueue);
-    SOTA_UpdateRaidQueueTable("Ranged", "RaidQueueFrameRangedListEntry", rQueue);
-    SOTA_UpdateRaidQueueTable("Healers", "RaidQueueFrameHealerListEntry", hQueue);
+    SOTA_UpdateRaidQueueTable("ТАНКИ", "RaidQueueFrameTankListEntry", tQueue);
+    SOTA_UpdateRaidQueueTable("МДД", "RaidQueueFrameMeleeListEntry", mQueue);
+    SOTA_UpdateRaidQueueTable("РДД", "RaidQueueFrameRangedListEntry", rQueue);
+    SOTA_UpdateRaidQueueTable("ХИЛЛЕРЫ", "RaidQueueFrameHealerListEntry", hQueue);
 
     -- Remove players from queue who are also in Raid
     for n = 1, table.getn(playersAlsoInRaid), 1 do
@@ -163,13 +164,13 @@ function SOTA_UpdateRaidQueueTable(caption, framename, sourcetable)
             local hh = math.floor(mm / 60);
 
             if mm == 1 then
-                playerzone = "OFFLINE (1 minute)";
+                playerzone = "НЕ В СЕТИ (1 минута)";
             elseif mm < 60 then
-                playerzone = "OFFLINE (" .. mm .. " minutes)";
+                playerzone = "НЕ В СЕТИ (" .. mm .. " минут)";
             elseif hh == 1 then
-                playerzone = "OFFLINE (1 hour)";
+                playerzone = "НЕ В СЕТИ (1 час)";
             else
-                playerzone = "OFFLINE (" .. hh .. " hours)";
+                playerzone = "НЕ В СЕТИ (" .. hh .. " часов)";
             end;
         end;
 
@@ -180,10 +181,10 @@ function SOTA_UpdateRaidQueueTable(caption, framename, sourcetable)
             getglobal(frame:GetName() .. "Name"):SetText(caption);
             getglobal(frame:GetName() .. "Name"):SetTextColor((headColor[1] / 255), (headColor[2] / 255),
                 (headColor[3] / 255), 255);
-            getglobal(frame:GetName() .. "Zone"):SetText("Zone");
+            getglobal(frame:GetName() .. "Zone"):SetText("ЗОНА");
             getglobal(frame:GetName() .. "Zone"):SetTextColor((headColor[1] / 255), (headColor[2] / 255),
                 (headColor[3] / 255), 255);
-            getglobal(frame:GetName() .. "Rank"):SetText("Queue: " .. table.getn(sourcetable));
+            getglobal(frame:GetName() .. "Rank"):SetText("В ОЧЕРЕДИ: " .. table.getn(sourcetable));
             getglobal(frame:GetName() .. "Rank"):SetTextColor((headColor[1] / 255), (headColor[2] / 255),
                 (headColor[3] / 255), 255);
         else
@@ -233,14 +234,38 @@ end
 --]]
 function SOTA_InviteQueuedPlayerGroup(rolename, roleidentifier)
     StaticPopupDialogs["SOTA_POPUP_INVITE_PLAYER"] = {
-        text = string.format("Do you want to invite all %s players ?", rolename),
-        button1 = "Yes",
-        button2 = "No",
+        text = string.format("Вы хотите пригласить всех игроков роли %s ?", rolename),
+        button1 = "Да",
+        button2 = "Нет",
         OnAccept = function() SOTA_InviteQueuedPlayerGroupNow(roleidentifier) end,
         timeout = 0,
         whileDead = true,
         hideOnEscape = true,
         preferredIndex = 3,
+        OnShow = function()
+            local frameName = this:GetName();
+            local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+            local textElement = getglobal(frameName .. "Text");
+            if textElement then
+                textElement:SetFont(fontPath, 12);
+            end
+
+            local editBox = getglobal(frameName .. "EditBox");
+            if editBox then
+                editBox:SetFont(fontPath, 12);
+            end
+
+            local button1 = getglobal(frameName .. "Button1");
+            if button1 then
+                button1:SetFont(fontPath, 12);
+            end
+
+            local button2 = getglobal(frameName .. "Button2");
+            if button2 then
+                button2:SetFont(fontPath, 12);
+            end
+        end,
     }
 
     StaticPopup_Show("SOTA_POPUP_INVITE_PLAYER");
@@ -266,19 +291,43 @@ function SOTA_InviteQueuedPlayer(playername)
     local qInfo = SOTA_GetQueuedPlayer(playername);
 
     if not qInfo then
-        localEcho("Player " .. playername .. " is not queued!");
+        localEcho("Игрок " .. playername .. " не находится в очереди!");
         return;
     end
 
     StaticPopupDialogs["SOTA_POPUP_INVITE_PLAYER"] = {
-        text = string.format("Do you want to invite %s into the raid?", playername),
-        button1 = "Yes",
-        button2 = "No",
+        text = string.format("Вы хотите пригласить %s в рейд?", playername),
+        button1 = "Да",
+        button2 = "Нет",
         OnAccept = function() InviteByName(playername) end,
         timeout = 0,
         whileDead = true,
         hideOnEscape = true,
-        preferredIndex = 3, -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+        preferredIndex = 3,
+        OnShow = function()
+            local frameName = this:GetName();
+            local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+            local textElement = getglobal(frameName .. "Text");
+            if textElement then
+                textElement:SetFont(fontPath, 12);
+            end
+
+            local editBox = getglobal(frameName .. "EditBox");
+            if editBox then
+                editBox:SetFont(fontPath, 12);
+            end
+
+            local button1 = getglobal(frameName .. "Button1");
+            if button1 then
+                button1:SetFont(fontPath, 12);
+            end
+
+            local button2 = getglobal(frameName .. "Button2");
+            if button2 then
+                button2:SetFont(fontPath, 12);
+            end
+        end,
     }
 
     StaticPopup_Show("SOTA_POPUP_INVITE_PLAYER");
@@ -290,13 +339,13 @@ function SOTA_RemoveQueuedPlayerGroupNow(playername)
         return;
     end
 
-    localEcho("Removing " .. playername .. " from queue");
+    localEcho("Удаление " .. playername .. " из очереди");
 
     SOTA_RemoveFromRaidQueue(playername);
 
     local guildInfo = SOTA_GetGuildPlayerInfo(playername);
     if (guildInfo and guildInfo[5] == 1) then
-        SOTA_whisper(playername, "You were removed from the Raid Queue.")
+        SOTA_whisper(playername, "Вы были удалены из очереди в рейд.")
     end
 end
 
@@ -317,7 +366,7 @@ end
 --	Since: 0.1.1
 --]]
 function SOTA_HandleQueueRequest(sender, message)
-    local _, _, queueparam = string.find(string.lower(message), "queue (%a+)")
+    local _, _, queueparam = string.find(string.lower(message), "очередь (%a+)")
     if not queueparam then
         if sender == UnitName("player") then
             SOTA_OpenRaidQueueUI();
@@ -338,7 +387,7 @@ function SOTA_HandleQueueRequest(sender, message)
                     h = h + 1
                 end
             end
-            SOTA_whisper(sender, string.format("Currently queued: %d tanks, %d melee, %d ranged, %d healers", t, m, r, h));
+            SOTA_whisper(sender, string.format("В очереди: %d ТАНКОВ, %d МДД, %d РДД, %d ХИЛЛЕРОВ", t, m, r, h));
         end
         return;
     end
@@ -346,16 +395,16 @@ function SOTA_HandleQueueRequest(sender, message)
     local queuetype = nil;
 
     queueparam = string.lower(queueparam);
-    if queueparam == "tank" or queueparam == "t" then
+    if queueparam == "танк" or queueparam == "т" or queueparam == "tank" or queueparam == "t" then
         queuetype = "tank";
-    elseif queueparam == "melee" or queueparam == "m" then
+    elseif queueparam == "мдд" or queueparam == "м" or queueparam == "melee" or queueparam == "m" then
         queuetype = "melee";
-    elseif queueparam == "ranged" or queueparam == "r" then
+    elseif queueparam == "рдд" or queueparam == "р" or queueparam == "ranged" or queueparam == "r" then
         queuetype = "ranged";
-    elseif queueparam == "healer" or queueparam == "h" then
+    elseif queueparam == "хил" or queueparam == "х" or queueparam == "healer" or queueparam == "h" then
         queuetype = "healer";
-    elseif queueparam == "sheyliny" or queueparam == "noob" then
-        SOTA_whisper(sender, "Sorry, raid is currently filled with Noobs ;-)");
+    elseif queueparam == "sheyliny" or queueparam == "noob" or queueparam == "нуб" then
+        SOTA_whisper(sender, "Сорри, рейд уже забит нубами ;-)");
         return;
     end
 
@@ -365,7 +414,7 @@ function SOTA_HandleQueueRequest(sender, message)
             SOTA_AddToRaidQueue(sender, queuetype);
         end
     else
-        SOTA_whisper(sender, "Type !queue <role>, where role is tank, melee, ranged or healer.");
+        SOTA_whisper(sender, "Напиши !queue <роль>, где роль: ТАНК, МДД, РДД или ХИЛЛЕР.");
     end
 end
 
@@ -381,7 +430,7 @@ function SOTA_AddToRaidQueueByName(args)
         end
     end
 
-    localEcho("Syntax: /sota addqueue <player> <role>");
+    localEcho("Синтаксис: /sota addqueue <игрок> <роль>");
 end
 
 --[[
@@ -408,9 +457,9 @@ function SOTA_AddToRaidQueue(playername, playerrole, silentmode, byProxy)
         playerrole ~= "healer" then
         if not silentmode then
             if byProxy then
-                localEcho("Valid roles are tank, melee, ranged or healer.");
+                localEcho("Допустимые роли: ТАНК, МДД, РДД или ХИЛЛЕР.");
             else
-                SOTA_whisper(playername, "Valid roles are tank, melee, ranged or healer.");
+                SOTA_whisper(playername, "Допустимые роли: ТАНК, МДД, РДД или ХИЛЛЕР.");
             end;
         end
         return false;
@@ -428,9 +477,9 @@ function SOTA_AddToRaidQueue(playername, playerrole, silentmode, byProxy)
         -- Impact of skipping offliners is that these are not synchronized.
         if not silentmode then
             if byProxy then
-                localEcho(string.format("%s need to be in the guild to join the raid queue!", playername));
+                localEcho(string.format("%s должен состоять в гильдии, чтобы встать в очередь!", playername));
             else
-                SOTA_whisper(playername, "You need to be in the guild to join the raid queue!");
+                SOTA_whisper(playername, "Ты должен состоять в гильдии, чтобы встать в очередь!");
             end;
         end
         return false;
@@ -443,9 +492,9 @@ function SOTA_AddToRaidQueue(playername, playerrole, silentmode, byProxy)
         if raidRoster[n][1] == playername then
             if not silentmode then
                 if byProxy then
-                    localEcho(string.format("%s is already in the raid.", playername));
+                    localEcho(string.format("%s уже в рейде.", playername));
                 else
-                    SOTA_whisper(playername, "You are already in the raid.");
+                    SOTA_whisper(playername, "Ты уже в рейде.");
                 end;
             end
             return false;
@@ -458,9 +507,9 @@ function SOTA_AddToRaidQueue(playername, playerrole, silentmode, byProxy)
         if rq[1] == playername and rq[3] == playerrole then
             if not silentmode then
                 if byProxy then
-                    localEcho(string.format("%s is already queued as %s.", playername, playerrole));
+                    localEcho(string.format("%s уже в очереди как %s.", playername, playerrole));
                 else
-                    SOTA_whisper(playername, string.format("You are already queued as %s.", playerrole));
+                    SOTA_whisper(playername, string.format("Ты уже в очереди как %s.", playerrole));
                 end;
             end
             return false;
@@ -478,11 +527,11 @@ function SOTA_AddToRaidQueue(playername, playerrole, silentmode, byProxy)
         SOTA_BroadcastJoinQueue(playername, playerrole);
 
         if byProxy then
-            localEcho(string.format("%s is now queued as %s - Characters in queue: %d", playername,
+            localEcho(string.format("%s в очереди как %s - Персонажей в очереди: %d", playername,
                 SOTA_UCFirst(playerrole), table.getn(SOTA_RaidQueue)));
         else
             SOTA_whisper(playername,
-                string.format("You are now queued as %s - Characters in queue: %d", SOTA_UCFirst(playerrole),
+                string.format("Ты в очереди как %s - Персонажей в очереди: %d", SOTA_UCFirst(playerrole),
                     table.getn(SOTA_RaidQueue)));
         end;
     end
@@ -561,26 +610,26 @@ function SOTA_Call_ListQueue(receiver)
         end;
     end;
 
-    SOTA_whisper(receiver, "Players in queue:");
+    SOTA_whisper(receiver, "Игроков в очереди:");
     local queued = false;
     if not (qTank == "") then
-        SOTA_whisper(receiver, "(Tanks) " .. qTank);
+        SOTA_whisper(receiver, "(ТАНКИ) " .. qTank);
         queued = true;
     end;
     if not (qMelee == "") then
-        SOTA_whisper(receiver, "(Melees) " .. qMelee);
+        SOTA_whisper(receiver, "(МДД) " .. qMelee);
         queued = true;
     end;
     if not (qRanged == "") then
-        SOTA_whisper(receiver, "(Ranged) " .. qRanged);
+        SOTA_whisper(receiver, "(РДД) " .. qRanged);
         queued = true;
     end;
     if not (qHealer == "") then
-        SOTA_whisper(receiver, "(Healers) " .. qHealer);
+        SOTA_whisper(receiver, "(ХИЛЛЕРЫ) " .. qHealer);
         queued = true;
     end;
     if not queued then
-        SOTA_whisper(receiver, "(Queue is empty)");
+        SOTA_whisper(receiver, "(Очередь пуста)");
     end;
 end;
 
@@ -617,14 +666,38 @@ function SOTA_OnQueuedPlayerClick(object, buttonname)
     -- Single player removal / invitation:
     if buttonname == "RightButton" then
         StaticPopupDialogs["SOTA_POPUP_REMOVE_PLAYER"] = {
-            text = string.format("Remove %s from the raid queue?", playername),
-            button1 = "Yes",
-            button2 = "No",
+            text = string.format("Удалить %s из очереди рейда?", playername),
+            button1 = "Да",
+            button2 = "Нет",
             OnAccept = function() SOTA_RemoveQueuedPlayerGroupNow(playername) end,
             timeout = 0,
             whileDead = true,
             hideOnEscape = true,
-            preferredIndex = 3, -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+            preferredIndex = 3,
+            OnShow = function()
+                local frameName = this:GetName();
+                local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+                local textElement = getglobal(frameName .. "Text");
+                if textElement then
+                    textElement:SetFont(fontPath, 12);
+                end
+
+                local editBox = getglobal(frameName .. "EditBox");
+                if editBox then
+                    editBox:SetFont(fontPath, 12);
+                end
+
+                local button1 = getglobal(frameName .. "Button1");
+                if button1 then
+                    button1:SetFont(fontPath, 12);
+                end
+
+                local button2 = getglobal(frameName .. "Button2");
+                if button2 then
+                    button2:SetFont(fontPath, 12);
+                end
+            end,
         }
 
         StaticPopup_Show("SOTA_POPUP_REMOVE_PLAYER");

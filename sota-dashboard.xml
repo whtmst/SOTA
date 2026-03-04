@@ -258,7 +258,7 @@
 								SOTA_RequestSOTAMaster();
 							</OnClick>
 							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "ЗАПРОСИТЬ СТАТУС МАСТЕР-ЛУТЕРА SOTA");
+								SOTA_ShowDashboardToolTip(this, "ЗАПРОСИТЬ СТАТУС МАСТЕР-ЛУТЕРА");
 							</OnEnter>
 							<OnLeave>
 								SOTA_HideDashboardToolTip(this);

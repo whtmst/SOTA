@@ -1,6 +1,48 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Script file="sota-raidqueue.lua" />
 
+	<!-- Кириллические шрифты -->
+	<Font name="SOTA_Font_Title" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="16" />
+		<Color r="1" g="1" b="1" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+	<Font name="SOTA_Font_Normal" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="12" />
+		<Color r="1" g="1" b="1" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+	<Font name="SOTA_Font_Small" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="10" />
+		<Color r="0.7" g="0.7" b="0.7" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+	<Font name="SOTA_Font_Orange" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="12" />
+		<Color r="0.925" g="0.243" b="0.031" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+
 	<!-- SOTA Big Window (150%) Frame template -->
 	<Frame name="SOTABigFrame" parent="UIParent" toplevel="true" hidden="true" virtual="true">
 		<Size>
@@ -12,7 +54,11 @@
 				<Offset x="312" y="-124" />
 			</Anchor>
 		</Anchors>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+		<Backdrop
+            bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+            edgeFile="Interface\DialogFrame\UI-DialogBox-Border"
+            tile="true"
+        >
 			<BackgroundInsets>
 				<AbsInset left="11" right="12" top="12" bottom="11" />
 			</BackgroundInsets>
@@ -41,40 +87,40 @@
 	<!-- template for a Player entry in the RaidQueue -->
 	<Button name="SOTA_PlayerTemplate" hidden="true" virtual="true">
 		<Size>
-			<AbsDimension x="150" y="16"/>
+			<AbsDimension x="150" y="16" />
 		</Size>
 		<Layers>
 			<Layer>
 				<!-- Player name -->
-				<FontString name="$parentName" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentName" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="70" y="16"/>
+						<AbsDimension x="70" y="16" />
 					</Size>
 					<Anchors>
 						<Anchor point="LEFT">
 							<Offset>
-								<AbsDimension x="4" y="0"/>
+								<AbsDimension x="4" y="0" />
 							</Offset>
 						</Anchor>
 					</Anchors>
 					<Color r="1" g="1" b="1" />
 				</FontString>
 				<!-- Location / offline time -->
-				<FontString name="$parentZone" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentZone" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="154" y="16"/>
+						<AbsDimension x="154" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentName"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentName" />
 					</Anchors>
 				</FontString>
 				<!-- Guild rank -->
-				<FontString name="$parentRank" justifyH="RIGHT" inherits="GameFontNormal">
+				<FontString name="$parentRank" justifyH="RIGHT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="74" y="16"/>
+						<AbsDimension x="74" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentZone"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentZone" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -105,11 +151,11 @@
 	<Frame name="RaidQueueFrame" inherits="SOTABigFrame">
 		<Layers>
 			<Layer>
-				<FontString name="$parentTitle" inherits="GameFontNormal" text="SOTA Raid Queue">
+				<FontString name="$parentTitle" inherits="SOTA_Font_Title" text="ОЧЕРЕДЬ РЕЙДА">
 					<Anchors>
 						<Anchor point="CENTER">
 							<Offset>
-								<AbsDimension x="-6" y="175"/>
+								<AbsDimension x="-6" y="175" />
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -133,10 +179,10 @@
 				</Anchors>
 				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 					<EdgeSize>
-						<AbsValue val="16"/>
+						<AbsValue val="16" />
 					</EdgeSize>
 					<TileSize>
-						<AbsValue val="16"/>
+						<AbsValue val="16" />
 					</TileSize>
 				</Backdrop>
 			</Frame>
@@ -151,10 +197,10 @@
 				</Anchors>
 				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 					<EdgeSize>
-						<AbsValue val="16"/>
+						<AbsValue val="16" />
 					</EdgeSize>
 					<TileSize>
-						<AbsValue val="16"/>
+						<AbsValue val="16" />
 					</TileSize>
 				</Backdrop>
 			</Frame>
@@ -173,10 +219,10 @@
 				</Anchors>
 				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 					<EdgeSize>
-						<AbsValue val="16"/>
+						<AbsValue val="16" />
 					</EdgeSize>
 					<TileSize>
-						<AbsValue val="16"/>
+						<AbsValue val="16" />
 					</TileSize>
 				</Backdrop>
 			</Frame>
@@ -191,10 +237,10 @@
 				</Anchors>
 				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 					<EdgeSize>
-						<AbsValue val="16"/>
+						<AbsValue val="16" />
 					</EdgeSize>
 					<TileSize>
-						<AbsValue val="16"/>
+						<AbsValue val="16" />
 					</TileSize>
 				</Backdrop>
 			</Frame>

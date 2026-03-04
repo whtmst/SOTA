@@ -22,6 +22,36 @@ SOTA_selectedTransactionID         = nil;
 TRANSACTION_STATE_ROLLEDBACK       = 0;
 TRANSACTION_STATE_ACTIVE           = 1;
 
+--	# of transactions shown in UI (excluding Header)
+local TRANSACTION_LIST_SIZE        = 5;
+--	# of player names displayed per line when posting transaction log into guild chat
+local TRANSACTION_PLAYERS_PER_LINE = 8;
+--	Setting for transaction details screen:
+local TRANSACTION_DETAILS_ROWS     = 18;
+
+-- Кириллический шрифт для кнопок
+local CYRILLIC_FONT_PATH = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+-- Установка кириллического шрифта для кнопок транзакций
+function SOTA_SetupTransactionButtonsFont()
+    local buttons = {
+        "PurgeDKPHistoryButton",
+        "TransactionLogButton",
+        "DKPHistoryButton",
+        "PrevTransactionPageButton",
+        "NextTransactionPageButton",
+        "BackToTransactionLogButton",
+        "UndoTransactionButton"
+    };
+
+    for _, buttonName in ipairs(buttons) do
+        local button = getglobal(buttonName);
+        if button then
+            button:SetFont(CYRILLIC_FONT_PATH, 12);
+        end
+    end;
+end
+
 --	# of transactions displayed in /gdlog
 local TRANSACTION_LIST_SIZE        = 5;
 --	# of player names displayed per line when posting transaction log into guild chat
@@ -65,6 +95,9 @@ function SOTA_OpenTransauctionUI()
     getglobal("BackToTransactionLogButton"):Hide();
     getglobal("UndoTransactionButton"):Hide();
 
+    -- Устанавливаем кириллический шрифт для кнопок
+    SOTA_SetupTransactionButtonsFont();
+
     SOTA_RefreshLogElements();
 
     TransactionUIFrame:Show();
@@ -99,14 +132,38 @@ end;
 
 function SOTA_PurgeDKPHistory()
     StaticPopupDialogs["SOTA_POPUP_PURGE_DKPHISTORY"] = {
-        text = "Are you sure you want to reset the DKP History?",
-        button1 = "Yes",
-        button2 = "No",
+        text = "Вы уверены, что хотите сбросить историю DKP?",
+        button1 = "Да",
+        button2 = "Нет",
         OnAccept = function() SOTA_PurgeDKPHistoryNow(playername) end,
         timeout = 0,
         whileDead = true,
         hideOnEscape = true,
         preferredIndex = 3,
+        OnShow = function()
+            local frameName = this:GetName();
+            local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+            local textElement = getglobal(frameName .. "Text");
+            if textElement then
+                textElement:SetFont(fontPath, 12);
+            end
+
+            local editBox = getglobal(frameName .. "EditBox");
+            if editBox then
+                editBox:SetFont(fontPath, 12);
+            end
+
+            local button1 = getglobal(frameName .. "Button1");
+            if button1 then
+                button1:SetFont(fontPath, 12);
+            end
+
+            local button2 = getglobal(frameName .. "Button2");
+            if button2 then
+                button2:SetFont(fontPath, 12);
+            end
+        end,
     }
 
     StaticPopup_Show("SOTA_POPUP_PURGE_DKPHISTORY");
@@ -149,11 +206,11 @@ function SOTA_RefreshTransactionElements()
     local numTransactions = table.getn(trLog);
     for n = 0, SOTA_MAX_TRANSACTIONS_DISPLAYED, 1 do
         if n == 0 then
-            timestamp = "Time";
+            timestamp = "Время";
             tid = "ID";
-            description = "Command";
+            description = "Команда";
             trInfo = nil;
-            name = "Player(s)";
+            name = "Игрока(ов)";
             dkp = "DKP";
         else
             local index = n + ((currentTransactionPage - 1) * SOTA_MAX_TRANSACTIONS_DISPLAYED);
@@ -182,7 +239,7 @@ function SOTA_RefreshTransactionElements()
                         dkp = dkp + 1 * (trInfo[f][2]);
                     end
                     dkp = ceil(dkp / playerCount);
-                    name = string.format("(%d players)", playerCount);
+                    name = string.format("(%d игроков)", playerCount);
                 end
             end
         end
@@ -269,10 +326,10 @@ function SOTA_RefreshHistoryElements()
     local numTransactions = table.getn(hrLog);
     for n = 0, SOTA_MAX_TRANSACTIONS_DISPLAYED, 1 do
         if n == 0 then
-            timestamp = "Time";
+            timestamp = "Время";
             tid = "ID";
-            name = "Player";
-            description = "Command";
+            name = "Игрок";
+            description = "Команда";
             dkp = "DKP";
             zone = "";
         else
@@ -369,7 +426,7 @@ function SOTA_UpdatePageControls()
             NextTransactionPageButton:Enable();
         end
 
-        TransactionUIFrameTitle:SetText("DKP History Log");
+        TransactionUIFrameTitle:SetText("ИСТОРИЯ DKP");
         TransactionUIFrameDKPHistory:Show();
     else
         -- Transaction log/details page:
@@ -387,7 +444,7 @@ function SOTA_UpdatePageControls()
 
         DKPHistoryButton:Show();
 
-        TransactionUIFrameTitle:SetText("Transaction Log");
+        TransactionUIFrameTitle:SetText("ЖУРНАЛ ТРАНЗАКЦИЙ");
         TransactionLogButton:Hide();
         TransactionUIFrameDKPHistory:Hide();
 
@@ -625,12 +682,12 @@ end;
 --]]
 function SOTA_ClearLocalHistory()
     SOTA_HISTORY_DKP = {};
-    localEcho("Local history was cleared.");
+    localEcho("Локальная история очищена.");
 end;
 
 function SOTA_RequestUndoTransaction(transactionID)
     if not SOTA_CanWriteNotes() then
-        localEcho("Sorry, you do not have access to the DKP notes.");
+        localEcho("Извини, у тебя нет доступа к DKP-заметкам.");
         return;
     end;
 
@@ -640,14 +697,38 @@ function SOTA_RequestUndoTransaction(transactionID)
     end
 
     StaticPopupDialogs["SOTA_POPUP_TRANSACTION_PLAYER"] = {
-        text = "Do you want to undo this transaction?",
-        button1 = "Yes",
-        button2 = "No",
+        text = "Вы хотите отменить эту транзакцию?",
+        button1 = "Да",
+        button2 = "Нет",
         OnAccept = function() SOTA_UndoTransaction(SOTA_RequestUndoTransaction) end,
         timeout = 0,
         whileDead = true,
         hideOnEscape = true,
         preferredIndex = 3,
+        OnShow = function()
+            local frameName = this:GetName();
+            local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+            local textElement = getglobal(frameName .. "Text");
+            if textElement then
+                textElement:SetFont(fontPath, 12);
+            end
+
+            local editBox = getglobal(frameName .. "EditBox");
+            if editBox then
+                editBox:SetFont(fontPath, 12);
+            end
+
+            local button1 = getglobal(frameName .. "Button1");
+            if button1 then
+                button1:SetFont(fontPath, 12);
+            end
+
+            local button2 = getglobal(frameName .. "Button2");
+            if button2 then
+                button2:SetFont(fontPath, 12);
+            end
+        end,
     }
     StaticPopup_Show("SOTA_POPUP_TRANSACTION_PLAYER");
 end
@@ -759,15 +840,39 @@ end
 --]]
 function SOTA_OnDKPHistoryClick(object)
     StaticPopupDialogs["SOTA_POPUP_TRANSACTION_DETAILS"] = {
-        text = "Display information for transaction in:",
-        button1 = "Raid chat",
-        button2 = "Local",
+        text = "Показать информацию о транзакции в:",
+        button1 = "Чат рейда",
+        button2 = "Локально",
         OnAccept = function() SOTA_DisplayDKPDetails(object, true) end,
         OnCancel = function() SOTA_DisplayDKPDetails(object, false) end,
         timeout = 0,
         whileDead = true,
         hideOnEscape = true,
         preferredIndex = 3,
+        OnShow = function()
+            local frameName = this:GetName();
+            local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
+
+            local textElement = getglobal(frameName .. "Text");
+            if textElement then
+                textElement:SetFont(fontPath, 12);
+            end
+
+            local editBox = getglobal(frameName .. "EditBox");
+            if editBox then
+                editBox:SetFont(fontPath, 12);
+            end
+
+            local button1 = getglobal(frameName .. "Button1");
+            if button1 then
+                button1:SetFont(fontPath, 12);
+            end
+
+            local button2 = getglobal(frameName .. "Button2");
+            if button2 then
+                button2:SetFont(fontPath, 12);
+            end
+        end,
     }
     StaticPopup_Show("SOTA_POPUP_TRANSACTION_DETAILS");
 end;
@@ -787,51 +892,51 @@ function SOTA_DisplayDKPDetails(object, showInRaidChat)
                     dkp = 1 * info[2];
                     if showInRaidChat then
                         -- Show details in Raid chat:
-                        raidEcho("----- DKP details -----");
-                        raidEcho(string.format(" - Player: %s, Zone: %s", info[1], entry[7]));
-                        raidEcho(string.format(" - Date/time: %s, TransactionID: %d", entry[1], 1 * entry[2]));
+                        raidEcho("----- Детальный DKP лог -----");
+                        raidEcho(string.format(" - Игрок: %s, Зона: %s", info[1], entry[7]));
+                        raidEcho(string.format(" - Дата/Время: %s, ID транзакции: %d", entry[1], 1 * entry[2]));
                         if dkp < 0 then
-                            raidEcho(string.format(" - DKP subtracted: %d, Total players involved: %d", math.abs(dkp),
+                            raidEcho(string.format(" - Вычтено DKP: %d, Затронуто игроков: %d", math.abs(dkp),
                                 table.getn(entry[6])));
                         else
-                            raidEcho(string.format(" - DKP added: %d, Total players involved: %d", math.abs(dkp),
+                            raidEcho(string.format(" - Начислено DKP: %d, Затронуто игроков: %d", math.abs(dkp),
                                 table.getn(entry[6])));
                         end;
-                        raidEcho(string.format(' - Command: "%s", DKP Officer: %s', string.lower(entry[4]), entry[3]));
+                        raidEcho(string.format(' - Команда: "%s", Кто выполнил: %s', string.lower(entry[4]), entry[3]));
                     else
                         --- Show details in Local chat:
-                        localEcho("----- DKP details -----");
+                        localEcho("----- Детальный DKP лог -----");
                         localEcho(string.format(
-                        " - Player: " ..
+                        " - Игрок: " ..
                         SOTA_COLOUR_INTRO ..
-                        "%s" .. SOTA_COLOUR_CHAT .. ", Zone: " .. SOTA_COLOUR_INTRO .. "%s" .. SOTA_COLOUR_CHAT .. "",
+                        "%s" .. SOTA_COLOUR_CHAT .. ", Зона: " .. SOTA_COLOUR_INTRO .. "%s" .. SOTA_COLOUR_CHAT .. "",
                             info[1], entry[7]));
                         localEcho(string.format(
-                        " - Date/time: " ..
+                        " - Дата/Время: " ..
                         SOTA_COLOUR_INTRO ..
-                        "%s" .. SOTA_COLOUR_CHAT .. ", TransactionID: " .. SOTA_COLOUR_INTRO ..
+                        "%s" .. SOTA_COLOUR_CHAT .. ", ID транзакции: " .. SOTA_COLOUR_INTRO ..
                         "%d" .. SOTA_COLOUR_CHAT .. "", entry[1], 1 * entry[2]));
                         if dkp < 0 then
                             localEcho(string.format(
-                            " - DKP subtracted: " ..
+                            " - Вычтено DKP: " ..
                             SOTA_COLOUR_INTRO ..
                             "%d" ..
                             SOTA_COLOUR_CHAT ..
-                            ", Total players involved: " .. SOTA_COLOUR_INTRO .. "%d" .. SOTA_COLOUR_CHAT .. "",
+                            ", Затронуто игроков: " .. SOTA_COLOUR_INTRO .. "%d" .. SOTA_COLOUR_CHAT .. "",
                                 math.abs(dkp), table.getn(entry[6])));
                         else
                             localEcho(string.format(
-                            " - DKP added: " ..
+                            " - Начислено DKP: " ..
                             SOTA_COLOUR_INTRO ..
                             "%d" ..
                             SOTA_COLOUR_CHAT ..
-                            ", Total players involved: " .. SOTA_COLOUR_INTRO .. "%d" .. SOTA_COLOUR_CHAT .. "",
+                            ", Затронуто игроков: " .. SOTA_COLOUR_INTRO .. "%d" .. SOTA_COLOUR_CHAT .. "",
                                 math.abs(dkp), table.getn(entry[6])));
                         end;
                         localEcho(string.format(
-                        " - Command: " ..
+                        " - Команда: " ..
                         SOTA_COLOUR_INTRO ..
-                        "%s" .. SOTA_COLOUR_CHAT .. ", DKP Officer: " .. SOTA_COLOUR_INTRO .. "%s" ..
+                        "%s" .. SOTA_COLOUR_CHAT .. ", Кто выполнил: " .. SOTA_COLOUR_INTRO .. "%s" ..
                         SOTA_COLOUR_CHAT .. "", entry[4], entry[3]));
                     end
 

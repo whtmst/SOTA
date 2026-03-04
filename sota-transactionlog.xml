@@ -1,22 +1,64 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Script file="sota-transactionlog.lua" />
 
+	<!-- Кириллические шрифты -->
+	<Font name="SOTA_Font_Title" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="16" />
+		<Color r="1" g="1" b="1" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+	<Font name="SOTA_Font_Normal" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="12" />
+		<Color r="1" g="1" b="1" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+	<Font name="SOTA_Font_Small" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="10" />
+		<Color r="0.7" g="0.7" b="0.7" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+	<Font name="SOTA_Font_Orange" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="12" />
+		<Color r="0.925" g="0.243" b="0.031" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+
 	<!-- template for a Log entry in the Transaction UI -->
 	<Button name="SOTA_LogTemplate" hidden="true" virtual="true">
 		<Size>
-			<AbsDimension x="320" y="16"/>
+			<AbsDimension x="320" y="16" />
 		</Size>
 		<Layers>
 			<Layer>
 				<!-- Timestamp -->
-				<FontString name="$parentTime" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentTime" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="64" y="16"/>
+						<AbsDimension x="64" y="16" />
 					</Size>
 					<Anchors>
 						<Anchor point="LEFT">
 							<Offset>
-								<AbsDimension x="4" y="0"/>
+								<AbsDimension x="4" y="0" />
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -24,54 +66,54 @@
 				<!-- + / - icon -->
 				<Texture name="$parentIcon" file="">
 					<Size>
-						<AbsDimension x="16" y="16"/>
+						<AbsDimension x="16" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentTime"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentTime" />
 					</Anchors>
 				</Texture>
 				<!-- Transaction ID -->
-				<FontString name="$parentTID" justifyH="RIGHT" inherits="GameFontNormal">
+				<FontString name="$parentTID" justifyH="RIGHT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="20" y="16"/>
+						<AbsDimension x="20" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentIcon"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentIcon" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentFiller1" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentFiller1" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="4" y="16"/>
+						<AbsDimension x="4" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentTID"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentTID" />
 					</Anchors>
 				</FontString>
 				<!-- Player name -->
-				<FontString name="$parentName" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentName" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="90" y="16"/>
+						<AbsDimension x="90" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentFiller1"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentFiller1" />
 					</Anchors>
 				</FontString>
 				<!-- Command type value -->
-				<FontString name="$parentCommand" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentCommand" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="70" y="16"/>
+						<AbsDimension x="70" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentName"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentName" />
 					</Anchors>
 				</FontString>
 				<!-- DKP value -->
-				<FontString name="$parentDKP" justifyH="RIGHT" inherits="GameFontNormal">
+				<FontString name="$parentDKP" justifyH="RIGHT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="50" y="16"/>
+						<AbsDimension x="50" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentCommand"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentCommand" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -92,26 +134,26 @@
 			</OnLoad>
 		</Scripts>
 		<NormalTexture name="$parentBG">
-			<Color r="0.0" g="0.0" b="0.0" a="0.0"/>
+			<Color r="0.0" g="0.0" b="0.0" a="0.0" />
 		</NormalTexture>
 	</Button>
 
 	<!-- template for a DKP entry in the DKP History -->
 	<Button name="SOTA_DKPTemplate" hidden="true" virtual="true">
 		<Size>
-			<AbsDimension x="320" y="16"/>
+			<AbsDimension x="320" y="16" />
 		</Size>
 		<Layers>
 			<Layer>
 				<!-- Timestamp -->
-				<FontString name="$parentTime" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentTime" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="150" y="16"/>
+						<AbsDimension x="150" y="16" />
 					</Size>
 					<Anchors>
 						<Anchor point="LEFT">
 							<Offset>
-								<AbsDimension x="4" y="0"/>
+								<AbsDimension x="4" y="0" />
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -119,35 +161,35 @@
 				<!-- + / - icon -->
 				<Texture name="$parentIcon" file="">
 					<Size>
-						<AbsDimension x="16" y="16"/>
+						<AbsDimension x="16" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentTime"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentTime" />
 					</Anchors>
 				</Texture>
-				<FontString name="$parentFiller1" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentFiller1" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="4" y="16"/>
+						<AbsDimension x="4" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentIcon"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentIcon" />
 					</Anchors>
 				</FontString>
 				<!-- Player name -->
-				<FontString name="$parentName" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentName" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="94" y="16"/>
+						<AbsDimension x="94" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentFiller1"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentFiller1" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentDKP" justifyH="RIGHT" inherits="GameFontNormal">
+				<FontString name="$parentDKP" justifyH="RIGHT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="50" y="16"/>
+						<AbsDimension x="50" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentCommand"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentCommand" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -168,55 +210,55 @@
 			</OnLoad>
 		</Scripts>
 		<NormalTexture name="$parentBG">
-			<Color r="0.0" g="0.0" b="0.0" a="0.0"/>
+			<Color r="0.0" g="0.0" b="0.0" a="0.0" />
 		</NormalTexture>
 	</Button>
 
 	<!-- template for a Player entry in the Transaction UI (4 columns) -->
 	<Button name="SOTA_FourPlayerTemplate" hidden="true" virtual="true">
 		<Size>
-			<AbsDimension x="80" y="16"/>
+			<AbsDimension x="80" y="16" />
 		</Size>
 		<Layers>
 			<Layer>
 				<!-- Player, 1 -->
-				<FontString name="$parentPlayer1" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentPlayer1" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="80" y="16"/>
+						<AbsDimension x="80" y="16" />
 					</Size>
 					<Anchors>
 						<Anchor point="LEFT">
 							<Offset>
-								<AbsDimension x="4" y="0"/>
+								<AbsDimension x="4" y="0" />
 							</Offset>
 						</Anchor>
 					</Anchors>
 				</FontString>
 				<!-- Player, 2 -->
-				<FontString name="$parentPlayer2" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentPlayer2" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="80" y="16"/>
+						<AbsDimension x="80" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPlayer1"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPlayer1" />
 					</Anchors>
 				</FontString>
 				<!-- Player, 3 -->
-				<FontString name="$parentPlayer3" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentPlayer3" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="80" y="16"/>
+						<AbsDimension x="80" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPlayer2"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPlayer2" />
 					</Anchors>
 				</FontString>
 				<!-- Player, 4 -->
-				<FontString name="$parentPlayer4" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentPlayer4" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="80" y="16"/>
+						<AbsDimension x="80" y="16" />
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPlayer3"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPlayer3" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -243,14 +285,14 @@
 	<!-- template for a Player entry in the Transaction UI (1 column) -->
 	<Button name="SOTA_PlayerLogTemplate" hidden="true" virtual="true">
 		<Size>
-			<AbsDimension x="80" y="16"/>
+			<AbsDimension x="80" y="16" />
 		</Size>
 		<Layers>
 			<Layer>
 				<!-- Player, 1 -->
-				<FontString name="$parentPlayerButton" justifyH="LEFT" inherits="GameFontNormal">
+				<FontString name="$parentPlayerButton" justifyH="LEFT" inherits="SOTA_Font_Normal">
 					<Size>
-						<AbsDimension x="80" y="16"/>
+						<AbsDimension x="80" y="16" />
 					</Size>
 				</FontString>
 			</Layer>
@@ -280,7 +322,7 @@
 	<Frame name="TransactionUIFrame" inherits="SOTAFrame">
 		<Layers>
 			<Layer>
-				<FontString name="$parentTitle" inherits="GameFontNormal" text="SOTA Transaction Log">
+				<FontString name="$parentTitle" inherits="SOTA_Font_Title" text="ЖУРНАЛ ТРАНЗАКЦИЙ">
 					<Anchors>
 						<Anchor point="CENTER">
 							<Offset>
@@ -346,7 +388,7 @@
 				</Scripts>
 			</Button>
 			<!-- Purge Transactions log button -->
-			<Button name="PurgeDKPHistoryButton" inherits="UIPanelButtonTemplate" text="Purge DKP History" hidden="true">
+			<Button name="PurgeDKPHistoryButton" inherits="UIPanelButtonTemplate" text="СБРОС ИСТОРИИ DKP" hidden="true">
 				<Size>
 					<AbsDimension x="163" y="23" />
 				</Size>
@@ -362,7 +404,7 @@
 				</Scripts>
 			</Button>
 			<!-- Log frame buttons: Transaction log -->
-			<Button name="TransactionLogButton" inherits="UIPanelButtonTemplate" text="View Transaction Log" hidden="true">
+			<Button name="TransactionLogButton" inherits="UIPanelButtonTemplate" text="ЖУРНАЛ ТРАНЗАКЦИЙ" hidden="true">
 				<Size>
 					<AbsDimension x="163" y="23" />
 				</Size>
@@ -378,7 +420,7 @@
 				</Scripts>
 			</Button>
 			<!-- Log frame buttons: DKP History -->
-			<Button name="DKPHistoryButton" inherits="UIPanelButtonTemplate" text="View DKP History">
+			<Button name="DKPHistoryButton" inherits="UIPanelButtonTemplate" text="ИСТОРИЯ DKP">
 				<Size>
 					<AbsDimension x="163" y="23" />
 				</Size>
@@ -395,7 +437,7 @@
 			</Button>
 
 			<!-- Log frame buttons: PREVious button -->
-			<Button name="PrevTransactionPageButton" inherits="UIPanelButtonTemplate" text="&lt;&lt; Prev">
+			<Button name="PrevTransactionPageButton" inherits="UIPanelButtonTemplate" text="&lt;&lt; НАЗАД">
 				<Size>
 					<AbsDimension x="78" y="23" />
 				</Size>
@@ -411,7 +453,7 @@
 				</Scripts>
 			</Button>
 			<!-- Log frame buttons: NEXT button -->
-			<Button name="NextTransactionPageButton" inherits="UIPanelButtonTemplate" text="Next &gt;&gt;">
+			<Button name="NextTransactionPageButton" inherits="UIPanelButtonTemplate" text="ВПЕРЕД &gt;&gt;">
 				<Size>
 					<AbsDimension x="78" y="23" />
 				</Size>
@@ -427,7 +469,7 @@
 				</Scripts>
 			</Button>
 			<!-- Log Details frame buttons: Back button -->
-			<Button name="BackToTransactionLogButton" inherits="UIPanelButtonTemplate" text="&lt;&lt; Back">
+			<Button name="BackToTransactionLogButton" inherits="UIPanelButtonTemplate" text="&lt;&lt; НАЗАД">
 				<Size>
 					<AbsDimension x="78" y="23" />
 				</Size>
@@ -443,7 +485,7 @@
 				</Scripts>
 			</Button>
 			<!-- Log Details frame buttons: Undo button -->
-			<Button name="UndoTransactionButton" inherits="UIPanelButtonTemplate" text="Undo">
+			<Button name="UndoTransactionButton" inherits="UIPanelButtonTemplate" text="ОТМЕНИТЬ">
 				<Size>
 					<AbsDimension x="78" y="23" />
 				</Size>
