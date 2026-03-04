@@ -1994,7 +1994,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT">
-						<Offset x="50" y="25" />
+						<Offset x="90" y="25" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -2013,7 +2013,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT">
-						<Offset x="-50" y="25" />
+						<Offset x="-90" y="25" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -2204,11 +2204,6 @@
 						<Anchor point="RIGHT" relativeTo="$parentTextureRight" relativePoint="LEFT" />
 					</Anchors>
 					<TexCoords left="0" right="0.9375" top="0" bottom="1.0" />
-				</Texture>
-			</Layer>
-			<Layer level="BACKGROUND">
-				<Texture setAllPoints="true">
-					<Color r="0.0" g="0.0" b="0.0" a="0.9" />
 				</Texture>
 			</Layer>
 		</Layers>

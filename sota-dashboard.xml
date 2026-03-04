@@ -46,7 +46,7 @@
 	<!-- SOTA Dashboard -->
 	<Frame name="DashboardUIFrame" parent="UIParent" toplevel="true" hidden="true">
 		<Size>
-			<AbsDimension x="296" y="80" />
+			<AbsDimension x="280" y="85" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT">
@@ -54,15 +54,15 @@
 			</Anchor>
 		</Anchors>
 		<Frames>
-			<!-- Current item frame -->
-			<Frame name="$parentItem">
+			<!-- Общая панель с кнопками (10 кнопок в 2 ряда) -->
+			<Frame name="$parentButtons">
 				<Size>
-					<AbsDimension x="296" y="40" />
+				<AbsDimension x="232" y="90" />
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension x="16" y="-24" />
+						<AbsDimension x="24" y="22" />
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -81,9 +81,287 @@
 						<AbsValue val="16" />
 					</TileSize>
 				</Backdrop>
-				<!-- "buttons" -->
 				<Frames>
-					<!-- Button 1: Выбор мастер лутера ("Kings") -->
+					<!-- ВЕРХНИЙ РЯД (бонусы DKP) -->
+					<!-- Button 1: Приветственное DKP -->
+					<Button name="$parentWelcomeDKPButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="12" y="-12" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\ICONS\Ability_Mage_IncantersAbsorbtion.blp" />
+						<Scripts>
+							<OnClick>
+								SOTA_WelcomeDKP();
+							</OnClick>
+							<OnEnter>
+								SOTA_ShowDashboardToolTip(this, "НАЧИСЛИТЬ ПРИВЕТСТВЕННОЕ DKP");
+							</OnEnter>
+							<OnLeave>
+								SOTA_HideDashboardToolTip(this);
+							</OnLeave>
+							<OnMouseDown>
+								this:GetNormalTexture():SetDesaturated(true);
+							</OnMouseDown>
+							<OnMouseUp>
+								this:GetNormalTexture():SetDesaturated(false);
+							</OnMouseUp>
+						</Scripts>
+					</Button>
+					<!-- Button 2: Без вайпов -->
+					<Button name="$parentNoWipeButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="56" y="-12" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\ICONS\Spell_Holy_Crusade.blp" />
+						<Scripts>
+							<OnClick>
+								SOTA_NoWipeDKP();
+							</OnClick>
+							<OnEnter>
+								SOTA_ShowDashboardToolTip(this, "НАЧИСЛИТЬ DKP ЗА ПРОХОД БЕЗ ВАЙПОВ");
+							</OnEnter>
+							<OnLeave>
+								SOTA_HideDashboardToolTip(this);
+							</OnLeave>
+							<OnMouseDown>
+								this:GetNormalTexture():SetDesaturated(true);
+							</OnMouseDown>
+							<OnMouseUp>
+								this:GetNormalTexture():SetDesaturated(false);
+							</OnMouseUp>
+						</Scripts>
+					</Button>
+					<!-- Button 3: Без смертей -->
+					<Button name="$parentNoDeathButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="100" y="-12" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\ICONS\Spell_Holy_Redemption.blp" />
+						<Scripts>
+							<OnClick>
+								SOTA_NoDeathDKP();
+							</OnClick>
+							<OnEnter>
+								SOTA_ShowDashboardToolTip(this, "НАЧИСЛИТЬ DKP ЗА ПРОХОД БЕЗ СМЕРТЕЙ");
+							</OnEnter>
+							<OnLeave>
+								SOTA_HideDashboardToolTip(this);
+							</OnLeave>
+							<OnMouseDown>
+								this:GetNormalTexture():SetDesaturated(true);
+							</OnMouseDown>
+							<OnMouseUp>
+								this:GetNormalTexture():SetDesaturated(false);
+							</OnMouseUp>
+						</Scripts>
+					</Button>
+					<!-- Button 4: Рекорд времени -->
+					<Button name="$parentRecordButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="144" y="-12" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\ICONS\Spell_Holy_BorrowedTime.blp" />
+						<Scripts>
+							<OnClick>
+								SOTA_RecordDKP();
+							</OnClick>
+							<OnEnter>
+								SOTA_ShowDashboardToolTip(this, "НАЧИСЛИТЬ DKP ЗА РЕКОРД ВРЕМЕНИ");
+							</OnEnter>
+							<OnLeave>
+								SOTA_HideDashboardToolTip(this);
+							</OnLeave>
+							<OnMouseDown>
+								this:GetNormalTexture():SetDesaturated(true);
+							</OnMouseDown>
+							<OnMouseUp>
+								this:GetNormalTexture():SetDesaturated(false);
+							</OnMouseUp>
+						</Scripts>
+					</Button>
+					<!-- Button 5: Начислить DKP рейду -->
+					<Button name="$parentRaidDKPButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="188" y="-12" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\ICONS\INV_Misc_Coin_02.blp" />
+						<Scripts>
+							<OnClick>
+								SOTA_ShareBossDKP();
+							</OnClick>
+							<OnEnter>
+								SOTA_ShowDashboardToolTip(this, "ДОБАВИТЬ УКАЗАННОЕ КОЛИЧЕСТВО DKP КАЖДОМУ УЧАСТНИКУ РЕЙДА");
+							</OnEnter>
+							<OnLeave>
+								SOTA_HideDashboardToolTip(this);
+							</OnLeave>
+							<OnMouseDown>
+								this:GetNormalTexture():SetDesaturated(true);
+							</OnMouseDown>
+							<OnMouseUp>
+								this:GetNormalTexture():SetDesaturated(false);
+							</OnMouseUp>
+						</Scripts>
+					</Button>
+
+					<!-- НИЖНИЙ РЯД (основные функции) -->
+					<!-- Button 6: Запрос мастер лутера -->
+					<Button name="$parentSOTAMasterButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="12" y="-48" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\ICONS\Spell_Holy_SpiritualGuidence.blp" />
+						<Scripts>
+							<OnClick>
+								SOTA_RequestSOTAMaster();
+							</OnClick>
+							<OnEnter>
+								SOTA_ShowDashboardToolTip(this, "ЗАПРОСИТЬ СТАТУС МАСТЕР-ЛУТЕРА SOTA");
+							</OnEnter>
+							<OnLeave>
+								SOTA_HideDashboardToolTip(this);
+							</OnLeave>
+							<OnMouseDown>
+								this:GetNormalTexture():SetDesaturated(true);
+							</OnMouseDown>
+							<OnMouseUp>
+								this:GetNormalTexture():SetDesaturated(false);
+							</OnMouseUp>
+						</Scripts>
+					</Button>
+					<!-- Button 7: Пустышка -->
+					<Button name="$parentPlaceholder1Button" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="56" y="-48" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\ICONS\INV_Misc_QuestionMark.blp" />
+						<Scripts>
+							<OnEnter>
+								SOTA_ShowDashboardToolTip(this, "СВОБОДНАЯ КНОПКА (ЗАГЛУШКА)");
+							</OnEnter>
+							<OnLeave>
+								SOTA_HideDashboardToolTip(this);
+							</OnLeave>
+							<OnMouseDown>
+								this:GetNormalTexture():SetDesaturated(true);
+							</OnMouseDown>
+							<OnMouseUp>
+								this:GetNormalTexture():SetDesaturated(false);
+							</OnMouseUp>
+						</Scripts>
+					</Button>
+					<!-- Button 8: Журнал транзакций -->
+					<Button name="$parentTransactionLogButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="100" y="-48" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\ICONS\BtnHolyScriptures.blp" />
+						<Scripts>
+							<OnClick>
+								SOTA_OpenTransauctionUI();
+							</OnClick>
+							<OnEnter>
+								SOTA_ShowDashboardToolTip(this, "ОТКРЫТЬ ЖУРНАЛ ТРАНЗАКЦИЙ");
+							</OnEnter>
+							<OnLeave>
+								SOTA_HideDashboardToolTip(this);
+							</OnLeave>
+							<OnMouseDown>
+								this:GetNormalTexture():SetDesaturated(true);
+							</OnMouseDown>
+							<OnMouseUp>
+								this:GetNormalTexture():SetDesaturated(false);
+							</OnMouseUp>
+						</Scripts>
+					</Button>
+					<!-- Button 9: Очередь в рейд -->
+					<Button name="$parentRaidQueueButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="144" y="-48" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\ICONS\Achievement_Rat.blp" />
+						<Scripts>
+							<OnClick>
+								SOTA_OpenRaidQueueUI();
+							</OnClick>
+							<OnEnter>
+								SOTA_ShowDashboardToolTip(this, "ОТКРЫТЬ ОЧЕРЕДЬ В РЕЙД");
+							</OnEnter>
+							<OnLeave>
+								SOTA_HideDashboardToolTip(this);
+							</OnLeave>
+							<OnMouseDown>
+								this:GetNormalTexture():SetDesaturated(true);
+							</OnMouseDown>
+							<OnMouseUp>
+								this:GetNormalTexture():SetDesaturated(false);
+							</OnMouseUp>
+						</Scripts>
+					</Button>
+					<!-- Button 10: Настройки -->
 					<Button name="$parentConfigurationButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
 						<Size>
 							<AbsDimension x="32" y="32" />
@@ -91,166 +369,137 @@
 						<Anchors>
 							<Anchor point="TOPLEFT">
 								<Offset>
-									<AbsDimension x="4" y="-4" />
+									<AbsDimension x="188" y="-48" />
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<NormalTexture file="Interface\ICONS\Spell_Magic_Magearmor.blp" />
-						<PushedTexture file="Interface\ICONS\Spell_Magic_GreaterBlessingOfKings.blp" />
-						<Scripts>
-							<OnClick>
-								SOTA_RequestSOTAMaster();
-							</OnClick>
-							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "Запросить статус мастер-лутера SOTA");
-							</OnEnter>
-							<OnLeave>
-								SOTA_HideDashboardToolTip(this);
-							</OnLeave>
-						</Scripts>
-					</Button>
-					<!-- Button 2: Логи транзакций ("Note") -->
-					<Button name="$parentTransactionLogButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
-						<Size>
-							<AbsDimension x="32" y="32" />
-						</Size>
-						<Anchors>
-							<Anchor point="LEFT">
-								<Offset>
-									<AbsDimension x="40" y="0" />
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<NormalTexture file="Interface\ICONS\INV_Misc_Note_05.blp" />
-						<PushedTexture file="Interface\ICONS\INV_Misc_Note_03.blp" />
-						<Scripts>
-							<OnClick>
-								SOTA_OpenTransauctionUI();
-							</OnClick>
-							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "Открыть журнал транзакций");
-							</OnEnter>
-							<OnLeave>
-								SOTA_HideDashboardToolTip(this);
-							</OnLeave>
-						</Scripts>
-					</Button>
-					<!-- Button 3: Раздать DKP ("Coins") -->
-					<Button name="$parentShareDKPButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
-						<Size>
-							<AbsDimension x="32" y="32" />
-						</Size>
-						<Anchors>
-							<Anchor point="LEFT">
-								<Offset>
-									<AbsDimension x="80" y="0" />
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<NormalTexture file="Interface\ICONS\INV_Misc_Coin_04.blp" />
-						<PushedTexture file="Interface\ICONS\INV_Misc_Coin_02.blp" />
-						<Scripts>
-							<OnClick>
-								SOTA_ShareBossDKP();
-							</OnClick>
-							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "Добавить введенное кол-во DKP каждому участнику рейда");
-							</OnEnter>
-							<OnLeave>
-								SOTA_HideDashboardToolTip(this);
-							</OnLeave>
-						</Scripts>
-					</Button>
-					<!-- Button 4: Рейд очередь ("Prayer of Spirit") -->
-					<Button name="$parentShareDKPButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
-						<Size>
-							<AbsDimension x="32" y="32" />
-						</Size>
-						<Anchors>
-							<Anchor point="LEFT">
-								<Offset>
-									<AbsDimension x="220" y="0" />
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<NormalTexture file="Interface\ICONS\Spell_Holy_PrayerOfSpirit.blp" />
-						<PushedTexture file="Interface\ICONS\Spell_Holy_DivineSpirit.blp" />
-						<Scripts>
-							<OnClick>
-								SOTA_OpenRaidQueueUI();
-							</OnClick>
-							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "Открыть очередь в рейд");
-							</OnEnter>
-							<OnLeave>
-								SOTA_HideDashboardToolTip(this);
-							</OnLeave>
-						</Scripts>
-					</Button>
-					<!-- Button 5: Настройки ("Gear") -->
-					<Button name="$parentConfigurationButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
-						<Size>
-							<AbsDimension x="32" y="32" />
-						</Size>
-						<Anchors>
-							<Anchor point="LEFT">
-								<Offset>
-									<AbsDimension x="260" y="0" />
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<NormalTexture file="Interface\ICONS\INV_Misc_Gear_01.blp" />
-						<PushedTexture file="Interface\ICONS\INV_Misc_Gear_02.blp" />
+						<NormalTexture file="Interface\ICONS\INV_Gizmo_02.blp" />
 						<Scripts>
 							<OnClick>
 								SOTA_OpenConfigurationUI();
 							</OnClick>
 							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "Открыть окно настроек");
+								SOTA_ShowDashboardToolTip(this, "ОТКРЫТЬ ОКНО НАСТРОЕК");
 							</OnEnter>
 							<OnLeave>
 								SOTA_HideDashboardToolTip(this);
 							</OnLeave>
+							<OnMouseDown>
+								this:GetNormalTexture():SetDesaturated(true);
+							</OnMouseDown>
+							<OnMouseUp>
+								this:GetNormalTexture():SetDesaturated(false);
+							</OnMouseUp>
 						</Scripts>
 					</Button>
+					<!-- Невидимой фрейм для перетаскивания (СИНИЙ ДЛЯ ТЕСТА) -->
+					<Frame name="$parentButtonsDragArea">
+						<Size>
+							<AbsDimension x="231" y="90" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="0" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background">
+							<Color r="0" g="0" b="1" a="0" />
+						</Backdrop>
+						<Scripts>
+							<OnLoad>
+								this:SetMovable(true)
+								this:RegisterForDrag("LeftButton")
+							</OnLoad>
+							<OnDragStart>
+								DashboardUIFrame:StartMoving()
+							</OnDragStart>
+							<OnDragStop>
+								DashboardUIFrame:StopMovingOrSizing()
+							</OnDragStop>
+						</Scripts>
+					</Frame>
 				</Frames>
+			</Frame>
+
+			<!-- Нижняя панель с информацией о мастер-лутере -->
+			<Frame name="$parentMasterInfo">
+				<Size>
+					<AbsDimension x="240" y="32" />
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="105" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop
+                    edgeFile="Interface\Tooltips\UI-Tooltip-Border"
+                    tile="true"
+                    bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                >
+					<BackgroundInsets>
+						<AbsInset left="4" right="4" top="4" bottom="4" />
+					</BackgroundInsets>
+					<EdgeSize>
+						<AbsValue val="16" />
+					</EdgeSize>
+					<TileSize>
+						<AbsValue val="16" />
+					</TileSize>
+				</Backdrop>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString inherits="SOTA_Font_Normal" text="МАСТЕР ЛУТЕР:">
+						<FontString name="SOTA_MasterInfoText" inherits="SOTA_Font_Normal" text="МАСТЕР ЛУТЕР: (отсутствует)" justifyH="CENTER">
 							<Anchors>
-								<Anchor point="LEFT">
+								<Anchor point="CENTER">
 									<Offset>
-										<AbsDimension x="120" y="10" />
+										<AbsDimension x="0" y="0" />
 									</Offset>
 								</Anchor>
 							</Anchors>
-						</FontString>
-						<FontString name="SOTA_MasterName" inherits="SOTA_Font_Normal" text="(отсутствует)">
-							<Anchors>
-								<Anchor point="LEFT">
-									<Offset>
-										<AbsDimension x="120" y="-8" />
-									</Offset>
-								</Anchor>
-							</Anchors>
-							<Color r="1" g="1" b="1" a="" />
 						</FontString>
 					</Layer>
 				</Layers>
+				<Frames>
+					<!-- Невидимой фрейм для перетаскивания (КРАСНЫЙ ДЛЯ ТЕСТА) -->
+					<Frame name="$parentDragArea">
+						<Size>
+							<AbsDimension x="240" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="0" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background">
+							<Color r="1" g="0" b="0" a="0" />
+						</Backdrop>
+						<Scripts>
+							<OnLoad>
+								this:SetMovable(true)
+								this:RegisterForDrag("LeftButton")
+							</OnLoad>
+							<OnDragStart>
+								DashboardUIFrame:StartMoving()
+							</OnDragStart>
+							<OnDragStop>
+								DashboardUIFrame:StopMovingOrSizing()
+							</OnDragStop>
+						</Scripts>
+					</Frame>
+				</Frames>
 			</Frame>
 		</Frames>
 		<Scripts>
 			<OnLoad>
 				this:SetMovable(true)
 				this:SetUserPlaced(true)
-				this:RegisterForDrag("LeftButton")
 			</OnLoad>
-			<OnDragStart>
-				this:StartMoving()
-			</OnDragStart>
-			<OnDragStop>
-				this:StopMovingOrSizing()
-			</OnDragStop>
 		</Scripts>
 	</Frame>
 
@@ -276,7 +525,7 @@
 	</Frame>
 
 	<!-- SOTA Tooltip Frame -->
-	<Frame name="SOTA_TooltipFrame" parent="UIParent" toplevel="true" hidden="true">
+	<Frame name="SOTA_TooltipFrame" parent="UIParent" toplevel="true" frameStrata="TOOLTIP" hidden="true">
 		<Size>
 			<AbsDimension x="200" y="50" />
 		</Size>
@@ -294,7 +543,7 @@
 		</Backdrop>
 		<Scripts>
 			<OnShow>
-				this:SetBackdropColor(0.1, 0.1, 0.1, 1);
+				this:SetBackdropColor(0, 0, 0, 1);
 			</OnShow>
 		</Scripts>
 		<Layers>

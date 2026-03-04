@@ -628,6 +628,23 @@ function SOTA_RequestSOTAMaster()
     end
 end
 
+-- Заглушки для новых кнопок бонусов DKP
+function SOTA_WelcomeDKP()
+    localEcho("Функция начисления приветственного DKP (в разработке)");
+end
+
+function SOTA_NoWipeDKP()
+    localEcho("Функция начисления DKP за проход без вайпов (в разработке)");
+end
+
+function SOTA_NoDeathDKP()
+    localEcho("Функция начисления DKP за проход без смертей (в разработке)");
+end
+
+function SOTA_RecordDKP()
+    localEcho("Функция начисления DKP за рекорд времени (в разработке)");
+end
+
 function SOTA_RequestMaster(silentmode)
     local playername = UnitName("player")
     local rank = SOTA_GetRaidRank(playername);
@@ -662,7 +679,7 @@ function SOTA_SetMasterState(mastername, masterstate)
 
     --echo(string.format("Master: %s, state= %d", mastername, CLIENT_STATE));
 
-    getglobal("SOTA_MasterName"):SetText(mastername);
+    getglobal("SOTA_MasterInfoText"):SetText("МАСТЕР ЛУТЕР: " .. mastername);
 end
 
 --[[

@@ -1075,7 +1075,7 @@ function SOTA_ShareBossDKP()
     if SOTA_CanDoDKP(true) then
         StaticPopupDialogs["SOTA_POPUP_SHARE_DKP"] = {
             -- text = "Разделить следующее количество DKP между участниками рейда:",
-            text = "Добавить введенное количество DKP рейду:",
+            text = "Добавить указанное количество DKP |cFFFF6600каждому участнику|r рейда:",
             hasEditBox = true,
             maxLetters = 6,
             button1 = "Добавить",
