@@ -96,6 +96,7 @@
 							</Anchor>
 						</Anchors>
 						<NormalTexture file="Interface\ICONS\Ability_Mage_IncantersAbsorbtion.blp" />
+						<PushedTexture file="Interface\ICONS\Ability_Mage_IncantersAbsorbtion.blp" />
 						<Scripts>
 							<OnClick>
 								SOTA_WelcomeDKP();
@@ -107,10 +108,10 @@
 								SOTA_HideDashboardToolTip(this);
 							</OnLeave>
 							<OnMouseDown>
-								this:GetNormalTexture():SetDesaturated(true);
+								this:GetPushedTexture():SetDesaturated(true);
 							</OnMouseDown>
 							<OnMouseUp>
-								this:GetNormalTexture():SetDesaturated(false);
+								this:GetPushedTexture():SetDesaturated(false);
 							</OnMouseUp>
 						</Scripts>
 					</Button>
@@ -127,6 +128,7 @@
 							</Anchor>
 						</Anchors>
 						<NormalTexture file="Interface\ICONS\Spell_Holy_Crusade.blp" />
+						<PushedTexture file="Interface\ICONS\Spell_Holy_Crusade.blp" />
 						<Scripts>
 							<OnClick>
 								SOTA_NoWipeDKP();
@@ -138,10 +140,10 @@
 								SOTA_HideDashboardToolTip(this);
 							</OnLeave>
 							<OnMouseDown>
-								this:GetNormalTexture():SetDesaturated(true);
+								this:GetPushedTexture():SetDesaturated(true);
 							</OnMouseDown>
 							<OnMouseUp>
-								this:GetNormalTexture():SetDesaturated(false);
+								this:GetPushedTexture():SetDesaturated(false);
 							</OnMouseUp>
 						</Scripts>
 					</Button>
@@ -158,6 +160,7 @@
 							</Anchor>
 						</Anchors>
 						<NormalTexture file="Interface\ICONS\Spell_Holy_Redemption.blp" />
+						<PushedTexture file="Interface\ICONS\Spell_Holy_Redemption.blp" />
 						<Scripts>
 							<OnClick>
 								SOTA_NoDeathDKP();
@@ -169,10 +172,10 @@
 								SOTA_HideDashboardToolTip(this);
 							</OnLeave>
 							<OnMouseDown>
-								this:GetNormalTexture():SetDesaturated(true);
+								this:GetPushedTexture():SetDesaturated(true);
 							</OnMouseDown>
 							<OnMouseUp>
-								this:GetNormalTexture():SetDesaturated(false);
+								this:GetPushedTexture():SetDesaturated(false);
 							</OnMouseUp>
 						</Scripts>
 					</Button>
@@ -189,6 +192,7 @@
 							</Anchor>
 						</Anchors>
 						<NormalTexture file="Interface\ICONS\Spell_Holy_BorrowedTime.blp" />
+						<PushedTexture file="Interface\ICONS\Spell_Holy_BorrowedTime.blp" />
 						<Scripts>
 							<OnClick>
 								SOTA_RecordDKP();
@@ -200,10 +204,10 @@
 								SOTA_HideDashboardToolTip(this);
 							</OnLeave>
 							<OnMouseDown>
-								this:GetNormalTexture():SetDesaturated(true);
+								this:GetPushedTexture():SetDesaturated(true);
 							</OnMouseDown>
 							<OnMouseUp>
-								this:GetNormalTexture():SetDesaturated(false);
+								this:GetPushedTexture():SetDesaturated(false);
 							</OnMouseUp>
 						</Scripts>
 					</Button>
@@ -220,6 +224,7 @@
 							</Anchor>
 						</Anchors>
 						<NormalTexture file="Interface\ICONS\INV_Misc_Coin_02.blp" />
+						<PushedTexture file="Interface\ICONS\INV_Misc_Coin_02.blp" />
 						<Scripts>
 							<OnClick>
 								SOTA_ShareBossDKP();
@@ -231,10 +236,10 @@
 								SOTA_HideDashboardToolTip(this);
 							</OnLeave>
 							<OnMouseDown>
-								this:GetNormalTexture():SetDesaturated(true);
+								this:GetPushedTexture():SetDesaturated(true);
 							</OnMouseDown>
 							<OnMouseUp>
-								this:GetNormalTexture():SetDesaturated(false);
+								this:GetPushedTexture():SetDesaturated(false);
 							</OnMouseUp>
 						</Scripts>
 					</Button>
@@ -253,6 +258,7 @@
 							</Anchor>
 						</Anchors>
 						<NormalTexture file="Interface\ICONS\Spell_Holy_SpiritualGuidence.blp" />
+						<PushedTexture file="Interface\ICONS\Spell_Holy_SpiritualGuidence.blp" />
 						<Scripts>
 							<OnClick>
 								SOTA_RequestSOTAMaster();
@@ -264,10 +270,10 @@
 								SOTA_HideDashboardToolTip(this);
 							</OnLeave>
 							<OnMouseDown>
-								this:GetNormalTexture():SetDesaturated(true);
+								this:GetPushedTexture():SetDesaturated(true);
 							</OnMouseDown>
 							<OnMouseUp>
-								this:GetNormalTexture():SetDesaturated(false);
+								this:GetPushedTexture():SetDesaturated(false);
 							</OnMouseUp>
 						</Scripts>
 					</Button>
@@ -284,6 +290,7 @@
 							</Anchor>
 						</Anchors>
 						<NormalTexture file="Interface\ICONS\INV_Misc_QuestionMark.blp" />
+						<PushedTexture file="Interface\ICONS\INV_Misc_QuestionMark.blp" />
 						<Scripts>
 							<OnEnter>
 								SOTA_ShowDashboardToolTip(this, "СВОБОДНАЯ КНОПКА (ЗАГЛУШКА)");
@@ -292,10 +299,10 @@
 								SOTA_HideDashboardToolTip(this);
 							</OnLeave>
 							<OnMouseDown>
-								this:GetNormalTexture():SetDesaturated(true);
+								this:GetPushedTexture():SetDesaturated(true);
 							</OnMouseDown>
 							<OnMouseUp>
-								this:GetNormalTexture():SetDesaturated(false);
+								this:GetPushedTexture():SetDesaturated(false);
 							</OnMouseUp>
 						</Scripts>
 					</Button>
@@ -312,6 +319,7 @@
 							</Anchor>
 						</Anchors>
 						<NormalTexture file="Interface\ICONS\BtnHolyScriptures.blp" />
+						<PushedTexture file="Interface\ICONS\BtnHolyScriptures.blp" />
 						<Scripts>
 							<OnClick>
 								SOTA_OpenTransauctionUI();
@@ -323,10 +331,10 @@
 								SOTA_HideDashboardToolTip(this);
 							</OnLeave>
 							<OnMouseDown>
-								this:GetNormalTexture():SetDesaturated(true);
+								this:GetPushedTexture():SetDesaturated(true);
 							</OnMouseDown>
 							<OnMouseUp>
-								this:GetNormalTexture():SetDesaturated(false);
+								this:GetPushedTexture():SetDesaturated(false);
 							</OnMouseUp>
 						</Scripts>
 					</Button>
@@ -343,6 +351,7 @@
 							</Anchor>
 						</Anchors>
 						<NormalTexture file="Interface\ICONS\Achievement_Rat.blp" />
+						<PushedTexture file="Interface\ICONS\Achievement_Rat.blp" />
 						<Scripts>
 							<OnClick>
 								SOTA_OpenRaidQueueUI();
@@ -354,10 +363,10 @@
 								SOTA_HideDashboardToolTip(this);
 							</OnLeave>
 							<OnMouseDown>
-								this:GetNormalTexture():SetDesaturated(true);
+								this:GetPushedTexture():SetDesaturated(true);
 							</OnMouseDown>
 							<OnMouseUp>
-								this:GetNormalTexture():SetDesaturated(false);
+								this:GetPushedTexture():SetDesaturated(false);
 							</OnMouseUp>
 						</Scripts>
 					</Button>
@@ -374,6 +383,7 @@
 							</Anchor>
 						</Anchors>
 						<NormalTexture file="Interface\ICONS\INV_Gizmo_02.blp" />
+						<PushedTexture file="Interface\ICONS\INV_Gizmo_02.blp" />
 						<Scripts>
 							<OnClick>
 								SOTA_OpenConfigurationUI();
@@ -385,10 +395,10 @@
 								SOTA_HideDashboardToolTip(this);
 							</OnLeave>
 							<OnMouseDown>
-								this:GetNormalTexture():SetDesaturated(true);
+								this:GetPushedTexture():SetDesaturated(true);
 							</OnMouseDown>
 							<OnMouseUp>
-								this:GetNormalTexture():SetDesaturated(false);
+								this:GetPushedTexture():SetDesaturated(false);
 							</OnMouseUp>
 						</Scripts>
 					</Button>
