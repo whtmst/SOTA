@@ -1,7 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Script file="sota-dashboard.lua" />
 
-	<!-- SotA Dashboard -->
+	<!-- SOTA Dashboard -->
 	<Frame name="DashboardUIFrame" parent="UIParent" toplevel="true" hidden="true">
 		<Size>
 			<AbsDimension x="296" y="80" />

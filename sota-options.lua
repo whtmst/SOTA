@@ -1,8 +1,8 @@
 --[[
---	SotA - State of the Art
+--	SOTA - State of the Art
 --
 --	Unit: sota-options.lua
---	This holds the options (configuration) dialogue of SotA plus
+--	This holds the options (configuration) dialogue of SOTA plus
 --	underlying functionality to support changing the options.
 --]]
 
@@ -33,7 +33,7 @@ end;
 --	Parameters:
 --	%i: Item, %d: DKP, %b: Bidder, %r: Rank, $1,$2,$3: params (percent, players in range, players in queue etc)
 --	Automatic gathered:
---	%m: Min DKP, %s: SotA master
+--	%m: Min DKP, %s: SOTA master
 --]]
 function SOTA_getConfigurableMessage(msgKey, item, dkp, bidder, rank, param1, param2, param3)
     local msgInfo = SOTA_GetEventText(msgKey);
@@ -109,7 +109,19 @@ function SOTA_OpenConfigurationUI()
     ConfigurationDialogOpen = true;
     SOTA_RefreshBossDKPValues();
 
+    -- Устанавливаем текст подсказки для Boss DKP (две строки)
+    getglobal("FrameConfigBossDkpExplanationLine1"):SetText(
+        "Минимальная ставка в рейде = Значение ползунка / 10"
+    );
+    getglobal("FrameConfigBossDkpExplanationLine2"):SetText(
+        "Пример: Ползунок на 1000 - Мин. ставка: 100 DKP"
+    );
+
+    -- Показываем Bidding config по умолчанию
     SOTA_OpenBiddingConfig();
+
+    -- Показываем главный фрейм
+    FrameConfigBidding:Show();
 end
 
 function SOTA_CloseConfigurationUI()
@@ -131,6 +143,28 @@ function SOTA_SaveRules_OnClick()
     SOTA_CONFIG_BIDRULES = SOTA_GetBidRules();
 end;
 
+function SOTA_HighlightTab(tabIndex)
+    -- Подсветка активной вкладки (оранжевый текст)
+    local frames = {"FrameConfigBidding", "FrameConfigBossDkp", "FrameConfigMiscDkp", "FrameConfigMessage"};
+
+    for _, frameName in ipairs(frames) do
+        for i = 1, 4 do
+            local tabText = getglobal(frameName .. "Tab" .. i .. "Text");
+            if tabText then
+                -- Активная вкладка всегда оранжевая, неактивная белая
+                if (frameName == "FrameConfigBidding" and i == 1 and tabIndex == 1) or
+                   (frameName == "FrameConfigBossDkp" and i == 2 and tabIndex == 2) or
+                   (frameName == "FrameConfigMiscDkp" and i == 3 and tabIndex == 3) or
+                   (frameName == "FrameConfigMessage" and i == 4 and tabIndex == 4) then
+                    tabText:SetTextColor(0.925, 0.243, 0.031);  -- Оранжевый #FFEC3E08
+                else
+                    tabText:SetTextColor(1, 1, 1);    -- Белый для неактивных
+                end
+            end
+        end
+    end
+end
+
 function SOTA_ToggleConfigurationUI()
     if ConfigurationDialogOpen then
         SOTA_CloseConfigurationUI();
@@ -142,21 +176,25 @@ end;
 function SOTA_OpenBiddingConfig()
     SOTA_CloseAllConfig();
     FrameConfigBidding:Show();
+    SOTA_HighlightTab(1);
 end
 
 function SOTA_OpenBossDkpConfig()
     SOTA_CloseAllConfig();
     FrameConfigBossDkp:Show();
+    SOTA_HighlightTab(2);
 end
 
 function SOTA_OpenMiscDkpConfig()
     SOTA_CloseAllConfig();
     FrameConfigMiscDkp:Show();
+    SOTA_HighlightTab(3);
 end
 
 function SOTA_OpenMessageConfig()
     SOTA_CloseAllConfig();
     FrameConfigMessage:Show();
+    SOTA_HighlightTab(4);
 end
 
 function SOTA_OpenBidRulesConfig()
@@ -219,6 +257,7 @@ function SOTA_RefreshBossDKPValues()
     getglobal("FrameConfigBossDkp_20Mans"):SetValue(SOTA_GetBossDKPValue("20Mans"));
     getglobal("FrameConfigBossDkp_MoltenCore"):SetValue(SOTA_GetBossDKPValue("MoltenCore"));
     getglobal("FrameConfigBossDkp_Onyxia"):SetValue(SOTA_GetBossDKPValue("Onyxia"));
+    getglobal("FrameConfigBossDkp_EmeraldSanctum"):SetValue(SOTA_GetBossDKPValue("EmeraldSanctum"));
     getglobal("FrameConfigBossDkp_BlackwingLair"):SetValue(SOTA_GetBossDKPValue("BlackwingLair"));
     getglobal("FrameConfigBossDkp_AQ40"):SetValue(SOTA_GetBossDKPValue("AQ40"));
     getglobal("FrameConfigBossDkp_Naxxramas"):SetValue(SOTA_GetBossDKPValue("Naxxramas"));
@@ -239,6 +278,9 @@ function SOTA_OnOptionBossDKPChanged(object)
     elseif slider == "FrameConfigBossDkp_Onyxia" then
         SOTA_SetBossDKPValue("Onyxia", value);
         valueString = string.format("Onyxia: %d DKP", value);
+    elseif slider == "FrameConfigBossDkp_EmeraldSanctum" then
+        SOTA_SetBossDKPValue("EmeraldSanctum", value);
+        valueString = string.format("Emerald Sanctum: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_BlackwingLair" then
         SOTA_SetBossDKPValue("BlackwingLair", value);
         valueString = string.format("Blackwing Lair: %d DKP", value);

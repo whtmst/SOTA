@@ -134,7 +134,7 @@
 				</Frames>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="$parentItemName" inherits="GameFontNormal" font="Fonts\FRIZQT__.TTF" text="">
+						<FontString name="$parentItemName" inherits="GameFontNormal" font="assets\fonts\FRIZQT__.TTF" text="">
 							<Color r="" g="" b="" a="" />
 							<FontHeight val="20" />
 						</FontString>
@@ -314,7 +314,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<FontString inherits="GameFontNormal" text="SotA Auction Window">
+				<FontString inherits="GameFontNormal" text="SOTA Auction Window">
 					<Anchors>
 						<Anchor point="TOP" relativeTo="$parentHeaderTexture">
 							<Offset>

@@ -1,10 +1,10 @@
 --[[
---	SotA - State of the Art
+--	SOTA - State of the Art
 --
 --	Unit: sota-dashboard.lua
---	This unit displays a minimal UI to control SotA operation.
+--	This unit displays a minimal UI to control SOTA operation.
 --	Also the Slash Command handler is present in this unit, as this
---	is the controlling part of SotA.
+--	is the controlling part of SOTA.
 --]]
 
 
@@ -435,12 +435,12 @@ function SOTA_DisplayHelp()
     echo("");
     --	Misc:
     localEcho("Miscellaneous:");
-    echo("  Config    Open the SotA configuration screen.");
-    echo("  Log    Open the SotA transaction log screen.");
-    echo("  Master    Request SotA master status.");
+    echo("  Config    Open the SOTA configuration screen.");
+    echo("  Log    Open the SOTA transaction log screen.");
+    echo("  Master    Request SOTA master status.");
     echo("  Silent    Toggle silent bidding mode (suppress whisper confirmations).");
     echo("  <item>    Start an auction for <item>.");
-    echo("  Version    Display the SotA client version.");
+    echo("  Version    Display the SOTA client version.");
     echo("  Help    (default) This help!");
     echo("");
     --	Chat options (Guild chat and Raid chat):

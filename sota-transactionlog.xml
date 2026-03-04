@@ -280,7 +280,7 @@
 	<Frame name="TransactionUIFrame" inherits="SOTAFrame">
 		<Layers>
 			<Layer>
-				<FontString name="$parentTitle" inherits="GameFontNormal" text="SotA Transaction Log">
+				<FontString name="$parentTitle" inherits="GameFontNormal" text="SOTA Transaction Log">
 					<Anchors>
 						<Anchor point="CENTER">
 							<Offset>

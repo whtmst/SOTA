@@ -1,4 +1,4 @@
-# SotA - State of the Art
+# SOTA - State of the Art
 
 ![Turtle WoW](https://img.shields.io/badge/Server-Turtle%20WoW-green)
 ![Version](https://img.shields.io/badge/Version-1.18.1-blue)
@@ -19,7 +19,7 @@
 
 ## 📖 О проекте
 
-**SotA** - развитие аддона **GuildDKP** с полной обратной совместимостью. DKP хранится в публичных/офицерских заметках гильдии и может экспортироваться через RPGO_GuildProfiler.
+**SOTA** - развитие аддона **GuildDKP** с полной обратной совместимостью. DKP хранится в публичных/офицерских заметках гильдии и может экспортироваться через RPGO_GuildProfiler.
 
 ### SOTA Master
 

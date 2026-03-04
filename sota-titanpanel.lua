@@ -1,5 +1,5 @@
 --[[
---	SotA - State of the Art
+--	SOTA - State of the Art
 --
 --	Unit: sota-titanpanel.lua
 --	If Titan Panel is installed, this unit will hook into Titan Panel
@@ -13,7 +13,7 @@ function TitanPanelSOTAButton_OnLoad()
         id = SOTA_ID,
         menuText = SOTA_TITAN_TITLE,
         buttonTextFunction = nil,
-        tooltipTitle = "State of the Art [SotA] Options",
+        tooltipTitle = "State of the Art [SOTA] Options",
         tooltipTextFunction = "TitanPanelSOTAButton_GetTooltipText",
         frequency = 0,
         icon = "Interface\\ICONS\\INV_Misc_Coin_02"

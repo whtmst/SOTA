@@ -1,7 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Script file="sota-raidqueue.lua" />
 
-	<!-- SotA Big Window (150%) Frame template -->
+	<!-- SOTA Big Window (150%) Frame template -->
 	<Frame name="SOTABigFrame" parent="UIParent" toplevel="true" hidden="true" virtual="true">
 		<Size>
 			<!-- <AbsDimension x="384" y="512" /> -->
@@ -105,7 +105,7 @@
 	<Frame name="RaidQueueFrame" inherits="SOTABigFrame">
 		<Layers>
 			<Layer>
-				<FontString name="$parentTitle" inherits="GameFontNormal" text="SotA Raid Queue">
+				<FontString name="$parentTitle" inherits="GameFontNormal" text="SOTA Raid Queue">
 					<Anchors>
 						<Anchor point="CENTER">
 							<Offset>

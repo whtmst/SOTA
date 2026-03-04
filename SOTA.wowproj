@@ -2,10 +2,10 @@
 <Project ToolsVersion="4.0" DefaultTargets="Deploy" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Default</Configuration>
-    <Name>SotA</Name>
+    <Name>SOTA</Name>
     <ProjectGuid>{a48a4cd1-0f42-442c-8f75-8bbc1619a9cc}</ProjectGuid>
-    <AssemblyName>SotA</AssemblyName>
-    <RootNamespace>SotA</RootNamespace>
+    <AssemblyName>SOTA</AssemblyName>
+    <RootNamespace>SOTA</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Default' ">
     <OutputPath>.</OutputPath>
@@ -54,7 +54,7 @@
     <Content Include="sota-titanpanel.xml">
       <SubType>Frame</SubType>
     </Content>
-    <Content Include="SotA.toc">
+    <Content Include="SOTA.toc">
       <SubType>TableOfContents</SubType>
     </Content>
     <Content Include="sota.txt" />

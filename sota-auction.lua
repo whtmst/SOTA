@@ -1,5 +1,5 @@
 --[[
---	SotA - State of the Art
+--	SOTA - State of the Art
 -- 
 --	Unit: sota-auction.lua
 --	The Auction UI is controlled by this unit, which includes the Bidding

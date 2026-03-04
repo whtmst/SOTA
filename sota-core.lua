@@ -1,5 +1,5 @@
 --[[
---	SotA - State of the Art
+--	SOTA - State of the Art
 --
 --	Unit: sota-core.lua
 --	This unit contains the core functionality such as DKP handling,
@@ -9,8 +9,8 @@
 
 SOTA_MESSAGE_PREFIX           = "SOTAv1"
 SOTA_ID                       = "SOTA"
-SOTA_TITLE                    = "SotA"
-SOTA_TITAN_TITLE              = "SotA - DKP Distribution"
+SOTA_TITLE                    = "SOTA"
+SOTA_TITAN_TITLE              = "SOTA - DKP Distribution"
 
 local SOTA_DEBUG_ENABLED      = false;
 
@@ -139,6 +139,7 @@ local SOTA_CONFIG_DEFAULT_BossDKP = {
     { "20Mans",        400 },
     { "MoltenCore",    600 },
     { "Onyxia",        600 },
+    { "EmeraldSanctum", 1000 },
     { "BlackwingLair", 600 },
     { "AQ40",          600 },
     { "Naxxramas",     600 },
@@ -623,6 +624,21 @@ end
 function SOTA_GetBossDKPList()
     if not SOTA_CONFIG_BossDKP or table.getn(SOTA_CONFIG_BossDKP) == 0 then
         SOTA_CONFIG_BossDKP = SOTA_CONFIG_DEFAULT_BossDKP;
+    else
+        -- Миграция: добавляем новые рейды, если их нет в сохранённых настройках
+        for n = 1, table.getn(SOTA_CONFIG_DEFAULT_BossDKP), 1 do
+            local defaultEntry = SOTA_CONFIG_DEFAULT_BossDKP[n];
+            local found = false;
+            for m = 1, table.getn(SOTA_CONFIG_BossDKP), 1 do
+                if SOTA_CONFIG_BossDKP[m][1] == defaultEntry[1] then
+                    found = true;
+                    break;
+                end
+            end
+            if not found then
+                table.insert(SOTA_CONFIG_BossDKP, defaultEntry);
+            end
+        end
     end
     return SOTA_CONFIG_BossDKP;
 end
@@ -1725,6 +1741,8 @@ function SOTA_GetStartingDKP()
         startingDKP = SOTA_GetBossDKPValue("MoltenCore") / 10; -- Verified
     elseif zonetext == "Onyxia's Lair" --[[or (zonetext == "Dustwallow Marsh" and subzone == "Wyrmbog")]] then
         startingDKP = SOTA_GetBossDKPValue("Onyxia") / 10;     -- Verified
+    elseif zonetext == "Emerald Sanctum" then
+        startingDKP = SOTA_GetBossDKPValue("EmeraldSanctum") / 10;
     elseif zonetext == "Blackwing Lair" then
         startingDKP = SOTA_GetBossDKPValue("BlackwingLair") / 10;
     elseif zonetext == "Ahn'Qiraj" --[[or (zonetext == "Gates of Ahn'Qiraj" and posX < 0.422)]] then
@@ -1760,6 +1778,8 @@ function SOTA_GetValidDKPZones()
         validZones = { zonetext, "Blackrock Mountain" };
     elseif zonetext == "Onyxia's Lair" then
         validZones = { zonetext, "Dustwallow Marsh" };
+    elseif zonetext == "Emerald Sanctum" then
+        validZones = { zonetext, "Hyjal" };
     elseif zonetext == "Blackwing Lair" then
         validZones = { zonetext, "Blackrock Mountain" };
     elseif zonetext == "Ahn'Qiraj" then
