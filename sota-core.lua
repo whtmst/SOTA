@@ -110,6 +110,10 @@ SOTA_MSG_OnClose             = "OnEnd";
 SOTA_MSG_OnCancel            = "OnCancel";
 SOTA_MSG_OnDKPAdded          = "OnDKPAddedPlayer";
 SOTA_MSG_OnDKPAddedRaid      = "OnDKPAddedRaid";
+SOTA_MSG_OnWelcomeDKP        = "OnWelcomeDKP";
+SOTA_MSG_OnNoWipeDKP         = "OnNoWipeDKP";
+SOTA_MSG_OnNoDeathDKP        = "OnNoDeathDKP";
+SOTA_MSG_OnRecordDKP         = "OnRecordDKP";
 SOTA_MSG_OnDKPAddedRange     = "OnDKPAddedRange";
 SOTA_MSG_OnDKPAddedQueue     = "OnDKPAddedQueue";
 SOTA_MSG_OnDKPSubtract       = "OnDKPSubtractedPlayer";
@@ -852,18 +856,18 @@ end
 --[[
 --	Add <n> DKP to all players in raid and in queue
 --]]
-function SOTA_Call_AddRaidDKP(dkp)
+function SOTA_Call_AddRaidDKP(dkp, bonusType)
     if SOTA_IsInRaid(true) then
         SOTA_EnsureOfflineVisible()
         RaidState = RAID_STATE_ENABLED;
         SOTA_RequestMaster();
-        SOTA_AddJob(function(job) SOTA_AddRaidDKP(job[2]) end, dkp, "_")
+        SOTA_AddJob(function(job) SOTA_AddRaidDKP(job[2], false, "_", job[3]) end, dkp, bonusType)
         SOTA_RequestUpdateGuildRoster();
     end
 end
 
 local SOTA_QueuedPlayersImpacted;
-function SOTA_AddRaidDKP(dkp, silentmode, callMethod)
+function SOTA_AddRaidDKP(dkp, silentmode, callMethod, bonusType)
     SOTA_QueuedPlayersImpacteded = 0;
 
     if SOTA_IsInRaid(true) then
@@ -925,7 +929,17 @@ function SOTA_AddRaidDKP(dkp, silentmode, callMethod)
 
         if not silentmode then
             --			publicEcho(string.format("Все игроки в рейде получили по %d DKP", dkp));
-            SOTA_EchoEvent(SOTA_MSG_OnDKPAddedRaid, "", dkp);
+            local msgKey = SOTA_MSG_OnDKPAddedRaid;
+            if bonusType == "welcome" then
+                msgKey = SOTA_MSG_OnWelcomeDKP;
+            elseif bonusType == "nowipe" then
+                msgKey = SOTA_MSG_OnNoWipeDKP;
+            elseif bonusType == "nodeath" then
+                msgKey = SOTA_MSG_OnNoDeathDKP;
+            elseif bonusType == "record" then
+                msgKey = SOTA_MSG_OnRecordDKP;
+            end
+            SOTA_EchoEvent(msgKey, "", dkp);
         end
 
         SOTA_LogMultipleTransactions(callMethod, tidChanges)
@@ -1174,7 +1188,7 @@ function SOTA_WelcomeDKP()
                 end
             end,
             OnAccept = function()
-                SOTA_Call_AddRaidDKP(SOTA_WELCOME_DKP_AMOUNT);
+                SOTA_Call_AddRaidDKP(SOTA_WELCOME_DKP_AMOUNT, "welcome");
             end
         }
         StaticPopup_Show("SOTA_POPUP_WELCOME_DKP");
@@ -1217,7 +1231,7 @@ function SOTA_NoWipeDKP()
                 end
             end,
             OnAccept = function()
-                SOTA_Call_AddRaidDKP(SOTA_NO_WIPE_DKP_AMOUNT);
+                SOTA_Call_AddRaidDKP(SOTA_NO_WIPE_DKP_AMOUNT, "nowipe");
             end
         }
         StaticPopup_Show("SOTA_POPUP_NO_WIPE_DKP");
@@ -1260,7 +1274,7 @@ function SOTA_NoDeathDKP()
                 end
             end,
             OnAccept = function()
-                SOTA_Call_AddRaidDKP(SOTA_NO_DEATH_DKP_AMOUNT);
+                SOTA_Call_AddRaidDKP(SOTA_NO_DEATH_DKP_AMOUNT, "nodeath");
             end
         }
         StaticPopup_Show("SOTA_POPUP_NO_DEATH_DKP");
@@ -1303,7 +1317,7 @@ function SOTA_RecordDKP()
                 end
             end,
             OnAccept = function()
-                SOTA_Call_AddRaidDKP(SOTA_RECORD_DKP_AMOUNT);
+                SOTA_Call_AddRaidDKP(SOTA_RECORD_DKP_AMOUNT, "record");
             end
         }
         StaticPopup_Show("SOTA_POPUP_RECORD_DKP");
