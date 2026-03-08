@@ -10,5 +10,4 @@ sota-options.xml
 sota-raidqueue.xml
 sota-transactionlog.xml
 sota-auction.xml
-sota-titanpanel.xml
 sota-dashboard.xml

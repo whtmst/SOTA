@@ -10,7 +10,6 @@
 SOTA_MESSAGE_PREFIX           = "SOTAv1"
 SOTA_ID                       = "SOTA"
 SOTA_TITLE                    = "SOTA"
-SOTA_TITAN_TITLE              = "SOTA - DKP Distribution"
 
 local SOTA_DEBUG_ENABLED      = false;
 
