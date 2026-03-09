@@ -54,6 +54,85 @@
 			</Anchor>
 		</Anchors>
 		<Frames>
+		
+			<!-- Верхняя панель с информацией о мастер-лутере -->
+			<Frame name="$parentMasterInfo">
+				<Size>
+					<AbsDimension x="232" y="24" />
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="109" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop
+                    edgeFile="Interface\Buttons\WHITE8X8"
+                    tile="true"
+                    bgFile="Interface\Buttons\WHITE8X8"
+                >
+					<BackgroundInsets>
+						<AbsInset left="0" right="0" top="0" bottom="0" />
+					</BackgroundInsets>
+					<EdgeSize>
+						<AbsValue val="1" />
+					</EdgeSize>
+					<TileSize>
+						<AbsValue val="16" />
+					</TileSize>
+				</Backdrop>
+				<Scripts>
+					<OnLoad>
+					    this:SetBackdropColor(0.098, 0.098, 0.098, 1);
+						this:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);
+					</OnLoad>
+				</Scripts>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="SOTA_MasterInfoText" inherits="SOTA_Font_Normal" text="МАСТЕР ЛУТЕР: (не назначен)" justifyH="CENTER">
+							<Anchors>
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<!-- Невидимой фрейм для перетаскивания верхней панели (КРАСНЫЙ ДЛЯ ТЕСТА) -->
+					<Frame name="$parentDragArea">
+						<Size>
+							<AbsDimension x="232" y="24" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="0" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background">
+							<Color r="1" g="0" b="0" a="0" />
+						</Backdrop>
+						<Scripts>
+							<OnLoad>
+								this:SetMovable(true)
+								this:RegisterForDrag("LeftButton")
+							</OnLoad>
+							<OnDragStart>
+								DashboardUIFrame:StartMoving()
+							</OnDragStart>
+							<OnDragStop>
+								DashboardUIFrame:StopMovingOrSizing()
+							</OnDragStop>
+						</Scripts>
+					</Frame>
+				</Frames>
+			</Frame>
+		
 			<!-- Общая панель с кнопками (10 кнопок в 2 ряда) -->
 			<Frame name="$parentButtons">
 				<Size>
@@ -67,20 +146,26 @@
 					</Anchor>
 				</Anchors>
 				<Backdrop
-                    edgeFile="Interface\Tooltips\UI-Tooltip-Border"
+                    bgFile="Interface\Buttons\WHITE8X8"
                     tile="true"
-                    bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                    edgeFile="Interface\Buttons\WHITE8X8"
                 >
 					<BackgroundInsets>
-						<AbsInset left="4" right="4" top="4" bottom="4" />
+						<AbsInset left="0" right="0" top="0" bottom="0" />
 					</BackgroundInsets>
 					<EdgeSize>
-						<AbsValue val="16" />
+						<AbsValue val="1" />
 					</EdgeSize>
 					<TileSize>
 						<AbsValue val="16" />
 					</TileSize>
 				</Backdrop>
+				<Scripts>
+					<OnLoad>
+					    this:SetBackdropColor(0.098, 0.098, 0.098, 1);
+						this:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);
+					</OnLoad>
+				</Scripts>
 				<Frames>
 					<!-- ВЕРХНИЙ РЯД (бонусы DKP) -->
 					<!-- Button 1: Приветственное DKP -->
@@ -95,8 +180,8 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<NormalTexture file="Interface\ICONS\Ability_Mage_IncantersAbsorbtion.blp" />
-						<PushedTexture file="Interface\ICONS\Ability_Mage_IncantersAbsorbtion.blp" />
+						<NormalTexture file="Interface\ICONS\Ability_Mage_IncantersAbsorbtion" />
+						<PushedTexture file="Interface\ICONS\Ability_Mage_IncantersAbsorbtion" />
 						<Scripts>
 							<OnClick>
 								SOTA_WelcomeDKP();
@@ -127,8 +212,8 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<NormalTexture file="Interface\ICONS\Spell_Holy_Crusade.blp" />
-						<PushedTexture file="Interface\ICONS\Spell_Holy_Crusade.blp" />
+						<NormalTexture file="Interface\ICONS\Spell_Holy_Crusade" />
+						<PushedTexture file="Interface\ICONS\Spell_Holy_Crusade" />
 						<Scripts>
 							<OnClick>
 								SOTA_NoWipeDKP();
@@ -159,8 +244,8 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<NormalTexture file="Interface\ICONS\Spell_Holy_Redemption.blp" />
-						<PushedTexture file="Interface\ICONS\Spell_Holy_Redemption.blp" />
+						<NormalTexture file="Interface\ICONS\Spell_Holy_Redemption" />
+						<PushedTexture file="Interface\ICONS\Spell_Holy_Redemption" />
 						<Scripts>
 							<OnClick>
 								SOTA_NoDeathDKP();
@@ -191,8 +276,8 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<NormalTexture file="Interface\ICONS\Spell_Holy_BorrowedTime.blp" />
-						<PushedTexture file="Interface\ICONS\Spell_Holy_BorrowedTime.blp" />
+						<NormalTexture file="Interface\ICONS\Spell_Holy_BorrowedTime" />
+						<PushedTexture file="Interface\ICONS\Spell_Holy_BorrowedTime" />
 						<Scripts>
 							<OnClick>
 								SOTA_RecordDKP();
@@ -223,8 +308,8 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<NormalTexture file="Interface\ICONS\INV_Misc_Coin_02.blp" />
-						<PushedTexture file="Interface\ICONS\INV_Misc_Coin_02.blp" />
+						<NormalTexture file="Interface\ICONS\INV_Misc_Coin_02" />
+						<PushedTexture file="Interface\ICONS\INV_Misc_Coin_02" />
 						<Scripts>
 							<OnClick>
 								SOTA_ShareBossDKP();
@@ -257,8 +342,8 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<NormalTexture file="Interface\ICONS\Spell_Holy_SpiritualGuidence.blp" />
-						<PushedTexture file="Interface\ICONS\Spell_Holy_SpiritualGuidence.blp" />
+						<NormalTexture file="Interface\ICONS\Spell_Holy_SpiritualGuidence" />
+						<PushedTexture file="Interface\ICONS\Spell_Holy_SpiritualGuidence" />
 						<Scripts>
 							<OnClick>
 								SOTA_RequestSOTAMaster();
@@ -289,8 +374,8 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<NormalTexture file="Interface\ICONS\INV_Misc_QuestionMark.blp" />
-						<PushedTexture file="Interface\ICONS\INV_Misc_QuestionMark.blp" />
+						<NormalTexture file="Interface\ICONS\INV_Misc_QuestionMark" />
+						<PushedTexture file="Interface\ICONS\INV_Misc_QuestionMark" />
 						<Scripts>
 							<OnClick>
 								SOTA_PlaceholderButton();
@@ -321,8 +406,8 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<NormalTexture file="Interface\ICONS\BtnHolyScriptures.blp" />
-						<PushedTexture file="Interface\ICONS\BtnHolyScriptures.blp" />
+						<NormalTexture file="Interface\ICONS\BtnHolyScriptures" />
+						<PushedTexture file="Interface\ICONS\BtnHolyScriptures" />
 						<Scripts>
 							<OnClick>
 								SOTA_OpenTransauctionUI();
@@ -353,8 +438,8 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<NormalTexture file="Interface\ICONS\Achievement_Rat.blp" />
-						<PushedTexture file="Interface\ICONS\Achievement_Rat.blp" />
+						<NormalTexture file="Interface\ICONS\Achievement_Rat" />
+						<PushedTexture file="Interface\ICONS\Achievement_Rat" />
 						<Scripts>
 							<OnClick>
 								SOTA_OpenRaidQueueUI();
@@ -385,8 +470,8 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<NormalTexture file="Interface\ICONS\INV_Gizmo_02.blp" />
-						<PushedTexture file="Interface\ICONS\INV_Gizmo_02.blp" />
+						<NormalTexture file="Interface\ICONS\INV_Gizmo_02" />
+						<PushedTexture file="Interface\ICONS\INV_Gizmo_02" />
 						<Scripts>
 							<OnClick>
 								SOTA_OpenConfigurationUI();
@@ -419,78 +504,6 @@
 						</Anchors>
 						<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background">
 							<Color r="0" g="0" b="1" a="0" />
-						</Backdrop>
-						<Scripts>
-							<OnLoad>
-								this:SetMovable(true)
-								this:RegisterForDrag("LeftButton")
-							</OnLoad>
-							<OnDragStart>
-								DashboardUIFrame:StartMoving()
-							</OnDragStart>
-							<OnDragStop>
-								DashboardUIFrame:StopMovingOrSizing()
-							</OnDragStop>
-						</Scripts>
-					</Frame>
-				</Frames>
-			</Frame>
-
-			<!-- Нижняя панель с информацией о мастер-лутере -->
-			<Frame name="$parentMasterInfo">
-				<Size>
-					<AbsDimension x="240" y="32" />
-				</Size>
-				<Anchors>
-					<Anchor point="BOTTOM">
-						<Offset>
-							<AbsDimension x="0" y="105" />
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Backdrop
-                    edgeFile="Interface\Tooltips\UI-Tooltip-Border"
-                    tile="true"
-                    bgFile="Interface\DialogFrame\UI-DialogBox-Background"
-                >
-					<BackgroundInsets>
-						<AbsInset left="4" right="4" top="4" bottom="4" />
-					</BackgroundInsets>
-					<EdgeSize>
-						<AbsValue val="16" />
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="16" />
-					</TileSize>
-				</Backdrop>
-				<Layers>
-					<Layer level="ARTWORK">
-						<FontString name="SOTA_MasterInfoText" inherits="SOTA_Font_Normal" text="МАСТЕР ЛУТЕР: (отсутствует)" justifyH="CENTER">
-							<Anchors>
-								<Anchor point="CENTER">
-									<Offset>
-										<AbsDimension x="0" y="0" />
-									</Offset>
-								</Anchor>
-							</Anchors>
-						</FontString>
-					</Layer>
-				</Layers>
-				<Frames>
-					<!-- Невидимой фрейм для перетаскивания (КРАСНЫЙ ДЛЯ ТЕСТА) -->
-					<Frame name="$parentDragArea">
-						<Size>
-							<AbsDimension x="240" y="32" />
-						</Size>
-						<Anchors>
-							<Anchor point="TOPLEFT">
-								<Offset>
-									<AbsDimension x="0" y="0" />
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background">
-							<Color r="1" g="0" b="0" a="0" />
 						</Backdrop>
 						<Scripts>
 							<OnLoad>
@@ -542,26 +555,26 @@
 		<Size>
 			<AbsDimension x="200" y="50" />
 		</Size>
-		<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true" bgFile="Interface\Tooltips\UI-Tooltip-Background">
+		<Backdrop bgFile="Interface\Buttons\WHITE8X8" tile="true" edgeFile="Interface\Buttons\WHITE8X8">
 			<BackgroundInsets>
-				<AbsInset left="4" right="4" top="4" bottom="4" />
+				<AbsInset left="0" right="0" top="0" bottom="0" />
 			</BackgroundInsets>
 			<EdgeSize>
-				<AbsValue val="16" />
+				<AbsValue val="1" />
 			</EdgeSize>
 			<TileSize>
 				<AbsValue val="16" />
 			</TileSize>
-			<Color r="0.1" g="0.1" b="0.1" a="1" />
 		</Backdrop>
 		<Scripts>
-			<OnShow>
-				this:SetBackdropColor(0, 0, 0, 1);
-			</OnShow>
+			<OnLoad>
+				this:SetBackdropColor(0.098, 0.098, 0.098, 1);
+				this:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);
+			</OnLoad>
 		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
-				<FontString name="SOTA_TooltipText" inherits="SOTA_Font_Orange" justifyH="LEFT">
+				<FontString name="SOTA_TooltipText" inherits="SOTA_Font_Normal" justifyH="LEFT">
 					<Anchors>
 						<Anchor point="TOPLEFT">
 							<Offset>

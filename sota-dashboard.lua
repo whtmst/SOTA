@@ -679,7 +679,7 @@ function SOTA_SetMasterState(mastername, masterstate)
     CLIENT_STATE = masterstate;
 
     if not mastername then
-        mastername = "(отсутствует)";
+        mastername = "(не назначен)";
     end
 
     --echo(string.format("Master: %s, state= %d", mastername, CLIENT_STATE));

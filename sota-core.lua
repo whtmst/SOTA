@@ -22,7 +22,7 @@ local SOTA_RECORD_DKP_AMOUNT = 100    -- DKP за рекорд времени
 SOTA_CHAT_END                 = "|r"
 SOTA_COLOUR_INTRO             = "|c80F0F0F0"
 SOTA_COLOUR_CHAT              = "|c8040A0F8"
-SOTA_COLOUR_MAIN              = "|cFFFF6600"  -- Оранжево-красный
+SOTA_COLOUR_MAIN              = "|cFFC84B31"  -- (основной акцентный цвет SOTA - оранжево-красный)
 
 local WARN_CHANNEL            = "RAID_WARNING"
 local RAID_CHANNEL            = "RAID"
@@ -1088,6 +1088,179 @@ function SOTA_AddRangedDKP(dkp, silentmode, dkpLabel, shareTheDKP)
     return raidUpdateCount;
 end
 
+-- =================================================================================
+-- Стилизация StaticPopup для SOTA (тёмный фон + серая рамка)
+-- Применяется только к SOTA-диалогам, не затрагивает стандартные диалоги Blizzard
+-- =================================================================================
+-- Стилизация самого StaticPopup
+-- =================================================================================
+function SOTA_StyleStaticPopup(frameName)
+    local popupFrame = getglobal(frameName);
+    if popupFrame then
+        popupFrame:SetBackdrop({
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            tile = true,
+            edgeSize = 1,
+            tileSize = 16,
+            insets = { left = 0, right = 0, top = 0, bottom = 0 }
+        });
+        popupFrame:SetBackdropColor(0.098, 0.098, 0.098, 1);       -- bg-main
+        popupFrame:SetBackdropBorderColor(0.251, 0.251, 0.251, 1); -- border-main
+    end
+end
+
+-- =================================================================================
+-- Стилизация кнопок в StaticPopup
+-- =================================================================================
+function SOTA_StyleStaticPopupButtons(frameName)
+    local button1 = getglobal(frameName .. "Button1");
+    if button1 then
+        -- Включаем Backdrop для кнопки 1
+        button1:SetBackdrop({
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            tile = true,
+            edgeSize = 1,
+            tileSize = 16,
+            insets = { left = 0, right = 0, top = 0, bottom = 0 }
+        });
+        button1:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-main
+        button1:SetBackdropBorderColor(0.251, 0.251, 0.251, 1); -- border-main
+        button1:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1); -- text-main
+
+        -- Смещаем текст вверх (чтобы не был прижат к низу)
+        button1:GetFontString():ClearAllPoints();
+        button1:GetFontString():SetPoint("CENTER", button1, "CENTER", 0, 2);
+
+        -- Убираем стандартную текстуру кнопки
+        button1:SetNormalTexture("");
+        button1:SetPushedTexture("");
+        button1:SetHighlightTexture("");
+
+        -- Отключаем смещение текста при нажатии
+        button1:SetPushedTextOffset(0, 0);
+
+        -- Добавляем реакцию на нажатие (изменение цвета фона и текста)
+        button1:SetScript("OnMouseDown", function()
+            this:SetBackdropColor(0.098, 0.098, 0.098, 1);  -- bg-main но темнее
+            this:GetFontString():SetTextColor(0.784, 0.294, 0.192, 1);  -- accent-main
+        end);
+
+        button1:SetScript("OnMouseUp", function()
+            this:SetBackdropColor(0.145, 0.145, 0.145, 1);  -- bg-section
+            this:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1); -- text-main
+        end);
+
+        -- Добавляем реакцию ховер (изменение цвета фона)
+        button1:SetScript("OnEnter", function()
+            this:SetBackdropColor(0.098, 0.098, 0.098, 1);  -- bg-main но темнее
+        end);
+
+        button1:SetScript("OnLeave", function()
+            this:SetBackdropColor(0.145, 0.145, 0.145, 1);   -- bg-main
+        end);
+    end
+
+    local button2 = getglobal(frameName .. "Button2");
+    if button2 then
+        -- Включаем Backdrop для кнопки 2
+        button2:SetBackdrop({
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            tile = true,
+            edgeSize = 1,
+            tileSize = 16,
+            insets = { left = 0, right = 0, top = 0, bottom = 0 }
+        });
+        button2:SetBackdropColor(0.145, 0.145, 0.145, 1);
+        button2:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);
+        button2:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1);
+
+        -- Смещаем текст вверх (чтобы не был прижат к низу)
+        button2:GetFontString():ClearAllPoints();
+        button2:GetFontString():SetPoint("CENTER", button2, "CENTER", 0, 2);
+
+        -- Убираем стандартную текстуру кнопки
+        button2:SetNormalTexture("");
+        button2:SetPushedTexture("");
+        button2:SetHighlightTexture("");
+
+        -- Отключаем смещение текста при нажатии
+        button2:SetPushedTextOffset(0, 0);
+
+        -- Добавляем реакцию на нажатие (изменение цвета фона и текста)
+        button2:SetScript("OnMouseDown", function()
+            this:SetBackdropColor(0.098, 0.098, 0.098, 1);  -- bg-main но темнее
+            this:GetFontString():SetTextColor(0.784, 0.294, 0.192, 1);  -- accent-main
+        end);
+
+        button2:SetScript("OnMouseUp", function()
+            this:SetBackdropColor(0.145, 0.145, 0.145, 1);  -- bg-section
+            this:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1); -- text-main
+        end);
+
+        -- Добавляем реакцию ховер (изменение цвета фона)
+        button2:SetScript("OnEnter", function()
+            this:SetBackdropColor(0.098, 0.098, 0.098, 1);  -- bg-main но темнее
+        end);
+
+        button2:SetScript("OnLeave", function()
+            this:SetBackdropColor(0.145, 0.145, 0.145, 1);   -- bg-main
+        end);
+    end
+end
+
+-- =================================================================================
+-- Стилизация EditBox в StaticPopup (тёмный фон + серая рамка)
+-- EditBox наследуется от Frame, значит SetBackdrop доступен
+-- =================================================================================
+function SOTA_StyleStaticPopupEditBox(frameName, editBoxWidth, editBoxHeight, maxLetters)
+    local editBox = getglobal(frameName .. "EditBox");
+    if editBox then
+        -- Отключаем стандартную текстуру фона (как в pfUI)
+        editBox:DisableDrawLayer("BACKGROUND");
+
+        -- Устанавливаем размер поля ввода (если передан)
+        if editBoxWidth and editBoxHeight then
+            editBox:SetWidth(editBoxWidth);
+            editBox:SetHeight(editBoxHeight);
+        end
+
+        -- Устанавливаем максимальное количество символов (если передано)
+        if maxLetters then
+            editBox:SetMaxLetters(maxLetters);
+        end
+
+        -- Устанавливаем цвет текста
+        editBox:SetTextColor(0.925, 0.859, 0.729, 1);  -- text-main
+
+        -- Устанавливаем Backdrop (фон + рамка)
+        editBox:SetBackdrop({
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            tile = true,
+            edgeSize = 1,
+            tileSize = 16,
+            insets = { left = 0, right = 0, top = 0, bottom = 0 }
+        });
+        editBox:SetBackdropColor(0.784, 0.294, 0.192, 1);      -- bg-main (фон)
+        editBox:SetBackdropBorderColor(0.251, 0.251, 0.251, 1); -- border-main (рамка)
+
+        -- Устанавливаем отступы для текста
+        editBox:SetTextInsets(5, 4, 2, 4); -- (left, right, top, bottom)
+
+        -- Добавляем реакцию на фокус (изменение цвета рамки)
+        editBox:SetScript("OnEditFocusGained", function()
+            this:SetBackdropBorderColor(0.784, 0.294, 0.192, 1);  -- accent-main (оранжевая)
+        end);
+
+        editBox:SetScript("OnEditFocusLost", function()
+            this:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);  -- border-main (серая)
+        end);
+    end
+end
+
 function SOTA_ShareBossDKP()
     -- local bossDkp = "".. (SOTA_GetMinimumBid() * 10);
 
@@ -1101,9 +1274,9 @@ function SOTA_ShareBossDKP()
 
         StaticPopupDialogs["SOTA_POPUP_SHARE_DKP"] = {
             -- text = "Разделить следующее количество DKP между участниками рейда:",
-            text = "Добавить указанное количество DKP |cFFFF6600каждому участнику|r рейда:",
+            text = "Добавить указанное количество DKP |cFFC84B31каждому участнику|r рейда:",
             hasEditBox = true,
-            maxLetters = 6,
+            maxLetters = 5,
             button1 = "Добавить",
             button2 = "Отмена",
             OnAccept = function() SOTA_ExcludePlayerFromTransaction(SOTA_selectedTransactionID, playername) end,
@@ -1113,6 +1286,12 @@ function SOTA_ShareBossDKP()
             preferredIndex = 3,
             OnShow = function()
                 local frameName = this:GetName();
+
+                -- Стилизация SOTA (тёмный фон + серая рамка)
+                SOTA_StyleStaticPopup(frameName);
+                SOTA_StyleStaticPopupButtons(frameName);
+                SOTA_StyleStaticPopupEditBox(frameName, 55, 24, 5);  -- ширина, высота, макс. кол-во символов
+
                 -- Устанавливаем шрифт с поддержкой кириллицы для всех элементов
                 local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
 
@@ -1126,7 +1305,7 @@ function SOTA_ShareBossDKP()
                 local editBox = getglobal(frameName .. "EditBox");
                 if editBox then
                     editBox:SetText("");
-                    editBox:SetFont(fontPath, 12);
+                    editBox:SetFont(fontPath, 16);
                     editBox:SetFocus();
                 end
 
@@ -1171,7 +1350,7 @@ function SOTA_WelcomeDKP()
         StaticPopup_Hide("SOTA_POPUP_SHARE_DKP");
 
         StaticPopupDialogs["SOTA_POPUP_WELCOME_DKP"] = {
-            text = "Будет начислен приветственный бонус: |cFFFF6600"..SOTA_WELCOME_DKP_AMOUNT.." DKP всем участникам|r рейда",
+            text = "Будет начислен приветственный бонус: |cFFC84B31"..SOTA_WELCOME_DKP_AMOUNT.." DKP всем участникам|r рейда",
             hasEditBox = false,
             button1 = "Добавить",
             button2 = "Отмена",
@@ -1181,6 +1360,11 @@ function SOTA_WelcomeDKP()
             preferredIndex = 3,
             OnShow = function()
                 local frameName = this:GetName();
+
+                -- Стилизация SOTA (тёмный фон + серая рамка)
+                SOTA_StyleStaticPopup(frameName);
+                SOTA_StyleStaticPopupButtons(frameName);
+
                 local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
 
                 -- Текст заголовка
@@ -1221,7 +1405,7 @@ function SOTA_NoWipeDKP()
         StaticPopup_Hide("SOTA_POPUP_SHARE_DKP");
 
         StaticPopupDialogs["SOTA_POPUP_NO_WIPE_DKP"] = {
-            text = "|cFFFF6600ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за проход без вайпов: |cFFFF6600"..SOTA_NO_WIPE_DKP_AMOUNT.." DKP всем участникам|r рейда",
+            text = "|cFFC84B31ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за проход без вайпов: |cFFC84B31"..SOTA_NO_WIPE_DKP_AMOUNT.." DKP всем участникам|r рейда",
             hasEditBox = false,
             button1 = "Добавить",
             button2 = "Отмена",
@@ -1231,6 +1415,11 @@ function SOTA_NoWipeDKP()
             preferredIndex = 3,
             OnShow = function()
                 local frameName = this:GetName();
+
+                -- Стилизация SOTA (тёмный фон + серая рамка)
+                SOTA_StyleStaticPopup(frameName);
+                SOTA_StyleStaticPopupButtons(frameName);
+
                 local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
 
                 -- Текст заголовка
@@ -1271,7 +1460,7 @@ function SOTA_NoDeathDKP()
         StaticPopup_Hide("SOTA_POPUP_SHARE_DKP");
 
         StaticPopupDialogs["SOTA_POPUP_NO_DEATH_DKP"] = {
-            text = "|cFFFF6600ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за проход без смертей (в том числе на треше): |cFFFF6600"..SOTA_NO_DEATH_DKP_AMOUNT.." DKP всем участникам|r рейда",
+            text = "|cFFC84B31ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за проход без смертей (в том числе на треше): |cFFC84B31"..SOTA_NO_DEATH_DKP_AMOUNT.." DKP всем участникам|r рейда",
             hasEditBox = false,
             button1 = "Добавить",
             button2 = "Отмена",
@@ -1281,6 +1470,11 @@ function SOTA_NoDeathDKP()
             preferredIndex = 3,
             OnShow = function()
                 local frameName = this:GetName();
+
+                -- Стилизация SOTA (тёмный фон + серая рамка)
+                SOTA_StyleStaticPopup(frameName);
+                SOTA_StyleStaticPopupButtons(frameName);
+
                 local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
 
                 -- Текст заголовка
@@ -1321,7 +1515,7 @@ function SOTA_RecordDKP()
         StaticPopup_Hide("SOTA_POPUP_SHARE_DKP");
 
         StaticPopupDialogs["SOTA_POPUP_RECORD_DKP"] = {
-            text = "|cFFFF6600ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за побитый рекорд времени прохождения рейда на 2 и более минуты: |cFFFF6600"..SOTA_RECORD_DKP_AMOUNT.." DKP всем участникам|r рейда",
+            text = "|cFFC84B31ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за побитый рекорд времени прохождения рейда на 2 и более минуты: |cFFC84B31"..SOTA_RECORD_DKP_AMOUNT.." DKP всем участникам|r рейда",
             hasEditBox = false,
             button1 = "Добавить",
             button2 = "Отмена",
@@ -1331,6 +1525,11 @@ function SOTA_RecordDKP()
             preferredIndex = 3,
             OnShow = function()
                 local frameName = this:GetName();
+
+                -- Стилизация SOTA (тёмный фон + серая рамка)
+                SOTA_StyleStaticPopup(frameName);
+                SOTA_StyleStaticPopupButtons(frameName);
+
                 local fontPath = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
 
                 -- Текст заголовка
