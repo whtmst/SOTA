@@ -9,6 +9,125 @@
 local SOTA_MAX_MESSAGES       = 15
 local ConfigurationDialogOpen = false;
 
+-- =================================================================================
+-- Стилизация EditBox в FrameEventEditor (тёмный фон + серая рамка)
+-- Применяется только к окну редактирования сообщений, не затрагивает стандартные EditBox Blizzard
+-- =================================================================================
+function SOTA_StyleEventEditorEditBox()
+    if FrameEventEditorMessage then
+        FrameEventEditorMessage:DisableDrawLayer("BACKGROUND");
+        FrameEventEditorMessage:SetBackdrop({
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            tile = true,
+            edgeSize = 1,
+            tileSize = 16,
+            insets = { left = 0, right = 0, top = 0, bottom = 0 }
+        });
+        FrameEventEditorMessage:SetBackdropColor(0.784, 0.294, 0.192, 1);
+        FrameEventEditorMessage:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);
+        FrameEventEditorMessage:SetTextInsets(5, 4, 2, 4);
+        FrameEventEditorMessage:SetTextColor(0.925, 0.859, 0.729, 1);
+        FrameEventEditorMessage:SetAutoFocus(false);  -- Отключаем автофокус для корректной работы Esc
+
+        -- Добавляем реакцию на фокус (изменение цвета рамки)
+        FrameEventEditorMessage:SetScript("OnEditFocusGained", function()
+            this:SetBackdropBorderColor(0.784, 0.294, 0.192, 1);  -- accent-main (оранжевая)
+        end);
+
+        FrameEventEditorMessage:SetScript("OnEditFocusLost", function()
+            this:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);  -- border-main (серая)
+        end);
+
+        -- Обработка Esc: снимаем фокус
+        FrameEventEditorMessage:SetScript("OnEscapePressed", function()
+            this:ClearFocus();
+            this:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);  -- border-main (серая)
+        end);
+    end
+end
+
+-- =================================================================================
+-- Стилизация кнопок в FrameEventEditor (тёмный фон + серая рамка + оранжевый акцент)
+-- Применяется только к кнопкам ОК и ОТМЕНА в окне редактирования сообщений
+-- =================================================================================
+function SOTA_StyleEventEditorButtons()
+    -- OK button
+    local button1 = getglobal("OkButton");
+    if button1 then
+        button1:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1);
+        button1:GetFontString():SetPoint("CENTER", button1, "CENTER", 0, 1);
+        button1:SetBackdrop({
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            tile = true,
+            edgeSize = 1,
+            tileSize = 16,
+            insets = { left = 0, right = 0, top = 0, bottom = 0 }
+        });
+        button1:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-section
+        button1:SetBackdropBorderColor(0.251, 0.251, 0.251, 1); -- border-main
+        button1:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1); -- text-main
+        button1:GetFontString():SetPoint("CENTER", button1, "CENTER", 0, 2);
+        button1:SetNormalTexture("");
+        button1:SetPushedTexture("");
+        button1:SetHighlightTexture("");
+        button1:SetPushedTextOffset(0, 0);
+
+        button1:SetScript("OnEnter", function()
+            this:SetBackdropColor(0.098, 0.098, 0.098, 1);
+        end);
+        button1:SetScript("OnLeave", function()
+            this:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-section
+        end);
+        button1:SetScript("OnMouseDown", function()
+            this:SetBackdropColor(0.098, 0.098, 0.098, 1);
+            this:GetFontString():SetTextColor(0.784, 0.294, 0.192, 1);
+        end);
+        button1:SetScript("OnMouseUp", function()
+            this:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-section
+            this:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1); -- text-main
+        end);
+    end
+
+    -- Cancel button
+    local button2 = getglobal("CancelButton");
+    if button2 then
+        button2:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1);
+        button2:GetFontString():SetPoint("CENTER", button2, "CENTER", 0, 1);
+        button2:SetBackdrop({
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            tile = true,
+            edgeSize = 1,
+            tileSize = 16,
+            insets = { left = 0, right = 0, top = 0, bottom = 0 }
+        });
+        button2:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-section
+        button2:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);
+        button2:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1); -- text-main
+        button2:GetFontString():SetPoint("CENTER", button2, "CENTER", 0, 2);
+        button2:SetNormalTexture("");
+        button2:SetPushedTexture("");
+        button2:SetHighlightTexture("");
+        button2:SetPushedTextOffset(0, 0);
+
+        button2:SetScript("OnEnter", function()
+            this:SetBackdropColor(0.098, 0.098, 0.098, 1);
+        end);
+        button2:SetScript("OnLeave", function()
+            this:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-section
+        end);
+        button2:SetScript("OnMouseDown", function()
+            this:SetBackdropColor(0.098, 0.098, 0.098, 1);
+            this:GetFontString():SetTextColor(0.784, 0.294, 0.192, 1);
+        end);
+        button2:SetScript("OnMouseUp", function()
+            this:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-section
+            this:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1); -- text-main
+        end);
+    end
+end
 
 
 function SOTA_EchoEvent(msgKey, item, dkp, bidder, rank, param1, param2, param3)
@@ -409,8 +528,8 @@ function SOTA_VerifyEventMessages()
         { SOTA_MSG_OnMainspecMaxBid,     1, "$b ($r) went all in ($d DKP) for $i" },
         { SOTA_MSG_OnOffspecMaxBid,      1, "$b went all in ($d) Off-spec for $i" },
         { SOTA_MSG_OnComplete,           2, "$i sold to $b for $d DKP" },
-        { SOTA_MSG_OnPause,              2, "Auction has been Paused" },
-        { SOTA_MSG_OnResume,             2, "Auction has been Resumed" },
+        { SOTA_MSG_OnPause,              1, "Auction has been Paused" },
+        { SOTA_MSG_OnResume,             1, "Auction has been Resumed" },
         { SOTA_MSG_OnClose,              1, "Auction for $i is over" },
         { SOTA_MSG_OnCancel,             1, "Auction was Cancelled" },
         { SOTA_MSG_OnDKPAdded,           1, "$d DKP добавлено игроку $b" },
@@ -595,6 +714,10 @@ function SOTA_OnEventMessageClick(object)
         getglobal(frame:GetName() .. "CheckbuttonSay"):SetChecked(1);
     end
     -- Yes, channel can be disabled (0) = nothing is written.
+
+    -- Стилизация EditBox и кнопок перед открытием
+    SOTA_StyleEventEditorEditBox();
+    SOTA_StyleEventEditorButtons();
 
     FrameEventEditor:Show();
     FrameEventEditorMessage:SetFocus();

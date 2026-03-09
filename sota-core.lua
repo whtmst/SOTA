@@ -1125,7 +1125,7 @@ function SOTA_StyleStaticPopupButtons(frameName)
             tileSize = 16,
             insets = { left = 0, right = 0, top = 0, bottom = 0 }
         });
-        button1:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-main
+        button1:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-section
         button1:SetBackdropBorderColor(0.251, 0.251, 0.251, 1); -- border-main
         button1:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1); -- text-main
 
@@ -1143,22 +1143,22 @@ function SOTA_StyleStaticPopupButtons(frameName)
 
         -- Добавляем реакцию на нажатие (изменение цвета фона и текста)
         button1:SetScript("OnMouseDown", function()
-            this:SetBackdropColor(0.098, 0.098, 0.098, 1);  -- bg-main но темнее
+            this:SetBackdropColor(0.098, 0.098, 0.098, 1);  -- bg-main
             this:GetFontString():SetTextColor(0.784, 0.294, 0.192, 1);  -- accent-main
         end);
 
         button1:SetScript("OnMouseUp", function()
-            this:SetBackdropColor(0.145, 0.145, 0.145, 1);  -- bg-section
+            this:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-section
             this:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1); -- text-main
         end);
 
         -- Добавляем реакцию ховер (изменение цвета фона)
         button1:SetScript("OnEnter", function()
-            this:SetBackdropColor(0.098, 0.098, 0.098, 1);  -- bg-main но темнее
+            this:SetBackdropColor(0.098, 0.098, 0.098, 1);  -- bg-main
         end);
 
         button1:SetScript("OnLeave", function()
-            this:SetBackdropColor(0.145, 0.145, 0.145, 1);   -- bg-main
+            this:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-section
         end);
     end
 
@@ -1173,9 +1173,9 @@ function SOTA_StyleStaticPopupButtons(frameName)
             tileSize = 16,
             insets = { left = 0, right = 0, top = 0, bottom = 0 }
         });
-        button2:SetBackdropColor(0.145, 0.145, 0.145, 1);
-        button2:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);
-        button2:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1);
+        button2:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-section
+        button2:SetBackdropBorderColor(0.251, 0.251, 0.251, 1); -- border-main
+        button2:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1); -- text-main
 
         -- Смещаем текст вверх (чтобы не был прижат к низу)
         button2:GetFontString():ClearAllPoints();
@@ -1191,7 +1191,7 @@ function SOTA_StyleStaticPopupButtons(frameName)
 
         -- Добавляем реакцию на нажатие (изменение цвета фона и текста)
         button2:SetScript("OnMouseDown", function()
-            this:SetBackdropColor(0.098, 0.098, 0.098, 1);  -- bg-main но темнее
+            this:SetBackdropColor(0.098, 0.098, 0.098, 1);  -- bg-main
             this:GetFontString():SetTextColor(0.784, 0.294, 0.192, 1);  -- accent-main
         end);
 
@@ -1202,7 +1202,7 @@ function SOTA_StyleStaticPopupButtons(frameName)
 
         -- Добавляем реакцию ховер (изменение цвета фона)
         button2:SetScript("OnEnter", function()
-            this:SetBackdropColor(0.098, 0.098, 0.098, 1);  -- bg-main но темнее
+            this:SetBackdropColor(0.098, 0.098, 0.098, 1);  -- bg-main
         end);
 
         button2:SetScript("OnLeave", function()
@@ -1244,7 +1244,7 @@ function SOTA_StyleStaticPopupEditBox(frameName, editBoxWidth, editBoxHeight, ma
             tileSize = 16,
             insets = { left = 0, right = 0, top = 0, bottom = 0 }
         });
-        editBox:SetBackdropColor(0.784, 0.294, 0.192, 1);      -- bg-main (фон)
+        editBox:SetBackdropColor(0.098, 0.098, 0.098, 1);      -- bg-main (фон)
         editBox:SetBackdropBorderColor(0.251, 0.251, 0.251, 1); -- border-main (рамка)
 
         -- Устанавливаем отступы для текста
@@ -1306,7 +1306,15 @@ function SOTA_ShareBossDKP()
                 if editBox then
                     editBox:SetText("");
                     editBox:SetFont(fontPath, 16);
+                    editBox:SetAutoFocus(false);  -- Отключаем автофокус при открытии
                     editBox:SetFocus();
+                    -- Применяем оранжевую рамку сразу (так как SetFocus не триггерит OnEditFocusGained в OnShow)
+                    editBox:SetBackdropBorderColor(0.784, 0.294, 0.192, 1);
+                    -- Обработка Esc: снимаем фокус, но не закрываем попап
+                    editBox:SetScript("OnEscapePressed", function()
+                        this:ClearFocus();
+                        this:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);  -- border-main (серая)
+                    end);
                 end
 
                 -- Кнопки
