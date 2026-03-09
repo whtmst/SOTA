@@ -34,7 +34,7 @@
 	</Font>
 	<Font name="SOTA_Font_Orange" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
 		<FontHeight val="12" />
-		<Color r="0.925" g="0.243" b="0.031" />
+		<Color r="0.784" g="0.294" b="0.192" />
 		<Shadow>
 			<Offset>
 				<AbsDimension x="1" y="-1" />
@@ -71,15 +71,15 @@
 		</Backdrop>
 		<Scripts>
 			<OnLoad>
-				this:SetMovable(true)
-				this:SetUserPlaced(true)
-				this:RegisterForDrag("LeftButton")
+				this:SetMovable(true);
+				this:SetUserPlaced(true);
+				this:RegisterForDrag("LeftButton");
 			</OnLoad>
 			<OnDragStart>
-				this:StartMoving()
+				this:StartMoving();
 			</OnDragStart>
 			<OnDragStop>
-				this:StopMovingOrSizing()
+				this:StopMovingOrSizing();
 			</OnDragStop>
 		</Scripts>
 	</Frame>
@@ -127,21 +127,21 @@
 		</Layers>
 		<Scripts>
 			<OnClick>
-				PlaySound("igMainMenuOptionCheckBoxOn")
-				SOTA_OnQueuedPlayerClick(this, arg1)
+				PlaySound("igMainMenuOptionCheckBoxOn");
+				SOTA_OnQueuedPlayerClick(this, arg1);
 			</OnClick>
 			<OnEnter>
-				getglobal(this:GetName().."BG"):SetVertexColor(1, 1, 1, 1)
+				getglobal(this:GetName().."BG"):SetVertexColor(1, 1, 1, 1);
 			</OnEnter>
 			<OnLeave>
-				getglobal(this:GetName().."BG"):SetVertexColor(0.7, 0.7, 0.7, 0.7)
+				getglobal(this:GetName().."BG"):SetVertexColor(0.7, 0.7, 0.7, 0.7);
 			</OnLeave>
 			<OnLoad>
 				this:RegisterForClicks(
 				"LeftButtonDown",
 				"RightButtonDown"
-				)
-				this:GetScript("OnLeave")(this)
+				);
+				this:GetScript("OnLeave")(this);
 			</OnLoad>
 		</Scripts>
 		<NormalTexture name="$parentBG" />

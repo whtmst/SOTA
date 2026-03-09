@@ -34,7 +34,7 @@
 	</Font>
 	<Font name="SOTA_Font_Orange" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
 		<FontHeight val="12" />
-		<Color r="0.925" g="0.243" b="0.031" />
+		<Color r="0.784" g="0.294" b="0.192" />
 		<Shadow>
 			<Offset>
 				<AbsDimension x="1" y="-1" />
@@ -86,17 +86,17 @@
 		</Layers>
 		<Scripts>
 			<OnClick>
-				PlaySound("igMainMenuOptionCheckBoxOn")
-				SOTA_OnBidClick(this)
+				PlaySound("igMainMenuOptionCheckBoxOn");
+				SOTA_OnBidClick(this);
 			</OnClick>
 			<OnEnter>
-				getglobal(this:GetName().."BG"):SetVertexColor(0.075, 0.075, 0.075, 1)
+				getglobal(this:GetName().."BG"):SetVertexColor(0.075, 0.075, 0.075, 1);
 			</OnEnter>
 			<OnLeave>
-				getglobal(this:GetName().."BG"):SetVertexColor(1, 1, 1, 1)
+				getglobal(this:GetName().."BG"):SetVertexColor(1, 1, 1, 1);
 			</OnLeave>
 			<OnLoad>
-				this:GetScript("OnLeave")(this)
+				this:GetScript("OnLeave")(this);
 			</OnLoad>
 		</Scripts>
 		<NormalTexture name="$parentBG">
@@ -288,7 +288,9 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>SOTA_OnPauseAuctionClick();</OnClick>
+					<OnClick>
+					    SOTA_OnPauseAuctionClick();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="FinishAuctionButton" inherits="UIPanelButtonTemplate" text="ЗАВЕРШИТЬ">
@@ -301,7 +303,9 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>SOTA_OnFinishAuctionClick();</OnClick>
+					<OnClick>
+					    SOTA_OnFinishAuctionClick();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="RestartAuctionButton" inherits="UIPanelButtonTemplate" text="ПЕРЕЗАПУСК">
@@ -314,7 +318,9 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>SOTA_OnRestartAuctionClick();</OnClick>
+					<OnClick>
+					    SOTA_OnRestartAuctionClick();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<!-- Button row to control AuctionUI -->
@@ -328,7 +334,9 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>SOTA_OnAcceptBidClick();</OnClick>
+					<OnClick>
+					    SOTA_OnAcceptBidClick();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="CancelAuctionButton" inherits="UIPanelButtonTemplate" text="ОТМЕНИТЬ АУКЦИОН">
@@ -341,7 +349,9 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>SOTA_OnCancelAuctionClick();</OnClick>
+					<OnClick>
+					    SOTA_OnCancelAuctionClick();
+					</OnClick>
 				</Scripts>
 			</Button>
 		</Frames>
@@ -372,15 +382,15 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				this:SetMovable(true)
-				this:SetUserPlaced(true)
-				this:RegisterForDrag("LeftButton")
+				this:SetMovable(true);
+				this:SetUserPlaced(true);
+				this:RegisterForDrag("LeftButton");
 			</OnLoad>
 			<OnDragStart>
-				this:StartMoving()
+				this:StartMoving();
 			</OnDragStart>
 			<OnDragStop>
-				this:StopMovingOrSizing()
+				this:StopMovingOrSizing();
 			</OnDragStop>
 		</Scripts>
 	</Frame>

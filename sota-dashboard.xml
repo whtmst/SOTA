@@ -34,7 +34,7 @@
 	</Font>
 	<Font name="SOTA_Font_Orange" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
 		<FontHeight val="12" />
-		<Color r="0.925" g="0.243" b="0.031" />
+		<Color r="0.784" g="0.294" b="0.192" />
 		<Shadow>
 			<Offset>
 				<AbsDimension x="1" y="-1" />
@@ -115,14 +115,14 @@
 						</Backdrop>
 						<Scripts>
 							<OnLoad>
-								this:SetMovable(true)
-								this:RegisterForDrag("LeftButton")
+								this:SetMovable(true);
+								this:RegisterForDrag("LeftButton");
 							</OnLoad>
 							<OnDragStart>
-								DashboardUIFrame:StartMoving()
+								DashboardUIFrame:StartMoving();
 							</OnDragStart>
 							<OnDragStop>
-								DashboardUIFrame:StopMovingOrSizing()
+								DashboardUIFrame:StopMovingOrSizing();
 							</OnDragStop>
 						</Scripts>
 					</Frame>
@@ -526,14 +526,14 @@
 						</Backdrop>
 						<Scripts>
 							<OnLoad>
-								this:SetMovable(true)
-								this:RegisterForDrag("LeftButton")
+								this:SetMovable(true);
+								this:RegisterForDrag("LeftButton");
 							</OnLoad>
 							<OnDragStart>
-								DashboardUIFrame:StartMoving()
+								DashboardUIFrame:StartMoving();
 							</OnDragStart>
 							<OnDragStop>
-								DashboardUIFrame:StopMovingOrSizing()
+								DashboardUIFrame:StopMovingOrSizing();
 							</OnDragStop>
 						</Scripts>
 					</Frame>
@@ -542,12 +542,12 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				this:SetMovable(true)
-				this:SetUserPlaced(true)
+				this:SetMovable(true);
+				this:SetUserPlaced(true);
 			</OnLoad>
 			<OnShow>
 				if SOTA_InitializeDashboardButtonsState then
-					SOTA_InitializeDashboardButtonsState()
+					SOTA_InitializeDashboardButtonsState();
 				end
 			</OnShow>
 		</Scripts>

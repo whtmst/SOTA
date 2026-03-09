@@ -63,15 +63,15 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				this:SetMovable(true)
-				this:SetUserPlaced(true)
-				this:RegisterForDrag("LeftButton")
+				this:SetMovable(true);
+				this:SetUserPlaced(true);
+				this:RegisterForDrag("LeftButton");
 			</OnLoad>
 			<OnDragStart>
-				this:StartMoving()
+				this:StartMoving();
 			</OnDragStart>
 			<OnDragStop>
-				this:StopMovingOrSizing()
+				this:StopMovingOrSizing();
 			</OnDragStop>
 		</Scripts>
 	</Frame>

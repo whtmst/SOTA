@@ -34,7 +34,7 @@
 	</Font>
 	<Font name="SOTA_Font_Orange" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
 		<FontHeight val="12" />
-		<Color r="0.925" g="0.243" b="0.031" />
+		<Color r="0.784" g="0.294" b="0.192" />
 		<Shadow>
 			<Offset>
 				<AbsDimension x="1" y="-1" />
@@ -43,7 +43,7 @@
 		</Shadow>
 	</Font>
 
-	<!-- Modern Configuration Frame Template -->
+	<!-- MODERN CONFIGURATION FRAME TEMPLATE -->
 	<Frame name="SOTA_ModernConfigFrameTemplate" parent="UIParent" toplevel="true" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="450" y="600" />
@@ -51,17 +51,16 @@
 		<Anchors>
 			<Anchor point="CENTER" />
 		</Anchors>
-		<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+		<Backdrop bgFile="Interface\Buttons\WHITE8X8" tile="true" edgeFile="Interface\Buttons\WHITE8X8">
 			<BackgroundInsets>
-				<AbsInset left="4" right="4" top="4" bottom="4" />
+				<AbsInset left="0" right="0" top="0" bottom="0" />
 			</BackgroundInsets>
+			<EdgeSize>
+				<AbsValue val="1" />
+			</EdgeSize>
 			<TileSize>
 				<AbsValue val="16" />
 			</TileSize>
-			<EdgeSize>
-				<AbsValue val="16" />
-			</EdgeSize>
-			<Color r="0.075" g="0.075" b="0.075" a="1" />
 		</Backdrop>
 		<Layers>
 			<Layer level="ARTWORK">
@@ -104,15 +103,17 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				this:SetMovable(true)
-				this:SetUserPlaced(false)
-				this:RegisterForDrag("LeftButton")
+                this:SetBackdropColor(0.098, 0.098, 0.098, 1);
+           	    this:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);
+				this:SetMovable(true);
+				this:SetUserPlaced(false);
+				this:RegisterForDrag("LeftButton");
 			</OnLoad>
 			<OnDragStart>
-				this:StartMoving()
+				this:StartMoving();
 			</OnDragStart>
 			<OnDragStop>
-				this:StopMovingOrSizing()
+				this:StopMovingOrSizing();
 				SOTA_UpdateFramePos(this);
 			</OnDragStop>
 		</Scripts>
@@ -123,24 +124,27 @@
 		<Size>
 			<AbsDimension x="90" y="24" />
 		</Size>
-		<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+		<Backdrop bgFile="Interface\Buttons\WHITE8X8" tile="true" edgeFile="Interface\Buttons\WHITE8X8">
 			<BackgroundInsets>
-				<AbsInset left="2" right="2" top="2" bottom="2" />
+				<AbsInset left="0" right="0" top="0" bottom="0" />
 			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="8" />
-			</TileSize>
 			<EdgeSize>
-				<AbsValue val="8" />
+				<AbsValue val="1" />
 			</EdgeSize>
-			<Color r="0.15" g="0.15" b="0.15" a="0.8" />
+			<TileSize>
+				<AbsValue val="16" />
+			</TileSize>
 		</Backdrop>
 		<Scripts>
+    		<OnLoad>
+    		    this:SetBackdropColor(0.098, 0.098, 0.098, 1);
+    			this:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);
+    		</OnLoad>
 			<OnClick>
 				<!-- Handler set by parent -->
 			</OnClick>
 			<OnEnter>
-				getglobal(this:GetName().."Text"):SetTextColor(0.925, 0.243, 0.031);
+				getglobal(this:GetName().."Text"):SetTextColor(0.784, 0.294, 0.192);
 			</OnEnter>
 			<OnLeave>
 				-- Не перекрашиваем активную вкладку (1=Bidding, 2=Boss DKP, 3=Misc DKP, 4=Messages)
@@ -154,12 +158,12 @@
 					isActive = true;
 				end
 				if not isActive then
-					getglobal(this:GetName().."Text"):SetTextColor(1, 1, 1);
+					getglobal(this:GetName().."Text"):SetTextColor(0.925, 0.859, 0.729, 1);
 				end
 			</OnLeave>
 		</Scripts>
 		<NormalText inherits="SOTA_Font_Normal" />
-		<HighlightText inherits="SOTA_Font_Title" />
+		<HighlightText inherits="SOTA_Font_Orange" />
 	</Button>
 
 	<!-- Tab Button with Text Template -->
@@ -184,13 +188,15 @@
 			<AbsDimension x="370" y="20" />
 		</Size>
 		<Scripts>
-			<OnLoad>
-				getglobal(this:GetName().."Low"):SetText("0");
-				getglobal(this:GetName().."Low"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
-				getglobal(this:GetName().."High"):SetText("5000");
-				getglobal(this:GetName().."High"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
-				getglobal(this:GetName().."Text"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
-			</OnLoad>
+    		<OnLoad>
+                getglobal(this:GetName().."Low"):SetText("0");
+                getglobal(this:GetName().."Low"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+                getglobal(this:GetName().."High"):SetText("5000");
+                getglobal(this:GetName().."High"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+                getglobal(this:GetName().."Text"):SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 10);
+                getglobal(this:GetName().."Text"):SetJustifyH("LEFT");
+                getglobal(this:GetName().."Text"):SetPoint("LEFT", this, "LEFT", 0, 0);
+            </OnLoad>
 			<OnValueChanged>
 				SOTA_OnOptionBossDKPChanged(this);
 			</OnValueChanged>
@@ -245,17 +251,17 @@
 		</Layers>
 		<Scripts>
 			<OnClick>
-				SOTA_OnEventMessageClick(this)
-				PlaySound("igMainMenuOptionCheckBoxOn")
+				SOTA_OnEventMessageClick(this);
+				PlaySound("igMainMenuOptionCheckBoxOn");
 			</OnClick>
 			<OnEnter>
-				getglobal(this:GetName().."Highlight"):SetVertexColor(0.925, 0.243, 0.031, 1)
+				getglobal(this:GetName().."Highlight"):SetVertexColor(0.925, 0.243, 0.031, 1);
 			</OnEnter>
 			<OnLeave>
-				getglobal(this:GetName().."Highlight"):SetVertexColor(1, 1, 1, 1)
+				getglobal(this:GetName().."Highlight"):SetVertexColor(1, 1, 1, 1);
 			</OnLeave>
 			<OnLoad>
-				this:GetScript("OnLeave")(this)
+				this:GetScript("OnLeave")(this);
 			</OnLoad>
 		</Scripts>
 		<NormalTexture name="$parentBG">
@@ -287,13 +293,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СТАВКИ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenBiddingConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenBiddingConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab2" inherits="SOTA_TabButtonTemplate" id="2">
@@ -306,13 +318,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="DKP">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenBossDkpConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenBossDkpConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab3" inherits="SOTA_TabButtonTemplate" id="3">
@@ -325,13 +343,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="ПРОЧЕЕ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenMiscDkpConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenMiscDkpConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab4" inherits="SOTA_TabButtonTemplate" id="4">
@@ -344,13 +368,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СООБЩЕНИЯ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenMessageConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenMessageConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 
@@ -586,13 +616,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СТАВКИ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenBiddingConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenBiddingConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab2" inherits="SOTA_TabButtonTemplate" id="2">
@@ -605,13 +641,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="DKP">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenBossDkpConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenBossDkpConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab3" inherits="SOTA_TabButtonTemplate" id="3">
@@ -624,13 +666,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="ПРОЧЕЕ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenMiscDkpConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenMiscDkpConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab4" inherits="SOTA_TabButtonTemplate" id="4">
@@ -643,7 +691,11 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СООБЩЕНИЯ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
@@ -656,7 +708,7 @@
 			<Slider name="$parent_20Mans" inherits="SOTA_BossDKPSlider">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="40" y="-152" />
+						<Offset x="40" y="-140" />
 					</Anchor>
 				</Anchors>
 			</Slider>
@@ -664,7 +716,7 @@
 			<Slider name="$parent_MoltenCore" inherits="SOTA_BossDKPSlider">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="40" y="-184" />
+						<Offset x="40" y="-180" />
 					</Anchor>
 				</Anchors>
 			</Slider>
@@ -672,7 +724,7 @@
 			<Slider name="$parent_Onyxia" inherits="SOTA_BossDKPSlider">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="40" y="-216" />
+						<Offset x="40" y="-220" />
 					</Anchor>
 				</Anchors>
 			</Slider>
@@ -680,7 +732,7 @@
 			<Slider name="$parent_EmeraldSanctum" inherits="SOTA_BossDKPSlider">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="40" y="-248" />
+						<Offset x="40" y="-260" />
 					</Anchor>
 				</Anchors>
 			</Slider>
@@ -688,7 +740,7 @@
 			<Slider name="$parent_BlackwingLair" inherits="SOTA_BossDKPSlider">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="40" y="-280" />
+						<Offset x="40" y="-300" />
 					</Anchor>
 				</Anchors>
 			</Slider>
@@ -696,7 +748,7 @@
 			<Slider name="$parent_AQ40" inherits="SOTA_BossDKPSlider">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="40" y="-312" />
+						<Offset x="40" y="-340" />
 					</Anchor>
 				</Anchors>
 			</Slider>
@@ -704,7 +756,7 @@
 			<Slider name="$parent_Naxxramas" inherits="SOTA_BossDKPSlider">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="40" y="-344" />
+						<Offset x="40" y="-380" />
 					</Anchor>
 				</Anchors>
 			</Slider>
@@ -712,7 +764,7 @@
 			<Slider name="$parent_WorldBosses" inherits="SOTA_BossDKPSlider">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="40" y="-376" />
+						<Offset x="40" y="-420" />
 					</Anchor>
 				</Anchors>
 			</Slider>
@@ -733,13 +785,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СТАВКИ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenBiddingConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenBiddingConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab2" inherits="SOTA_TabButtonTemplate" id="2">
@@ -752,13 +810,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="DKP">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenBossDkpConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenBossDkpConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab3" inherits="SOTA_TabButtonTemplate" id="3">
@@ -771,13 +835,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="ПРОЧЕЕ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenMiscDkpConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenMiscDkpConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab4" inherits="SOTA_TabButtonTemplate" id="4">
@@ -790,13 +860,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СООБЩЕНИЯ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenMessageConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenMessageConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 
@@ -1069,13 +1145,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СТАВКИ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenBiddingConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenBiddingConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab2" inherits="SOTA_TabButtonTemplate" id="2">
@@ -1088,13 +1170,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="DKP">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenBossDkpConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenBossDkpConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab3" inherits="SOTA_TabButtonTemplate" id="3">
@@ -1107,13 +1195,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="ПРОЧЕЕ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenMiscDkpConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenMiscDkpConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab4" inherits="SOTA_TabButtonTemplate" id="4">
@@ -1126,17 +1220,23 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СООБЩЕНИЯ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="2" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenMessageConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenMessageConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 
-			<!-- Message list frame -->
+			<!-- ScrollFrame для списка сообщений (FrameConfigMessage) -->
 			<ScrollFrame name="$parentTableList" inherits="FauxScrollFrameTemplate">
 				<Size>
 					<AbsDimension x="375" y="350" />
@@ -1148,9 +1248,9 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+				<Backdrop bgFile="Interface\Buttons\WHITE8X8" tile="true" edgeFile="Interface\Buttons\WHITE8X8">
 					<EdgeSize>
-						<AbsValue val="16" />
+						<AbsValue val="1" />
 					</EdgeSize>
 					<TileSize>
 						<AbsValue val="16" />
@@ -1161,7 +1261,9 @@
 						FauxScrollFrame_OnVerticalScroll(20, SOTA_UpdateTextList);
 					</OnVerticalScroll>
 					<OnShow>
-						SOTA_UpdateTextList()
+						SOTA_UpdateTextList();
+						this:SetBackdropColor(0.098, 0.098, 0.098, 1);
+						this:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);
 					</OnShow>
 				</Scripts>
 			</ScrollFrame>
@@ -1260,13 +1362,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СТАВКИ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenBiddingConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenBiddingConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab2" inherits="SOTA_TabButtonTemplate" id="2">
@@ -1279,13 +1387,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="DKP">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenBossDkpConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenBossDkpConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab3" inherits="SOTA_TabButtonTemplate" id="3">
@@ -1298,13 +1412,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="ПРОЧЕЕ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenMiscDkpConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenMiscDkpConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab4" inherits="SOTA_TabButtonTemplate" id="4">
@@ -1317,13 +1437,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СООБЩЕНИЯ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenMessageConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenMessageConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 
@@ -1340,10 +1466,10 @@
 				<FontString inherits="SOTA_Font_Normal" />
 				<Scripts>
 					<OnLoad>
-						this:RegisterEvent("OnEnterPressed")
+						this:RegisterEvent("OnEnterPressed");
 					</OnLoad>
 					<OnEnterPressed>
-						SOTA_SaveRules_OnClick()
+						SOTA_SaveRules_OnClick();
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
@@ -1360,10 +1486,10 @@
 				<FontString inherits="SOTA_Font_Normal" />
 				<Scripts>
 					<OnLoad>
-						this:RegisterEvent("OnEnterPressed")
+						this:RegisterEvent("OnEnterPressed");
 					</OnLoad>
 					<OnEnterPressed>
-						SOTA_SaveRules_OnClick()
+						SOTA_SaveRules_OnClick();
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
@@ -1381,10 +1507,10 @@
 				<FontString inherits="SOTA_Font_Normal" />
 				<Scripts>
 					<OnLoad>
-						this:RegisterEvent("OnEnterPressed")
+						this:RegisterEvent("OnEnterPressed");
 					</OnLoad>
 					<OnEnterPressed>
-						SOTA_SaveRules_OnClick()
+						SOTA_SaveRules_OnClick();
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
@@ -1401,10 +1527,10 @@
 				<FontString inherits="SOTA_Font_Normal" />
 				<Scripts>
 					<OnLoad>
-						this:RegisterEvent("OnEnterPressed")
+						this:RegisterEvent("OnEnterPressed");
 					</OnLoad>
 					<OnEnterPressed>
-						SOTA_SaveRules_OnClick()
+						SOTA_SaveRules_OnClick();
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
@@ -1422,10 +1548,10 @@
 				<FontString inherits="SOTA_Font_Normal" />
 				<Scripts>
 					<OnLoad>
-						this:RegisterEvent("OnEnterPressed")
+						this:RegisterEvent("OnEnterPressed");
 					</OnLoad>
 					<OnEnterPressed>
-						SOTA_SaveRules_OnClick()
+						SOTA_SaveRules_OnClick();
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
@@ -1442,10 +1568,10 @@
 				<FontString inherits="SOTA_Font_Normal" />
 				<Scripts>
 					<OnLoad>
-						this:RegisterEvent("OnEnterPressed")
+						this:RegisterEvent("OnEnterPressed");
 					</OnLoad>
 					<OnEnterPressed>
-						SOTA_SaveRules_OnClick()
+						SOTA_SaveRules_OnClick();
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
@@ -1463,10 +1589,10 @@
 				<FontString inherits="SOTA_Font_Normal" />
 				<Scripts>
 					<OnLoad>
-						this:RegisterEvent("OnEnterPressed")
+						this:RegisterEvent("OnEnterPressed");
 					</OnLoad>
 					<OnEnterPressed>
-						SOTA_SaveRules_OnClick()
+						SOTA_SaveRules_OnClick();
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
@@ -1483,10 +1609,10 @@
 				<FontString inherits="SOTA_Font_Normal" />
 				<Scripts>
 					<OnLoad>
-						this:RegisterEvent("OnEnterPressed")
+						this:RegisterEvent("OnEnterPressed");
 					</OnLoad>
 					<OnEnterPressed>
-						SOTA_SaveRules_OnClick()
+						SOTA_SaveRules_OnClick();
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
@@ -1813,13 +1939,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СТАВКИ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenBiddingConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenBiddingConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab2" inherits="SOTA_TabButtonTemplate" id="2">
@@ -1832,13 +1964,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="DKP">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenBossDkpConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenBossDkpConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab3" inherits="SOTA_TabButtonTemplate" id="3">
@@ -1851,13 +1989,19 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="ПРОЧЕЕ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenMiscDkpConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenMiscDkpConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="$parentTab4" inherits="SOTA_TabButtonTemplate" id="4">
@@ -1870,17 +2014,23 @@
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" text="СООБЩЕНИЯ">
 							<Anchors>
-								<Anchor point="CENTER" />
+								<Anchor point="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnClick>SOTA_OpenMessageConfig();</OnClick>
+					<OnClick>
+					    SOTA_OpenMessageConfig();
+					</OnClick>
 				</Scripts>
 			</Button>
 
-			<!-- Message list frame -->
+			<!-- ScrollFrame для списка версий настроек (FrameConfigSyncCfg) -->
 			<ScrollFrame name="$parentTableList" inherits="FauxScrollFrameTemplate">
 				<Size>
 					<AbsDimension x="286" y="250" />
@@ -1892,9 +2042,9 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+				<Backdrop bgFile="Interface\Buttons\WHITE8X8" tile="true" edgeFile="Interface\Buttons\WHITE8X8">
 					<EdgeSize>
-						<AbsValue val="16" />
+						<AbsValue val="1" />
 					</EdgeSize>
 					<TileSize>
 						<AbsValue val="16" />
@@ -1905,7 +2055,9 @@
 						--FauxScrollFrame_OnVerticalScroll(20, SOTA_UpdateTextList);
 					</OnVerticalScroll>
 					<OnShow>
-						--SOTA_UpdateTextList()
+						--SOTA_UpdateTextList();
+						this:SetBackdropColor(0.098, 0.098, 0.098, 1);
+						this:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);
 					</OnShow>
 				</Scripts>
 			</ScrollFrame>
@@ -1976,8 +2128,8 @@
 				<FontString inherits="SOTA_Font_Normal" />
 				<Scripts>
 					<OnLoad>
-						this:RegisterEvent("OnEnterPressed")
-						this:RegisterEvent("OnEscapePressed")
+						this:RegisterEvent("OnEnterPressed");
+						this:RegisterEvent("OnEscapePressed");
 					</OnLoad>
 					<OnEnterPressed>
 						SOTA_OnEventEditorSave();
@@ -2209,15 +2361,15 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				this:SetMovable(true)
-				this:SetUserPlaced(true)
-				this:RegisterForDrag("LeftButton")
+				this:SetMovable(true);
+				this:SetUserPlaced(true);
+				this:RegisterForDrag("LeftButton");
 			</OnLoad>
 			<OnDragStart>
-				this:StartMoving()
+				this:StartMoving();
 			</OnDragStart>
 			<OnDragStop>
-				this:StopMovingOrSizing()
+				this:StopMovingOrSizing();
 			</OnDragStop>
 		</Scripts>
 	</Frame>

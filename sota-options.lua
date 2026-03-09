@@ -161,9 +161,9 @@ function SOTA_HighlightTab(tabIndex)
             if tabText then
                 -- Подсвечиваем вкладку с номером tabIndex на ВСЕХ фреймах
                 if i == tabIndex then
-                    tabText:SetTextColor(0.925, 0.243, 0.031);  -- Оранжевый #FFEC3E08
+                    tabText:SetTextColor(0.784, 0.294, 0.192);  -- Акцентный цвет
                 else
-                    tabText:SetTextColor(1, 1, 1);    -- Белый для неактивных
+                    tabText:SetTextColor(0.925, 0.859, 0.729, 1);    -- Белый для неактивных
                 end
             end
         end
@@ -288,28 +288,28 @@ function SOTA_OnOptionBossDKPChanged(object)
 
     if slider == "FrameConfigBossDkp_20Mans" then
         SOTA_SetBossDKPValue("20Mans", value);
-        valueString = string.format("РЕЙДЫ НА 20 ЧЕЛОВЕК (ZG, AQ20): %d DKP", value);
+        valueString = string.format("-- РЕЙДЫ НА 20 ЧЕЛОВЕК (ZG, AQ20): %d DKP", value);
     elseif slider == "FrameConfigBossDkp_MoltenCore" then
         SOTA_SetBossDKPValue("MoltenCore", value);
-        valueString = string.format("MOLTEN CORE: %d DKP", value);
+        valueString = string.format("-- MOLTEN CORE: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_Onyxia" then
         SOTA_SetBossDKPValue("Onyxia", value);
-        valueString = string.format("ONYXIA: %d DKP", value);
+        valueString = string.format("-- ONYXIA: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_EmeraldSanctum" then
         SOTA_SetBossDKPValue("EmeraldSanctum", value);
-        valueString = string.format("EMERALD SANCTUM: %d DKP", value);
+        valueString = string.format("-- EMERALD SANCTUM: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_BlackwingLair" then
         SOTA_SetBossDKPValue("BlackwingLair", value);
-        valueString = string.format("BLACKWING LAIR: %d DKP", value);
+        valueString = string.format("-- BLACKWING LAIR: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_AQ40" then
         SOTA_SetBossDKPValue("AQ40", value);
-        valueString = string.format("TEMPLE OF AHN'QIRAJ: %d DKP", value);
+        valueString = string.format("-- TEMPLE OF AHN'QIRAJ: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_Naxxramas" then
         SOTA_SetBossDKPValue("Naxxramas", value);
-        valueString = string.format("NAXXRAMAS: %d DKP", value);
+        valueString = string.format("-- NAXXRAMAS: %d DKP", value);
     elseif slider == "FrameConfigBossDkp_WorldBosses" then
         SOTA_SetBossDKPValue("WorldBosses", value);
-        valueString = string.format("МИРОВЫЕ БОССЫ: %d DKP", value);
+        valueString = string.format("-- МИРОВЫЕ БОССЫ: %d DKP", value);
     end
 
     local textObj = getglobal(slider .. "Text");

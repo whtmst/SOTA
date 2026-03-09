@@ -149,9 +149,9 @@ local SOTA_CONFIG_DEFAULT_BossDKP = {
     { "MoltenCore",    600 },
     { "Onyxia",        600 },
     { "EmeraldSanctum", 1000 },
-    { "BlackwingLair", 600 },
-    { "AQ40",          600 },
-    { "Naxxramas",     600 },
+    { "BlackwingLair", 1000 },
+    { "AQ40",          1000 },
+    { "Naxxramas",     1000 },
     { "WorldBosses",   0 }
 }
 -- Pane 3:
