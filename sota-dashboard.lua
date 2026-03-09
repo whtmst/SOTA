@@ -679,10 +679,12 @@ function SOTA_SetMasterState(mastername, masterstate)
     CLIENT_STATE = masterstate;
 
     if not mastername then
-        mastername = "(не назначен)";
+        mastername = "|cFFC84B31НЕ НАЗНАЧЕН|r";
+    else
+        mastername = "|cFF1EFF00" .. mastername .. "|r"; -- Зелёный цвет для имени
     end
 
-    --echo(string.format("Master: %s, state= %d", mastername, CLIENT_STATE));
+    -- echo(string.format("Master: %s, state= %d", mastername, CLIENT_STATE));
 
     getglobal("SOTA_MasterInfoText"):SetText("МАСТЕР ЛУТЕР: " .. mastername);
 end

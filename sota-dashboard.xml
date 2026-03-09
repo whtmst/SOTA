@@ -90,7 +90,7 @@
 				</Scripts>
 				<Layers>
 					<Layer level="ARTWORK">
-						<FontString name="SOTA_MasterInfoText" inherits="SOTA_Font_Normal" text="МАСТЕР ЛУТЕР: (не назначен)" justifyH="CENTER">
+						<FontString name="SOTA_MasterInfoText" inherits="SOTA_Font_Normal" text="МАСТЕР ЛУТЕР: НЕ НАЗНАЧЕН" justifyH="CENTER">
 							<Anchors>
 								<Anchor point="CENTER">
 									<Offset>
