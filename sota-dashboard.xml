@@ -54,7 +54,7 @@
 			</Anchor>
 		</Anchors>
 		<Frames>
-		
+
 			<!-- Верхняя панель с информацией о мастер-лутере -->
 			<Frame name="$parentMasterInfo">
 				<Size>
@@ -67,11 +67,7 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop
-                    edgeFile="Interface\Buttons\WHITE8X8"
-                    tile="true"
-                    bgFile="Interface\Buttons\WHITE8X8"
-                >
+				<Backdrop bgFile="Interface\Buttons\WHITE8X8" tile="true" edgeFile="Interface\Buttons\WHITE8X8">
 					<BackgroundInsets>
 						<AbsInset left="0" right="0" top="0" bottom="0" />
 					</BackgroundInsets>
@@ -105,7 +101,7 @@
 					<!-- Невидимой фрейм для перетаскивания верхней панели (КРАСНЫЙ ДЛЯ ТЕСТА) -->
 					<Frame name="$parentDragArea">
 						<Size>
-							<AbsDimension x="232" y="24" />
+							<AbsDimension x="205" y="24" />
 						</Size>
 						<Anchors>
 							<Anchor point="TOPLEFT">
@@ -132,7 +128,34 @@
 					</Frame>
 				</Frames>
 			</Frame>
-		
+
+			<!-- Кнопка сворачивания/разворачивания панели кнопок -->
+			<Button name="$parentToggleButtons">
+				<Size>
+					<AbsDimension x="24" y="24" />
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentMasterInfo" relativePoint="BOTTOMRIGHT">
+						<Offset>
+							<AbsDimension x="-2" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture file="Interface\Buttons\UI-ScrollBar-ScrollDownButton-Up" />
+				<PushedTexture file="Interface\Buttons\UI-ScrollBar-ScrollDownButton-Down" />
+				<Scripts>
+					<OnClick>
+						SOTA_ToggleDashboardButtons();
+					</OnClick>
+					<OnEnter>
+						SOTA_ShowDashboardToolTip(this, "СВЕРНУТЬ/РАЗВЕРНУТЬ ПАНЕЛЬ");
+					</OnEnter>
+					<OnLeave>
+						SOTA_HideDashboardToolTip(this);
+					</OnLeave>
+				</Scripts>
+			</Button>
+
 			<!-- Общая панель с кнопками (10 кнопок в 2 ряда) -->
 			<Frame name="$parentButtons">
 				<Size>
@@ -145,11 +168,7 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop
-                    bgFile="Interface\Buttons\WHITE8X8"
-                    tile="true"
-                    edgeFile="Interface\Buttons\WHITE8X8"
-                >
+				<Backdrop bgFile="Interface\Buttons\WHITE8X8" tile="true" edgeFile="Interface\Buttons\WHITE8X8">
 					<BackgroundInsets>
 						<AbsInset left="0" right="0" top="0" bottom="0" />
 					</BackgroundInsets>
@@ -526,6 +545,11 @@
 				this:SetMovable(true)
 				this:SetUserPlaced(true)
 			</OnLoad>
+			<OnShow>
+				if SOTA_InitializeDashboardButtonsState then
+					SOTA_InitializeDashboardButtonsState()
+				end
+			</OnShow>
 		</Scripts>
 	</Frame>
 

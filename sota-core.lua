@@ -11,7 +11,7 @@ SOTA_MESSAGE_PREFIX           = "SOTAv1"
 SOTA_ID                       = "SOTA"
 SOTA_TITLE                    = "SOTA"
 
-local SOTA_DEBUG_ENABLED      = false;
+local SOTA_DEBUG_ENABLED      = false; -- Включение дебаг режима
 
 -- Значения DKP для бонусных кнопок
 local SOTA_WELCOME_DKP_AMOUNT = 60    -- Приветственное DKP
@@ -20,9 +20,9 @@ local SOTA_NO_DEATH_DKP_AMOUNT = 100  -- DKP за проход без смерт
 local SOTA_RECORD_DKP_AMOUNT = 100    -- DKP за рекорд времени
 
 SOTA_CHAT_END                 = "|r"
-SOTA_COLOUR_INTRO             = "|c80F0F0F0"
-SOTA_COLOUR_CHAT              = "|c8040A0F8"
-SOTA_COLOUR_MAIN              = "|cFFC84B31"  -- (основной акцентный цвет SOTA - оранжево-красный)
+SOTA_COLOUR_INTRO             = "|cFFC84B31"  -- (акцентный цвет SOTA - оранжево-красный)
+SOTA_COLOUR_CHAT              = "|cFFECDBBA"  -- (основной цвет текста)
+SOTA_COLOUR_MAIN              = "|cFFC84B31"  -- (акцентный цвет SOTA - оранжево-красный)
 
 local WARN_CHANNEL            = "RAID_WARNING"
 local RAID_CHANNEL            = "RAID"
@@ -223,7 +223,7 @@ function publicEcho(msgInfo)
 end;
 
 function localEcho(msg)
-    echo("<" .. SOTA_COLOUR_INTRO .. SOTA_TITLE .. SOTA_COLOUR_CHAT .. "> " .. msg);
+    echo("[" .. SOTA_COLOUR_INTRO .. SOTA_TITLE .. SOTA_COLOUR_CHAT .. "] " .. msg);
 end;
 
 function raidEcho(msg)

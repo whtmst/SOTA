@@ -7,7 +7,6 @@
 --	is the controlling part of SOTA.
 --]]
 
-
 --[[
 --	Master / Slave setup
 --	--------------------
@@ -58,9 +57,6 @@ local synchronizationState = 0;
 --	Hold RX_SYNCINIT responses when querying for a client to sync. { message, id/count }
 local syncResults          = {};
 local syncRQResults        = {};
-
-
-
 
 --
 --	SLASH COMMANDS
@@ -687,6 +683,65 @@ function SOTA_SetMasterState(mastername, masterstate)
     -- echo(string.format("Master: %s, state= %d", mastername, CLIENT_STATE));
 
     getglobal("SOTA_MasterInfoText"):SetText("МАСТЕР ЛУТЕР: " .. mastername);
+end
+
+-- =================================================================================
+-- Переключение видимости панели кнопок (свёрнуть/развернуть)
+-- =================================================================================
+function SOTA_ToggleDashboardButtons()
+
+    local buttonsFrame = DashboardUIFrameButtons
+    local toggleButton = DashboardUIFrameToggleButtons
+
+    if not toggleButton then
+        return
+    end
+
+    local texture = toggleButton:GetNormalTexture()
+
+    if not texture then
+        return
+    end
+
+    if buttonsFrame:IsShown() then
+        debugEcho(string.format("[SOTA] Скрываю панель"))
+        buttonsFrame:Hide()
+        texture:SetTexCoord(0, 1, 1, 0)
+        SOTA_CONFIG_DashboardButtonsExpanded = false
+    else
+        debugEcho(string.format("[SOTA] Показываю панель"))
+        buttonsFrame:Show()
+        texture:SetTexCoord(0, 1, 0, 1)
+        SOTA_CONFIG_DashboardButtonsExpanded = true
+    end
+end
+
+-- =================================================================================
+-- Инициализация состояния панели кнопок (вызывается после загрузки UI)
+-- =================================================================================
+function SOTA_InitializeDashboardButtonsState()
+
+    local toggleButton = DashboardUIFrameToggleButtons
+
+    if not toggleButton then
+        return
+    end
+
+    local texture = toggleButton:GetNormalTexture()
+    if not texture then
+        return
+    end
+
+    -- По умолчанию панель развёрнута (true)
+    if SOTA_CONFIG_DashboardButtonsExpanded == false then
+        debugEcho(string.format("[SOTA] Скрываю панель (из SavedVariables)"))
+        DashboardUIFrameButtons:Hide()
+        texture:SetTexCoord(0, 1, 1, 0)  -- Стрелка вверх
+    else
+        debugEcho(string.format("[SOTA] Показываю панель (из SavedVariables)"))
+        DashboardUIFrameButtons:Show()
+        texture:SetTexCoord(0, 1, 0, 1)  -- Стрелка вниз
+    end
 end
 
 --[[

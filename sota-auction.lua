@@ -107,7 +107,7 @@ end
 function SOTA_CheckAuctionState()
     local state = SOTA_GetAuctionState();
 
-    debugEcho(string.format("SOTA_CheckAuctionState вызвана, состояние = %d", STATE_AUCTION_PAUSED));
+    -- debugEcho(string.format("SOTA_CheckAuctionState вызвана, состояние = %d", STATE_AUCTION_PAUSED));
 
     if state == STATE_NONE or state == STATE_AUCTION_PAUSED then
         return;

@@ -335,6 +335,11 @@ function SOTA_InitializeConfigSettings()
         SOTA_CONFIG_SilentBidding = 1; -- По умолчанию 1 (тихий режим)
     end
 
+    -- Кнопка сворачивания/разворачивания панели (по умолчанию развёрнута)
+    if SOTA_CONFIG_DashboardButtonsExpanded == nil then
+        SOTA_CONFIG_DashboardButtonsExpanded = true;
+    end
+
     -- Update GUI:
     if not SOTA_CONFIG_EnableOSBidding then
         SOTA_CONFIG_EnableOSBidding = 1;

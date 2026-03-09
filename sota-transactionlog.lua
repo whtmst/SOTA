@@ -902,7 +902,7 @@ function SOTA_DisplayDKPDetails(object, showInRaidChat)
                             raidEcho(string.format(" - Начислено DKP: %d, Затронуто игроков: %d", math.abs(dkp),
                                 table.getn(entry[6])));
                         end;
-                        raidEcho(string.format(' - Команда: "%s", Кто выполнил: %s', string.lower(entry[4]), entry[3]));
+                        raidEcho(string.format(" - Команда: \"%s\", Кто выполнил: %s", entry[4], entry[3]));
                     else
                         --- Show details in Local chat:
                         localEcho("----- Детальный DKP лог -----");
