@@ -1,6 +1,5 @@
 # Тестовые данные
-T-BIDDER_FOR_TEST/
-pfUI_FOR_TEST/
+_IGNORE/
 
 # Временные файлы
 *.tmp
