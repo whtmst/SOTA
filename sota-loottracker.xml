@@ -38,8 +38,19 @@
 		<Size>
 			<AbsDimension x="392" y="34" />
 		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<!-- Подложка строки (чередование) -->
+				<Texture name="$parentRowBG" file="Interface\Buttons\WHITE8X8">
+					<Anchors>
+						<Anchor point="TOPLEFT" />
+						<Anchor point="BOTTOMRIGHT" />
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
 		<Frames>
-			<!-- Кнопка-иконка предмета (32x32) -->
+			<!-- 1. Иконка предмета (32x32) -->
 			<Button name="$parentIcon" inherits="ActionButtonTemplate">
 				<Size>
 					<AbsDimension x="32" y="32" />
@@ -47,7 +58,7 @@
 				<Anchors>
 					<Anchor point="LEFT">
 						<Offset>
-							<AbsDimension x="4" y="0" />
+							<AbsDimension x="0" y="0" />
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -67,32 +78,39 @@
 				</Scripts>
 			</Button>
 
-			<!-- Кнопка с именем победителя (кликабельная) -->
+			<!-- 2. Кнопка с именем победителя (кликабельная) -->
 			<Button name="$parentWinnerButton">
 				<Size>
-					<AbsDimension x="200" y="32" />
+					<AbsDimension x="135" y="32" />
 				</Size>
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentIcon" relativePoint="RIGHT">
 						<Offset>
-							<AbsDimension x="25" y="0" />
+							<AbsDimension x="16" y="0" />
 						</Offset>
 					</Anchor>
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
 						<FontString name="$parentText" inherits="SOTA_Font_Normal" justifyH="LEFT">
+							<Size>
+								<AbsDimension x="131" y="0" />
+							</Size>
 							<Anchors>
 								<Anchor point="LEFT">
 									<Offset>
 										<AbsDimension x="4" y="0" />
 									</Offset>
 								</Anchor>
+								<Anchor point="RIGHT">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
-
 				<Scripts>
 					<OnLoad>
 						-- Красим хайлайт при наведении (белый полупрозрачный)
@@ -123,33 +141,83 @@
 				</Scripts>
 				<HighlightTexture name="$parentHighlight" file="Interface\Buttons\WHITE8X8" alphaMode="ADD" />
 			</Button>
+
+			<!-- 3. Имя босса (слева) -->
+			<Frame name="$parentBossFrame">
+				<Size>
+					<AbsDimension x="135" y="32" />
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentWinnerButton" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="5" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentBoss" inherits="SOTA_Font_Normal" justifyH="LEFT" text="">
+							<Size>
+								<AbsDimension x="131" y="32" />
+							</Size>
+							<Anchors>
+								<Anchor point="LEFT">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+
+			<!-- 4. Таймер (справа) -->
+			<Frame name="$parentTimerFrame">
+				<Size>
+					<AbsDimension x="60" y="32" />
+				</Size>
+				<Anchors>
+					<Anchor point="RIGHT">
+						<Offset>
+							<AbsDimension x="-30" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentTimer" inherits="SOTA_Font_Normal" justifyH="RIGHT" text="">
+							<Size>
+								<AbsDimension x="60" y="32" />
+							</Size>
+							<Anchors>
+								<Anchor point="CENTER" />
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+
+			<!-- 5. Кнопка-крестик для удаления записи -->
+			<Button name="$parentDeleteButton" inherits="UIPanelCloseButton">
+				<Size>
+					<AbsDimension x="20" y="20" />
+				</Size>
+				<Anchors>
+					<Anchor point="RIGHT">
+						<Offset>
+							<AbsDimension x="-5" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						local rowId = this:GetParent():GetID();
+						SOTA_LootTracker_OnDeleteClick(rowId);
+					</OnClick>
+				</Scripts>
+			</Button>
 		</Frames>
-		<Layers>
-			<Layer level="ARTWORK">
-				<!-- Таймер (справа) -->
-				<FontString name="$parentTimer" inherits="SOTA_Font_Normal" justifyH="RIGHT" text="">
-					<Size>
-						<AbsDimension x="60" y="32" />
-					</Size>
-					<Anchors>
-						<Anchor point="RIGHT">
-							<Offset>
-								<AbsDimension x="-8" y="0" />
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-			<Layer level="BACKGROUND">
-				<!-- Подложка строки (чередование) -->
-				<Texture name="$parentRowBG" file="Interface\Buttons\WHITE8X8">
-					<Anchors>
-						<Anchor point="TOPLEFT" />
-						<Anchor point="BOTTOMRIGHT" />
-					</Anchors>
-				</Texture>
-			</Layer>
-		</Layers>
 	</Frame>
 
 	<!-- Основное окно Loot Tracker -->
@@ -193,11 +261,20 @@
 						</Anchor>
 					</Anchors>
 				</FontString>
-				<FontString name="SOTA_LootTrackerFrameHeaderWinner" inherits="SOTA_Font_Small" text="ПОБЕДИТЕЛЬ">
+				<FontString name="SOTA_LootTrackerFrameHeaderWinner" inherits="SOTA_Font_Small" text="ПОБЕДИТЕЛЬ АУКЦИОНА">
 					<Anchors>
 						<Anchor point="TOPLEFT">
 							<Offset>
-								<AbsDimension x="75" y="-36" />
+								<AbsDimension x="65" y="-36" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="SOTA_LootTrackerFrameHeaderBoss" inherits="SOTA_Font_Small" text="ЭНКАУНТЕР (БОСС)" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="200" y="-36" />
 							</Offset>
 						</Anchor>
 					</Anchors>

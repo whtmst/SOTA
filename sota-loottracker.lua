@@ -13,6 +13,7 @@ local SOTA_LOOTTRACKER_REQUIRE_INSTANCE = false   -- true: только в ин�
 local SOTA_LOOTTRACKER_UPDATE_INTERVAL = 0.5      -- Интервал обновления UI (сек)
 local SOTA_LOOTTRACKER_LOOT_WINDOW_TIME = 600     -- Время на передачу (сек), 600 = 10 мин
 local SOTA_LOOTTRACKER_MAX_ROWS = 10              -- Максимум строк в UI
+local SOTA_LOOTTRACKER_REQUIRE_BOSS = true        -- true: проверять, что цель - босс (для тестирования ставим false)
 
 -- Кириллический шрифт для динамических элементов
 local CYRILLIC_FONT_PATH = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
@@ -27,6 +28,12 @@ local SOTA_LootTracker_Elapsed = 0;
 --	Создание записи в таблице отслеживания
 --]]
 local function SOTA_LootTracker_CreateEntry(itemLink, itemName, iconTexture, startTime, bossName, itemColor)
+    -- Проверка на максимальное количество записей
+    if table.getn(SOTA_LootTracker) >= SOTA_LOOTTRACKER_MAX_ROWS then
+        debugEcho("LootTracker: достигнут лимит записей (" .. SOTA_LOOTTRACKER_MAX_ROWS .. "), пропускаем создание");
+        return nil;
+    end
+
     local entry = {
         itemLink = itemLink,
         itemName = itemName,
@@ -68,15 +75,17 @@ function SOTA_LootTracker_TrackItem(slot)
         return;
     end
 
-    -- Фильтр 5: Проверка через T-Lib
-    -- if not T_Lib or not T_Lib.IsBoss then
-        -- debugEcho("LootTracker: T_Lib не загружена, запись не создана");
-        -- return;
-    -- end
-    -- if not T_Lib:IsBoss(targetName) then
-        -- debugEcho("LootTracker: " .. targetName .. " не является боссом (T_Lib)");
-        -- return;
-    -- end
+    -- Фильтр 5: Проверка через T-Lib (только если SOTA_LOOTTRACKER_REQUIRE_BOSS = true)
+    if SOTA_LOOTTRACKER_REQUIRE_BOSS then
+        if not T_Lib or not T_Lib.IsBoss then
+            debugEcho("LootTracker: T_Lib не загружена, запись не создана");
+            return;
+        end
+        if not T_Lib:IsBoss(targetName) then
+            debugEcho("LootTracker: " .. targetName .. " не является боссом (T_Lib)");
+            return;
+        end
+    end
 
     -- Фильтр 6 (опционально): Только в инстансе
     if SOTA_LOOTTRACKER_REQUIRE_INSTANCE then
@@ -211,7 +220,7 @@ function SOTA_LootTracker_OnAuctionComplete(auctionItemLink, winnerName)
 end
 
 --[[
---	OnUpdate с троттлингом — обновление таймеров
+--	OnUpdate с троттлингом - обновление таймеров
 --	Вызывается каждый кадр из XML, мы троттлим до раз в 0.5 сек
 --]]
 function SOTA_LootTracker_Update(elapsed)
@@ -222,7 +231,7 @@ function SOTA_LootTracker_Update(elapsed)
     end
     SOTA_LootTracker_Elapsed = 0;
 
-    -- Если записей нет — ничего не делаем
+    -- Если записей нет - ничего не делаем
     local count = table.getn(SOTA_LootTracker);
     if count == 0 then
         return;
@@ -252,7 +261,7 @@ end
 
 --[[
 --	Обновление отображения UI (строки таблицы)
---	Не создаёт новых таблиц — использует заранее созданные фреймы
+--	Не создаёт новых таблиц - использует заранее созданные фреймы
 --]]
 function SOTA_LootTracker_RefreshUI()
     if not SOTA_LootTrackerFrame then
@@ -322,7 +331,7 @@ function SOTA_LootTracker_RefreshUI()
                             winnerButton:Enable();
                         end
                     else
-                        winnerText:SetText("АУКЦИОН НЕ ПРОВЕДЕН");
+                        winnerText:SetText("БЕЗ ВЛАДЕЛЬЦА");
                         winnerText:SetTextColor(0.5, 0.5, 0.5, 1);
                         -- Отключаем кнопку если нет победителя
                         if winnerButton then
@@ -331,8 +340,8 @@ function SOTA_LootTracker_RefreshUI()
                     end
                 end
 
-                -- Время
-                local timerText = getglobal("SOTA_LootTrackerRow" .. n .. "Timer");
+                -- Время (4. Таймер внутри $parentTimerFrame)
+                local timerText = getglobal("SOTA_LootTrackerRow" .. n .. "TimerFrameTimer");
                 if timerText then
                     timerText:SetText(timeText);
                     -- Цвет таймера: красный если < 2 мин, жёлтый если < 5 мин, зелёный иначе
@@ -342,6 +351,18 @@ function SOTA_LootTracker_RefreshUI()
                         timerText:SetTextColor(1, 1, 0.2, 1);
                     else
                         timerText:SetTextColor(0.2, 1, 0.2, 1);
+                    end
+                end
+
+                -- Имя босса (3. Босс внутри $parentBossFrame)
+                local bossText = getglobal("SOTA_LootTrackerRow" .. n .. "BossFrameBoss");
+                if bossText then
+                    if entry.bossName then
+                        bossText:SetText(entry.bossName);
+                        bossText:SetTextColor(1, 0.8, 0, 1); -- Золотой цвет
+                    else
+                        bossText:SetText("---");
+                        bossText:SetTextColor(0.5, 0.5, 0.5, 1);
                     end
                 end
 
@@ -381,7 +402,7 @@ function SOTA_LootTracker_OnIconLeave()
 end
 
 --[[
---	Клик по иконке предмета — предложение создать аукцион
+--	Клик по иконке предмета - предложение создать аукцион
 --	Вызывает поп-ап подтверждение, если аукцион ещё не создан
 --]]
 function SOTA_LootTracker_OnIconClick(rowIndex)
@@ -391,7 +412,7 @@ function SOTA_LootTracker_OnIconClick(rowIndex)
         return;
     end
 
-    -- Если победитель уже есть — аукцион завершён, ничего не делаем
+    -- Если победитель уже есть - аукцион завершён, ничего не делаем
     if entry.winnerName then
         debugEcho("LootTracker: OnIconClick - победитель уже есть, выход");
         return;
@@ -401,7 +422,7 @@ function SOTA_LootTracker_OnIconClick(rowIndex)
     if SOTA_GetAuctionState then
         local auctionState = SOTA_GetAuctionState();
 
-        -- STATE_AUCTION_RUNNING (10) — аукцион идёт
+        -- STATE_AUCTION_RUNNING (10) - аукцион идёт
         if auctionState == 10 then
             local currentItemLink = SOTA_GetAuctionedItemLink();
             if currentItemLink and currentItemLink == entry.itemLink then
@@ -410,7 +431,7 @@ function SOTA_LootTracker_OnIconClick(rowIndex)
             end
         end
 
-        -- STATE_AUCTION_COMPLETE (30) — аукцион завершён, ждём передачи лута
+        -- STATE_AUCTION_COMPLETE (30) - аукцион завершён, ждём передачи лута
         -- В этом случае тоже не даём создать новый аукцион на этот предмет
         if auctionState == 30 then
             local currentItemLink = SOTA_GetAuctionedItemLink();
@@ -433,7 +454,7 @@ function SOTA_LootTracker_OnIconClick(rowIndex)
 end
 
 --[[
---	Клик по имени победителя — таргет + попытка трейда
+--	Клик по имени победителя - таргет + попытка трейда
 --]]
 function SOTA_LootTracker_OnPlayerClick(rowIndex)
     local entry = SOTA_LootTracker[rowIndex];
@@ -443,6 +464,26 @@ function SOTA_LootTracker_OnPlayerClick(rowIndex)
 
     TargetByName(entry.winnerName, true);
     InitiateTrade("target");
+end
+
+--[[
+--	Клик по кнопке удаления записи
+--]]
+function SOTA_LootTracker_OnDeleteClick(rowIndex)
+    if not rowIndex or rowIndex < 1 or rowIndex > table.getn(SOTA_LootTracker) then
+        return;
+    end
+
+    local entry = SOTA_LootTracker[rowIndex];
+    local itemName = entry.itemName or "Неизвестный предмет";
+
+    debugEcho("LootTracker: удаление записи для " .. itemName);
+
+    -- Удаляем запись из таблицы
+    table.remove(SOTA_LootTracker, rowIndex);
+
+    -- Обновляем UI
+    SOTA_LootTracker_RefreshUI();
 end
 
 --[[
@@ -537,6 +578,45 @@ function SOTA_LootTracker_OnLoad()
         end
     end;
 
+    -- СЛЕШ-КОМАНДА ДЛЯ СОЗДАНИЯ ТЕСТОВЫХ ЗАПИСЕЙ
+    SLASH_SOTALOOT1 = "/sotaloot";
+    SlashCmdList["SOTALOOT"] = function(msg)
+        -- Парсим аргументы: /sotaloot [itemName]|[bossName]
+        local itemName = "Тестовый предмет";
+        local bossName = "Тестовый Босс";
+
+        if msg and msg ~= "" then
+            -- Ищем разделитель |
+            local sepPos = string.find(msg, "|", 1, true);
+            if sepPos then
+                itemName = string.sub(msg, 1, sepPos - 1);
+                bossName = string.sub(msg, sepPos + 1);
+            else
+                itemName = msg;
+            end
+        end
+
+        -- Создаём тестовую запись
+        local fakeItemLink = "|cffff8000|Hitem:" .. math.random(10000, 99999) .. ":0:0:0|h[" .. itemName .. "]|h|r";
+        local fakeIcon = "INV_Misc_QuestionMark";
+        local fakeColor = "ffff8000";
+
+        local entry = SOTA_LootTracker_CreateEntry(fakeItemLink, itemName, fakeIcon, GetTime(), bossName, fakeColor);
+
+        if entry then
+            DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00[SOTA LootTracker] Создана тестовая запись: " .. itemName .. " с босса " .. bossName .. "|r");
+        else
+            DEFAULT_CHAT_FRAME:AddMessage("|cFFFF0000[SOTA LootTracker] Лимит записей достигнут (" .. SOTA_LOOTTRACKER_MAX_ROWS .. ")!|r");
+        end
+
+        -- Показываем UI если скрыт
+        if SOTA_LootTrackerFrame and not SOTA_LootTrackerFrame:IsVisible() then
+            SOTA_LootTracker_ShowUI();
+        else
+            SOTA_LootTracker_RefreshUI();
+        end
+    end;
+
     debugEcho("LootTracker: модуль загружен");
 end
 
@@ -550,7 +630,7 @@ function SOTA_LootTracker_CreateAuctionDialog()
         button1 = "ДА",
         button2 = "ОТМЕНА",
         OnAccept = function()
-            -- Пользователь нажал "ДА" — создаём аукцион
+            -- Пользователь нажал "ДА" - создаём аукцион
             if SOTA_LootTracker_PendingItemLink then
                 debugEcho("LootTracker: создание аукциона на " .. SOTA_LootTracker_PendingItemName);
                 -- Вызываем SOTA_StartAuction напрямую
@@ -585,7 +665,7 @@ function SOTA_LootTracker_CreateAuctionDialog()
             -- Устанавливаем текст с именем предмета и применяем кириллический шрифт
             local text = getglobal(dialogName .. "Text");
             if text and SOTA_LootTracker_PendingItemName then
-                text:SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
+                text:SetFont(CYRILLIC_FONT_PATH, 12);
                 -- Красим имя предмета в цвет качества (формат: |cAARRGGBB)
                 local itemColor = SOTA_LootTracker_PendingItemColor or "ffffffff";
                 text:SetText("Создать аукцион на предмет:\n\n|c" .. itemColor .. SOTA_LootTracker_PendingItemName .. "|r?");

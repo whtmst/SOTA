@@ -1354,7 +1354,7 @@ function SOTA_HandleGuildChatMessage(event, message, sender)
     -- Only respond if you are master, or no master has yet been assigned:
     if SOTA_IsMaster() or (not (SOTA_Master) and SOTA_IsPromoted()) then
         local command = string.sub(message, 2)
-        debugEcho("Мастер: Обработка команды GChat: " .. command);
+        -- debugEcho("Мастер: Обработка команды GChat: " .. command);
         SOTA_OnChatWhisper(event, command, sender);
     end
 end
@@ -1369,7 +1369,7 @@ function SOTA_HandleRaidChatMessage(event, message, sender)
 
     if SOTA_IsMaster() then
         local command = string.sub(message, 2)
-        debugEcho("Мастер: Обработка команды RChat: " .. command);
+        -- debugEcho("Мастер: Обработка команды RChat: " .. command);
         SOTA_OnChatWhisper(event, command, sender);
     end
 end
