@@ -44,7 +44,7 @@
 	</Font>
 
 	<!-- SOTA Dashboard -->
-	<Frame name="DashboardUIFrame" parent="UIParent" toplevel="true" hidden="true">
+	<Frame name="DashboardUIFrame" parent="UIParent" toplevel="true" hidden="true" frameStrata="HIGH">
 		<Size>
 			<AbsDimension x="280" y="85" />
 		</Size>
@@ -381,8 +381,8 @@
 							</OnMouseUp>
 						</Scripts>
 					</Button>
-					<!-- Button 7: Пустышка -->
-					<Button name="$parentPlaceholder1Button" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
+					<!-- Button 7: Отслеживание лута -->
+					<Button name="$parentLootTrackerButton" inherits="ActionButtonTemplate" frameStrata="HIGH" hidden="false">
 						<Size>
 							<AbsDimension x="32" y="32" />
 						</Size>
@@ -393,14 +393,14 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<NormalTexture file="Interface\ICONS\INV_Misc_QuestionMark" />
-						<PushedTexture file="Interface\ICONS\INV_Misc_QuestionMark" />
+						<NormalTexture file="Interface\ICONS\INV_Misc_pocketwatch_02" />
+						<PushedTexture file="Interface\ICONS\INV_Misc_pocketwatch_02" />
 						<Scripts>
 							<OnClick>
-								SOTA_PlaceholderButton();
+								SOTA_LootTracker_ToggleUI();
 							</OnClick>
 							<OnEnter>
-								SOTA_ShowDashboardToolTip(this, "НЕ НАЖИМАТЬ!");
+								SOTA_ShowDashboardToolTip(this, "ОТСЛЕЖИВАНИЕ ЛУТА");
 							</OnEnter>
 							<OnLeave>
 								SOTA_HideDashboardToolTip(this);

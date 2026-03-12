@@ -15,21 +15,22 @@ T_Lib = T_Lib or {}
 T_Lib.Utils = {}
 
 -- Print a message to chat frame
-function T_Lib.Utils:Print(...)
-    local msg = table.concat({...}, " ")
-    DEFAULT_CHAT_FRAME:AddMessage("|cFFEC3E08[T-LIB]|r " .. msg)
+function T_Lib.Utils:Print(msg)
+    if msg then
+        DEFAULT_CHAT_FRAME:AddMessage("|cFFEC3E08[T-LIB]|r " .. msg)
+    end
 end
 
 -- Print an error message
-function T_Lib.Utils:PrintError(...)
-    local msg = table.concat({...}, " ")
-    DEFAULT_CHAT_FRAME:AddMessage("|cFFFF3333[T-LIB ERROR]|r " .. msg)
+function T_Lib.Utils:PrintError(msg)
+    if msg then
+        DEFAULT_CHAT_FRAME:AddMessage("|cFFFF3333[T-LIB ERROR]|r " .. msg)
+    end
 end
 
 -- Print a debug message (only if debug mode is enabled)
-function T_Lib.Utils:PrintDebug(...)
-    if T_Lib.DebugMode then
-        local msg = table.concat({...}, " ")
+function T_Lib.Utils:PrintDebug(msg)
+    if T_Lib.DebugMode and msg then
         DEFAULT_CHAT_FRAME:AddMessage("|cFFFF00FF[T-LIB DEBUG]|r " .. msg)
     end
 end
@@ -111,8 +112,7 @@ end
 -- Format number with commas (1234567 -> "1,234,567")
 function T_Lib.Utils:FormatNumber(num)
     if not num then return "0" end
-    local left, right = string.match(tostring(num), "^([^%d]*%d+)(%d*)$")
-    return left:gsub("%d(?=(%d%d%d)%D)", "%0,") .. right
+    return tostring(num)
 end
 
 -- Short number (1500000 -> "1.5m")

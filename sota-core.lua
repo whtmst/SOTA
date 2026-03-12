@@ -11,7 +11,7 @@ SOTA_MESSAGE_PREFIX           = "SOTAv1"
 SOTA_ID                       = "SOTA"
 SOTA_TITLE                    = "SOTA"
 
-local SOTA_DEBUG_ENABLED      = false; -- Включение дебаг режима
+local SOTA_DEBUG_ENABLED = false;      -- Включение дебаг режима
 
 -- Значения DKP для бонусных кнопок
 local SOTA_WELCOME_DKP_AMOUNT = 60    -- Приветственное DKP

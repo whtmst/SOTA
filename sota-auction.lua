@@ -498,6 +498,11 @@ function SOTA_AcceptBid(playername, bid)
         SOTA_EchoEvent(SOTA_MSG_OnComplete, AuctionedItemLink, bid, playername);
 
         SOTA_SubtractPlayerDKP(playername, bid);
+
+        -- Хук: уведомляем Loot Tracker о победителе аукциона
+        if SOTA_LootTracker_OnAuctionComplete then
+            SOTA_LootTracker_OnAuctionComplete(AuctionedItemLink, playername);
+        end
     end
 end
 

@@ -1,0 +1,368 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Script file="sota-loottracker.lua" />
+
+	<!-- Кириллические шрифты -->
+	<Font name="SOTA_Font_Title" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="16" />
+		<Color r="1" g="1" b="1" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+	<Font name="SOTA_Font_Normal" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="12" />
+		<Color r="1" g="1" b="1" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+	<Font name="SOTA_Font_Small" font="Interface\AddOns\SOTA\assets\fonts\ARIALN.ttf" virtual="true">
+		<FontHeight val="10" />
+		<Color r="0.7" g="0.7" b="0.7" />
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+	</Font>
+
+	<!-- Шаблон строки таблицы Loot Tracker -->
+	<Frame name="SOTA_LootTrackerRowTemplate" hidden="true" virtual="true">
+		<Size>
+			<AbsDimension x="392" y="34" />
+		</Size>
+		<Frames>
+			<!-- Кнопка-иконка предмета (32x32) -->
+			<Button name="$parentIcon" inherits="ActionButtonTemplate">
+				<Size>
+					<AbsDimension x="32" y="32" />
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT">
+						<Offset>
+							<AbsDimension x="4" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture file="Interface\ICONS\INV_Misc_QuestionMark" />
+				<Scripts>
+					<OnEnter>
+						local rowId = this:GetParent():GetID();
+						SOTA_LootTracker_OnIconEnter(rowId);
+					</OnEnter>
+					<OnLeave>
+						SOTA_LootTracker_OnIconLeave();
+					</OnLeave>
+				</Scripts>
+			</Button>
+
+			<!-- Кнопка с именем победителя (кликабельная) -->
+			<Button name="$parentWinnerButton">
+				<Size>
+					<AbsDimension x="200" y="32" />
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentIcon" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="25" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentText" inherits="SOTA_Font_Normal" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="LEFT">
+									<Offset>
+										<AbsDimension x="4" y="0" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+
+				<Scripts>
+					<OnLoad>
+						-- Красим хайлайт при наведении (белый полупрозрачный)
+						local hl = getglobal(this:GetName().."Highlight");
+						if hl then
+							hl:SetVertexColor(1, 1, 1, 0.15);
+						end
+					</OnLoad>
+					<OnClick>
+						local rowId = this:GetParent():GetID();
+						SOTA_LootTracker_OnPlayerClick(rowId);
+					</OnClick>
+					<OnEnter>
+						-- Показываем ховер только если кнопка активна (есть победитель)
+						if this:IsEnabled() then
+							local hl = getglobal(this:GetName().."Highlight");
+							if hl then
+								hl:Show();
+							end
+						end
+					</OnEnter>
+					<OnLeave>
+						local hl = getglobal(this:GetName().."Highlight");
+						if hl then
+							hl:Hide();
+						end
+					</OnLeave>
+				</Scripts>
+				<HighlightTexture name="$parentHighlight" file="Interface\Buttons\WHITE8X8" alphaMode="ADD" />
+			</Button>
+		</Frames>
+		<Layers>
+			<Layer level="ARTWORK">
+				<!-- Таймер (справа) -->
+				<FontString name="$parentTimer" inherits="SOTA_Font_Normal" justifyH="RIGHT" text="">
+					<Size>
+						<AbsDimension x="60" y="32" />
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT">
+							<Offset>
+								<AbsDimension x="-8" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="BACKGROUND">
+				<!-- Подложка строки (чередование) -->
+				<Texture name="$parentRowBG" file="Interface\Buttons\WHITE8X8">
+					<Anchors>
+						<Anchor point="TOPLEFT" />
+						<Anchor point="BOTTOMRIGHT" />
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+
+	<!-- Основное окно Loot Tracker -->
+	<Frame name="SOTA_LootTrackerFrame" parent="UIParent" toplevel="true" hidden="true">
+		<Size>
+			<AbsDimension x="420" y="410" />
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" />
+		</Anchors>
+		<Backdrop bgFile="Interface\Buttons\WHITE8X8" edgeFile="Interface\Buttons\WHITE8X8" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="0" right="0" top="0" bottom="0" />
+			</BackgroundInsets>
+			<EdgeSize>
+				<AbsValue val="1" />
+			</EdgeSize>
+			<TileSize>
+				<AbsValue val="16" />
+			</TileSize>
+		</Backdrop>
+		<Layers>
+			<Layer level="ARTWORK">
+				<!-- Заголовок -->
+				<FontString name="SOTA_LootTrackerFrameTitle" inherits="SOTA_Font_Title" text="ОТСЛЕЖИВАНИЕ ЛУТА" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-12" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<!-- Заголовки колонок -->
+				<FontString name="SOTA_LootTrackerFrameHeaderItem" inherits="SOTA_Font_Small" text="ПРЕДМЕТ">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="14" y="-36" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="SOTA_LootTrackerFrameHeaderWinner" inherits="SOTA_Font_Small" text="ПОБЕДИТЕЛЬ">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="75" y="-36" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="SOTA_LootTrackerFrameHeaderTimer" inherits="SOTA_Font_Small" text="ОСТАЛОСЬ" justifyH="RIGHT">
+					<Anchors>
+						<Anchor point="TOPRIGHT">
+							<Offset>
+								<AbsDimension x="-14" y="-36" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<!-- Разделитель под заголовками -->
+				<Texture name="SOTA_LootTrackerFrameHeaderLine" file="Interface\Buttons\WHITE8X8">
+					<Size>
+						<AbsDimension x="392" y="1" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="14" y="-50" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<!-- Надпись "Нет активных таймеров" -->
+				<FontString
+                    name="SOTA_LootTrackerFrameEmptyText"
+                    inherits="SOTA_Font_Normal"
+                    text="НЕТ АКТИВНЫХ ТАЙМЕРОВ"
+                    justifyH="CENTER"
+                >
+					<Anchors>
+						<Anchor point="CENTER">
+							<Offset>
+								<AbsDimension x="0" y="-10" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="0.5" g="0.5" b="0.5" a="1" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<!-- Кнопка закрытия -->
+			<Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-4" y="-4" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						SOTA_LootTracker_HideUI();
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<!-- Контейнер для строк таблицы -->
+			<Frame name="SOTA_LootTrackerTableContainer">
+				<Size>
+					<AbsDimension x="392" y="340" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="14" y="-50" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<!-- 10 строк (Row1-Row10) -->
+					<Frame name="SOTA_LootTrackerRow1" inherits="SOTA_LootTrackerRowTemplate" id="1">
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset><AbsDimension x="0" y="0" /></Offset>
+							</Anchor>
+						</Anchors>
+					</Frame>
+					<Frame name="SOTA_LootTrackerRow2" inherits="SOTA_LootTrackerRowTemplate" id="2">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SOTA_LootTrackerRow1" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</Frame>
+					<Frame name="SOTA_LootTrackerRow3" inherits="SOTA_LootTrackerRowTemplate" id="3">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SOTA_LootTrackerRow2" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</Frame>
+					<Frame name="SOTA_LootTrackerRow4" inherits="SOTA_LootTrackerRowTemplate" id="4">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SOTA_LootTrackerRow3" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</Frame>
+					<Frame name="SOTA_LootTrackerRow5" inherits="SOTA_LootTrackerRowTemplate" id="5">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SOTA_LootTrackerRow4" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</Frame>
+					<Frame name="SOTA_LootTrackerRow6" inherits="SOTA_LootTrackerRowTemplate" id="6">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SOTA_LootTrackerRow5" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</Frame>
+					<Frame name="SOTA_LootTrackerRow7" inherits="SOTA_LootTrackerRowTemplate" id="7">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SOTA_LootTrackerRow6" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</Frame>
+					<Frame name="SOTA_LootTrackerRow8" inherits="SOTA_LootTrackerRowTemplate" id="8">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SOTA_LootTrackerRow7" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</Frame>
+					<Frame name="SOTA_LootTrackerRow9" inherits="SOTA_LootTrackerRowTemplate" id="9">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SOTA_LootTrackerRow8" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</Frame>
+					<Frame name="SOTA_LootTrackerRow10" inherits="SOTA_LootTrackerRowTemplate" id="10">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SOTA_LootTrackerRow9" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</Frame>
+				</Frames>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				this:SetBackdropColor(0.098, 0.098, 0.098, 1);
+				this:SetBackdropBorderColor(0.251, 0.251, 0.251, 1);
+				this:SetMovable(true);
+				this:SetUserPlaced(true);
+				this:RegisterForDrag("LeftButton");
+				-- Красим линию под названиями колонок
+				if SOTA_LootTrackerFrameHeaderLine then
+					SOTA_LootTrackerFrameHeaderLine:SetVertexColor(0.251, 0.251, 0.251, 1);
+				end
+			</OnLoad>
+			<OnDragStart>
+				this:StartMoving();
+			</OnDragStart>
+			<OnDragStop>
+				this:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
+	</Frame>
+
+	<!-- Невидимый фрейм для событий и OnUpdate -->
+	<Frame name="SOTA_LootTrackerEventFrame">
+		<Scripts>
+			<OnLoad>
+				if SOTA_LootTracker_OnLoad then
+					SOTA_LootTracker_OnLoad();
+				end
+			</OnLoad>
+			<OnEvent>
+				if SOTA_LootTracker_OnEvent then
+					SOTA_LootTracker_OnEvent(event);
+				end
+			</OnEvent>
+			<OnUpdate>
+				if SOTA_LootTracker_Update then
+					SOTA_LootTracker_Update(arg1);
+				end
+			</OnUpdate>
+		</Scripts>
+	</Frame>
+</Ui>

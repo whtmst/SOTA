@@ -1148,7 +1148,7 @@ end
 function T_Lib:GetBossCount(raidAlias)
     self:EnsureBossDataInitialized()
     local bosses = self:GetBossesByRaid(raidAlias)
-    return #bosses
+    return table.getn(bosses)
 end
 
 -- Get all raid names
