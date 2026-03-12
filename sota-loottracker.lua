@@ -7,12 +7,12 @@
 --]]
 
 -- === НАСТРОЙКИ LOOT TRACKER ===
-local SOTA_LOOTTRACKER_MIN_QUALITY = 0         -- Минимальное качество: 0 (Poor (серый)), 1 (Common (белый)), 2 (Uncommon (зелёный)), 3 (Rare (синий)), 4 (Epic (фиол)), 5 (Legendary (оранж))
-local SOTA_LOOTTRACKER_REQUIRE_RAID = true     -- true: только в рейде
-local SOTA_LOOTTRACKER_REQUIRE_INSTANCE = false -- true: только в инстансе
-local SOTA_LOOTTRACKER_UPDATE_INTERVAL = 0.5   -- Интервал обновления UI (сек)
-local SOTA_LOOTTRACKER_LOOT_WINDOW_TIME = 600  -- Время на передачу (сек), 600 = 10 мин
-local SOTA_LOOTTRACKER_MAX_ROWS = 10           -- Максимум строк в UI
+local SOTA_LOOTTRACKER_MIN_QUALITY = 0            -- Минимальное качество: 0 (Poor (серый)), 1 (Common (белый)), 2 (Uncommon (зелёный)), 3 (Rare (синий)), 4 (Epic (фиол)), 5 (Legendary (оранж))
+local SOTA_LOOTTRACKER_REQUIRE_RAID = true        -- true: только в рейде
+local SOTA_LOOTTRACKER_REQUIRE_INSTANCE = false   -- true: только в инстансе
+local SOTA_LOOTTRACKER_UPDATE_INTERVAL = 0.5      -- Интервал обновления UI (сек)
+local SOTA_LOOTTRACKER_LOOT_WINDOW_TIME = 600     -- Время на передачу (сек), 600 = 10 мин
+local SOTA_LOOTTRACKER_MAX_ROWS = 10              -- Максимум строк в UI
 
 -- Кириллический шрифт для динамических элементов
 local CYRILLIC_FONT_PATH = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
@@ -26,7 +26,7 @@ local SOTA_LootTracker_Elapsed = 0;
 --[[
 --	Создание записи в таблице отслеживания
 --]]
-local function SOTA_LootTracker_CreateEntry(itemLink, itemName, iconTexture, startTime, bossName)
+local function SOTA_LootTracker_CreateEntry(itemLink, itemName, iconTexture, startTime, bossName, itemColor)
     local entry = {
         itemLink = itemLink,
         itemName = itemName,
@@ -35,6 +35,7 @@ local function SOTA_LootTracker_CreateEntry(itemLink, itemName, iconTexture, sta
         bossName = bossName,
         winnerName = nil,
         winnerClass = nil,
+        itemColor = itemColor or "ffffffff", -- Сохраняем цвет для поп-апа
     };
     table.insert(SOTA_LootTracker, entry);
     debugEcho("LootTracker: создана запись для " .. (itemName or "?") .. " с босса " .. (bossName or "?"));
@@ -145,9 +146,16 @@ function SOTA_LootTracker_TrackItem(slot)
             end
 
             if not isDuplicate then
-                -- Создаём запись
+                -- Извлекаем цвет предмета из itemLink для поп-апа
+                local itemColor = "ffffffff"; -- По умолчанию белый
+                local _, _, colorStr = string.find(itemLink, "|c(%x%x%x%x%x%x%x%x)|H");
+                if colorStr then
+                    itemColor = string.lower(colorStr);
+                end
+
+                -- Создаём запись (передаём цвет предмета из itemLink)
                 local startTime = GetTime();
-                SOTA_LootTracker_CreateEntry(itemLink, name, icon, startTime, targetName);
+                SOTA_LootTracker_CreateEntry(itemLink, name, icon, startTime, targetName, itemColor);
 
                 debugEcho("LootTracker: создана запись для " .. name .. " с босса " .. (targetName or "Неизвестно"));
 
@@ -373,6 +381,58 @@ function SOTA_LootTracker_OnIconLeave()
 end
 
 --[[
+--	Клик по иконке предмета — предложение создать аукцион
+--	Вызывает поп-ап подтверждение, если аукцион ещё не создан
+--]]
+function SOTA_LootTracker_OnIconClick(rowIndex)
+    local entry = SOTA_LootTracker[rowIndex];
+    if not entry or not entry.itemLink then
+        debugEcho("LootTracker: OnIconClick - нет записи или itemLink");
+        return;
+    end
+
+    -- Если победитель уже есть — аукцион завершён, ничего не делаем
+    if entry.winnerName then
+        debugEcho("LootTracker: OnIconClick - победитель уже есть, выход");
+        return;
+    end
+
+    -- Проверяем состояние аукциона
+    if SOTA_GetAuctionState then
+        local auctionState = SOTA_GetAuctionState();
+
+        -- STATE_AUCTION_RUNNING (10) — аукцион идёт
+        if auctionState == 10 then
+            local currentItemLink = SOTA_GetAuctionedItemLink();
+            if currentItemLink and currentItemLink == entry.itemLink then
+                debugEcho("LootTracker: аукцион на " .. entry.itemName .. " уже идёт");
+                return;
+            end
+        end
+
+        -- STATE_AUCTION_COMPLETE (30) — аукцион завершён, ждём передачи лута
+        -- В этом случае тоже не даём создать новый аукцион на этот предмет
+        if auctionState == 30 then
+            local currentItemLink = SOTA_GetAuctionedItemLink();
+            if currentItemLink and currentItemLink == entry.itemLink then
+                debugEcho("LootTracker: аукцион на " .. entry.itemName .. " завершён, ожидание победителя и передачи предмета");
+                return;
+            end
+        end
+    end
+
+    -- Сохраняем itemLink и цвет для использования в поп-апе
+    SOTA_LootTracker_PendingItemLink = entry.itemLink;
+    SOTA_LootTracker_PendingItemName = entry.itemName or "Неизвестный предмет";
+    SOTA_LootTracker_PendingItemColor = entry.itemColor or "ffffffff";
+
+    debugEcho("LootTracker: показываем поп-ап для " .. SOTA_LootTracker_PendingItemName .. " (цвет: " .. SOTA_LootTracker_PendingItemColor .. ")");
+
+    -- Показываем поп-ап подтверждение
+    StaticPopup_Show("SOTA_LOOTTRACKER_CREATE_AUCTION");
+end
+
+--[[
 --	Клик по имени победителя — таргет + попытка трейда
 --]]
 function SOTA_LootTracker_OnPlayerClick(rowIndex)
@@ -454,6 +514,9 @@ function SOTA_LootTracker_OnLoad()
         eventFrame:RegisterEvent("LOOT_CLOSED");
     end
 
+    -- Создаём StaticPopupDialog для подтверждения создания аукциона
+    SOTA_LootTracker_CreateAuctionDialog();
+
     -- СЛЕШ-КОМАНДА ДЛЯ ТЕСТА БОССОВ
     SLASH_SOTABOSS1 = "/tlboss";
     SlashCmdList["SOTABOSS"] = function()
@@ -475,6 +538,67 @@ function SOTA_LootTracker_OnLoad()
     end;
 
     debugEcho("LootTracker: модуль загружен");
+end
+
+--[[
+--	Создание StaticPopupDialog для подтверждения создания аукциона
+--]]
+function SOTA_LootTracker_CreateAuctionDialog()
+    -- Определяем диалог
+    StaticPopupDialogs["SOTA_LOOTTRACKER_CREATE_AUCTION"] = {
+        text = "Создать аукцион на предмет?",
+        button1 = "ДА",
+        button2 = "ОТМЕНА",
+        OnAccept = function()
+            -- Пользователь нажал "ДА" — создаём аукцион
+            if SOTA_LootTracker_PendingItemLink then
+                debugEcho("LootTracker: создание аукциона на " .. SOTA_LootTracker_PendingItemName);
+                -- Вызываем SOTA_StartAuction напрямую
+                if SOTA_StartAuction then
+                    SOTA_StartAuction(SOTA_LootTracker_PendingItemLink);
+                else
+                    debugEcho("LootTracker: ОШИБКА - SOTA_StartAuction не доступна!");
+                end
+                SOTA_LootTracker_PendingItemLink = nil;
+                SOTA_LootTracker_PendingItemName = nil;
+                SOTA_LootTracker_PendingItemColor = nil;
+            end
+        end,
+        OnCancel = function()
+            -- Пользователь нажал "ОТМЕНА"
+            debugEcho("LootTracker: отмена создания аукциона");
+            SOTA_LootTracker_PendingItemLink = nil;
+            SOTA_LootTracker_PendingItemName = nil;
+            SOTA_LootTracker_PendingItemColor = nil;
+        end,
+        OnShow = function()
+            -- В WoW 1.12 OnShow для StaticPopupDialog не получает self, используем this
+            debugEcho("LootTracker: OnShow диалога вызван, this = " .. tostring(this));
+
+            -- Применяем стили при показе диалога
+            local dialogName = this:GetName();
+            debugEcho("LootTracker: имя диалога = " .. tostring(dialogName));
+
+            SOTA_StyleStaticPopup(dialogName);
+            SOTA_StyleStaticPopupButtons(dialogName);
+
+            -- Устанавливаем текст с именем предмета и применяем кириллический шрифт
+            local text = getglobal(dialogName .. "Text");
+            if text and SOTA_LootTracker_PendingItemName then
+                text:SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
+                -- Красим имя предмета в цвет качества (формат: |cAARRGGBB)
+                local itemColor = SOTA_LootTracker_PendingItemColor or "ffffffff";
+                text:SetText("Создать аукцион на предмет:\n\n|c" .. itemColor .. SOTA_LootTracker_PendingItemName .. "|r?");
+                debugEcho("LootTracker: текст установлен для " .. SOTA_LootTracker_PendingItemName .. " (цвет: " .. itemColor .. ")");
+            else
+                debugEcho("LootTracker: не удалось установить текст (text=" .. tostring(text) .. ", name=" .. tostring(SOTA_LootTracker_PendingItemName) .. ")");
+            end
+        end,
+        timeout = 0, -- Без таймаута
+        whileDead = true,
+        hideOnEscape = true,
+        preferredIndex = 3, -- Чтобы не конфликтовал с другими диалогами
+    };
 end
 
 --[[

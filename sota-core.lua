@@ -1128,6 +1128,8 @@ function SOTA_StyleStaticPopupButtons(frameName)
         button1:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-section
         button1:SetBackdropBorderColor(0.251, 0.251, 0.251, 1); -- border-main
         button1:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1); -- text-main
+        -- Применяем кириллический шрифт
+        button1:GetFontString():SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
 
         -- Смещаем текст вверх (чтобы не был прижат к низу)
         button1:GetFontString():ClearAllPoints();
@@ -1176,6 +1178,8 @@ function SOTA_StyleStaticPopupButtons(frameName)
         button2:SetBackdropColor(0.145, 0.145, 0.145, 1); -- bg-section
         button2:SetBackdropBorderColor(0.251, 0.251, 0.251, 1); -- border-main
         button2:GetFontString():SetTextColor(0.925, 0.859, 0.729, 1); -- text-main
+        -- Применяем кириллический шрифт
+        button2:GetFontString():SetFont("Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf", 12);
 
         -- Смещаем текст вверх (чтобы не был прижат к низу)
         button2:GetFontString():ClearAllPoints();

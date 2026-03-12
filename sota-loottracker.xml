@@ -60,6 +60,10 @@
 					<OnLeave>
 						SOTA_LootTracker_OnIconLeave();
 					</OnLeave>
+					<OnClick>
+						local rowId = this:GetParent():GetID();
+						SOTA_LootTracker_OnIconClick(rowId);
+					</OnClick>
 				</Scripts>
 			</Button>
 

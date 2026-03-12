@@ -41,6 +41,10 @@ function SOTA_GetAuctionState()
     return AuctionState;
 end
 
+function SOTA_GetAuctionedItemLink()
+    return AuctionedItemLink;
+end
+
 function SOTA_SetAuctionState(auctionState, seconds)
     if not seconds then
         seconds = 0;
