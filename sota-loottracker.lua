@@ -7,13 +7,21 @@
 --]]
 
 -- === НАСТРОЙКИ LOOT TRACKER ===
-local SOTA_LOOTTRACKER_MIN_QUALITY = 0            -- Минимальное качество: 0 (Poor (серый)), 1 (Common (белый)), 2 (Uncommon (зелёный)), 3 (Rare (синий)), 4 (Epic (фиол)), 5 (Legendary (оранж))
+local SOTA_LOOTTRACKER_MIN_QUALITY = 3            -- Минимальное качество: 0 (Poor (серый)), 1 (Common (белый)), 2 (Uncommon (зелёный)), 3 (Rare (синий)), 4 (Epic (фиол)), 5 (Legendary (оранж))
 local SOTA_LOOTTRACKER_REQUIRE_RAID = true        -- true: только в рейде
 local SOTA_LOOTTRACKER_REQUIRE_INSTANCE = false   -- true: только в инстансе
+local SOTA_LOOTTRACKER_REQUIRE_BOSS = true        -- true: проверять, что цель - босс (для тестирования ставим false)
 local SOTA_LOOTTRACKER_UPDATE_INTERVAL = 0.5      -- Интервал обновления UI (сек)
 local SOTA_LOOTTRACKER_LOOT_WINDOW_TIME = 600     -- Время на передачу (сек), 600 = 10 мин
 local SOTA_LOOTTRACKER_MAX_ROWS = 10              -- Максимум строк в UI
-local SOTA_LOOTTRACKER_REQUIRE_BOSS = true        -- true: проверять, что цель - босс (для тестирования ставим false)
+
+-- === НАСТРОЙКИ LOOT LINK (авто-линки лута при открытии босса) ===
+local SOTA_LOOTLINK_MIN_QUALITY = 3               -- Мин. качество для линков: 0 (Poor (серый)), 1 (Common (белый)), 2 (Uncommon (зелёный)), 3 (Rare (синий)), 4 (Epic (фиол)), 5 (Legendary (оранж))
+local SOTA_LOOTLINK_ROLE_MODE = 3                 -- 1 = только Рейд Лидер, 2 = только Мастер Лут, 3 = РЛ + МЛ + Ассист
+local SOTA_LOOTLINK_COOLDOWN = 60                -- Кулдаун между линками (сек), 60 = 1 минута
+
+-- Переменная для хранения времени последнего линка
+local SOTA_LootLink_LastLinkTime = nil;
 
 -- Кириллический шрифт для динамических элементов
 local CYRILLIC_FONT_PATH = "Interface\\AddOns\\SOTA\\assets\\fonts\\ARIALN.ttf";
@@ -30,7 +38,7 @@ local SOTA_LootTracker_Elapsed = 0;
 local function SOTA_LootTracker_CreateEntry(itemLink, itemName, iconTexture, startTime, bossName, itemColor)
     -- Проверка на максимальное количество записей
     if table.getn(SOTA_LootTracker) >= SOTA_LOOTTRACKER_MAX_ROWS then
-        debugEcho("LootTracker: достигнут лимит записей (" .. SOTA_LOOTTRACKER_MAX_ROWS .. "), пропускаем создание");
+        debugEcho("SOTA LootTracker: достигнут лимит записей (" .. SOTA_LOOTTRACKER_MAX_ROWS .. "), пропускаем создание");
         return nil;
     end
 
@@ -45,7 +53,7 @@ local function SOTA_LootTracker_CreateEntry(itemLink, itemName, iconTexture, sta
         itemColor = itemColor or "ffffffff", -- Сохраняем цвет для поп-апа
     };
     table.insert(SOTA_LootTracker, entry);
-    debugEcho("LootTracker: создана запись для " .. (itemName or "?") .. " с босса " .. (bossName or "?"));
+    debugEcho("SOTA LootTracker: создана запись для " .. (itemName or "?") .. " с босса " .. (bossName or "?"));
     return entry;
 end
 
@@ -56,7 +64,7 @@ function SOTA_LootTracker_TrackItem(slot)
     -- Фильтр 1: Только в рейде
     if SOTA_LOOTTRACKER_REQUIRE_RAID then
         if GetNumRaidMembers() == 0 then
-            debugEcho("LootTracker: Отклонено (игрок не в рейде)");
+            debugEcho("SOTA LootTracker: Отклонено (игрок не в рейде)");
             return;
         end
     end
@@ -64,25 +72,25 @@ function SOTA_LootTracker_TrackItem(slot)
     -- Фильтр 2: Только в режиме Мастер-Лут
     local lootMethod = GetLootMethod();
     if lootMethod ~= "master" then
-        debugEcho("LootTracker: Отклонено (режим лута не master, а " .. tostring(lootMethod) .. ")");
+        debugEcho("SOTA LootTracker: Отклонено (режим лута не master, а " .. tostring(lootMethod) .. ")");
         return;
     end
 
     -- Фильтр 4: Проверка на босса через таргет
     local targetName = UnitName("target");
     if not targetName then
-        debugEcho("LootTracker: нет таргета, запись не создана");
+        debugEcho("SOTA LootTracker: нет таргета, запись не создана");
         return;
     end
 
     -- Фильтр 5: Проверка через T-Lib (только если SOTA_LOOTTRACKER_REQUIRE_BOSS = true)
     if SOTA_LOOTTRACKER_REQUIRE_BOSS then
         if not T_Lib or not T_Lib.IsBoss then
-            debugEcho("LootTracker: T_Lib не загружена, запись не создана");
+            debugEcho("SOTA LootTracker: T_Lib не загружена, запись не создана");
             return;
         end
         if not T_Lib:IsBoss(targetName) then
-            debugEcho("LootTracker: " .. targetName .. " не является боссом (T_Lib)");
+            debugEcho("SOTA LootTracker: " .. targetName .. " не является боссом (T_Lib)");
             return;
         end
     end
@@ -139,9 +147,9 @@ function SOTA_LootTracker_TrackItem(slot)
 
         -- Если всё равно не удалось (или это золото)
         if not itemQuality then
-             debugEcho("LootTracker: Слот " .. slot .. " (" .. tostring(name) .. ") - не удалось определить качество по ссылке!");
+             debugEcho("SOTA LootTracker: Слот " .. slot .. " (" .. tostring(name) .. ") - не удалось определить качество по ссылке!");
         elseif itemQuality < SOTA_LOOTTRACKER_MIN_QUALITY then
-             debugEcho("LootTracker: Слот " .. slot .. " (" .. tostring(name) .. ") отклонен (качество " .. tostring(itemQuality) .. " < " .. tostring(SOTA_LOOTTRACKER_MIN_QUALITY) .. ")");
+             debugEcho("SOTA LootTracker: Слот " .. slot .. " (" .. tostring(name) .. ") отклонен (качество " .. tostring(itemQuality) .. " < " .. tostring(SOTA_LOOTTRACKER_MIN_QUALITY) .. ")");
         else
             -- Качество подходит конкретно
             -- Проверяем дубликат (тот же itemLink уже отслеживается)
@@ -149,7 +157,7 @@ function SOTA_LootTracker_TrackItem(slot)
             for n = 1, table.getn(SOTA_LootTracker), 1 do
                 if SOTA_LootTracker[n].itemLink == itemLink then
                     isDuplicate = true;
-                    debugEcho("LootTracker: Слот " .. slot .. " (" .. tostring(name) .. ") уже отслеживается");
+                    debugEcho("SOTA LootTracker: Слот " .. slot .. " (" .. tostring(name) .. ") уже отслеживается");
                     break;
                 end
             end
@@ -166,7 +174,7 @@ function SOTA_LootTracker_TrackItem(slot)
                 local startTime = GetTime();
                 SOTA_LootTracker_CreateEntry(itemLink, name, icon, startTime, targetName, itemColor);
 
-                debugEcho("LootTracker: создана запись для " .. name .. " с босса " .. (targetName or "Неизвестно"));
+                debugEcho("SOTA LootTracker: создана запись для " .. name .. " с босса " .. (targetName or "Неизвестно"));
 
                 -- Обновляем UI, но не показываем его принудительно (чтобы не мешать)
                 if SOTA_LootTrackerFrame and SOTA_LootTrackerFrame:IsVisible() then
@@ -175,7 +183,7 @@ function SOTA_LootTracker_TrackItem(slot)
             end
         end
     else
-        debugEcho("LootTracker: Слот " .. slot .. " - нет itemLink (возможно золото/квест итем)");
+        debugEcho("SOTA LootTracker: Слот " .. slot .. " - нет itemLink (возможно золото/квест итем)");
     end
 end
 
@@ -191,7 +199,7 @@ function SOTA_LootTracker_OnAuctionComplete(auctionItemLink, winnerName)
     -- Извлекаем имя предмета из линка (текст между квадратными скобками [Item Name])
     local _, _, auctionItemName = string.find(auctionItemLink, "%[(.-)%]");
     if not auctionItemName then
-        debugEcho("LootTracker: не удалось извлечь имя предмета из " .. auctionItemLink);
+        debugEcho("SOTA LootTracker: не удалось извлечь имя предмета из " .. auctionItemLink);
         return;
     end
 
@@ -207,7 +215,7 @@ function SOTA_LootTracker_OnAuctionComplete(auctionItemLink, winnerName)
                 entry.winnerClass = playerInfo[3];
             end
 
-            debugEcho("LootTracker: победитель " .. winnerName .. " записан для " .. (entry.itemName or "?"));
+            debugEcho("SOTA LootTracker: победитель " .. winnerName .. " записан для " .. (entry.itemName or "?"));
 
             -- Показываем UI, если он был скрыт, так как аукцион завершён
             SOTA_LootTracker_ShowUI();
@@ -216,7 +224,7 @@ function SOTA_LootTracker_OnAuctionComplete(auctionItemLink, winnerName)
         end
     end
 
-    debugEcho("LootTracker: запись для " .. auctionItemName .. " не найдена (аукцион)");
+    debugEcho("SOTA LootTracker: запись для " .. auctionItemName .. " не найдена (аукцион)");
 end
 
 --[[
@@ -244,7 +252,7 @@ function SOTA_LootTracker_Update(elapsed)
         local entry = SOTA_LootTracker[n];
         local remaining = SOTA_LOOTTRACKER_LOOT_WINDOW_TIME - (currentTime - entry.startTime);
         if remaining <= 0 then
-            debugEcho("LootTracker: запись " .. (entry.itemName or "?") .. " истекла, удаляю");
+            debugEcho("SOTA LootTracker: запись " .. (entry.itemName or "?") .. " истекла, удаляю");
             table.remove(SOTA_LootTracker, n);
             removed = true;
         end
@@ -408,13 +416,13 @@ end
 function SOTA_LootTracker_OnIconClick(rowIndex)
     local entry = SOTA_LootTracker[rowIndex];
     if not entry or not entry.itemLink then
-        debugEcho("LootTracker: OnIconClick - нет записи или itemLink");
+        debugEcho("SOTA LootTracker: OnIconClick - нет записи или itemLink");
         return;
     end
 
     -- Если победитель уже есть - аукцион завершён, ничего не делаем
     if entry.winnerName then
-        debugEcho("LootTracker: OnIconClick - победитель уже есть, выход");
+        debugEcho("SOTA LootTracker: OnIconClick - победитель уже есть, выход");
         return;
     end
 
@@ -426,7 +434,7 @@ function SOTA_LootTracker_OnIconClick(rowIndex)
         if auctionState == 10 then
             local currentItemLink = SOTA_GetAuctionedItemLink();
             if currentItemLink and currentItemLink == entry.itemLink then
-                debugEcho("LootTracker: аукцион на " .. entry.itemName .. " уже идёт");
+                debugEcho("SOTA LootTracker: аукцион на " .. entry.itemName .. " уже идёт");
                 return;
             end
         end
@@ -436,7 +444,7 @@ function SOTA_LootTracker_OnIconClick(rowIndex)
         if auctionState == 30 then
             local currentItemLink = SOTA_GetAuctionedItemLink();
             if currentItemLink and currentItemLink == entry.itemLink then
-                debugEcho("LootTracker: аукцион на " .. entry.itemName .. " завершён, ожидание победителя и передачи предмета");
+                debugEcho("SOTA LootTracker: аукцион на " .. entry.itemName .. " завершён, ожидание победителя и передачи предмета");
                 return;
             end
         end
@@ -447,7 +455,7 @@ function SOTA_LootTracker_OnIconClick(rowIndex)
     SOTA_LootTracker_PendingItemName = entry.itemName or "Неизвестный предмет";
     SOTA_LootTracker_PendingItemColor = entry.itemColor or "ffffffff";
 
-    debugEcho("LootTracker: показываем поп-ап для " .. SOTA_LootTracker_PendingItemName .. " (цвет: " .. SOTA_LootTracker_PendingItemColor .. ")");
+    debugEcho("SOTA LootTracker: показываем поп-ап для " .. SOTA_LootTracker_PendingItemName .. " (цвет: " .. SOTA_LootTracker_PendingItemColor .. ")");
 
     -- Показываем поп-ап подтверждение
     StaticPopup_Show("SOTA_LOOTTRACKER_CREATE_AUCTION");
@@ -477,7 +485,7 @@ function SOTA_LootTracker_OnDeleteClick(rowIndex)
     local entry = SOTA_LootTracker[rowIndex];
     local itemName = entry.itemName or "Неизвестный предмет";
 
-    debugEcho("LootTracker: удаление записи для " .. itemName);
+    debugEcho("SOTA LootTracker: удаление записи для " .. itemName);
 
     -- Удаляем запись из таблицы
     table.remove(SOTA_LootTracker, rowIndex);
@@ -493,14 +501,14 @@ function SOTA_LootTracker_ShowUI()
     if SOTA_LootTrackerFrame then
         SOTA_LootTrackerFrame:Show();
         SOTA_LootTracker_RefreshUI();
-        debugEcho("LootTracker: UI открыт");
+        debugEcho("SOTA LootTracker: UI открыт");
     end
 end
 
 function SOTA_LootTracker_HideUI()
     if SOTA_LootTrackerFrame then
         SOTA_LootTrackerFrame:Hide();
-        debugEcho("LootTracker: UI закрыт");
+        debugEcho("SOTA LootTracker: UI закрыт");
     end
 end
 
@@ -545,7 +553,7 @@ function SOTA_LootTracker_OnLoad()
     if not SOTA_Orig_GiveMasterLoot then
         SOTA_Orig_GiveMasterLoot = GiveMasterLoot;
         GiveMasterLoot = SOTA_Hooked_GiveMasterLoot;
-        debugEcho("LootTracker: Хук GiveMasterLoot установлен");
+        debugEcho("SOTA LootTracker: Хук GiveMasterLoot установлен");
     end
 
     -- Регистрируем события на фрейме SOTA_LootTrackerEventFrame
@@ -553,6 +561,7 @@ function SOTA_LootTracker_OnLoad()
     if eventFrame then
         eventFrame:RegisterEvent("LOOT_BIND_CONFIRM");
         eventFrame:RegisterEvent("LOOT_CLOSED");
+        eventFrame:RegisterEvent("LOOT_OPENED");
     end
 
     -- Создаём StaticPopupDialog для подтверждения создания аукциона
@@ -617,7 +626,65 @@ function SOTA_LootTracker_OnLoad()
         end
     end;
 
-    debugEcho("LootTracker: модуль загружен");
+    -- СЛЕШ-КОМАНДА ДЛЯ НАСТРОЙКИ LOOTLINK
+    SLASH_SOTALOOTLINK1 = "/sotalootlink";
+    SlashCmdList["SOTALOOTLINK"] = function(msg)
+        -- Парсим команду: /sotalootlink quality 4 | mode 3
+        local cmd = nil;
+        local value = nil;
+
+        if msg and msg ~= "" then
+            -- Ищем первый пробел
+            local spacePos = string.find(msg, " ", 1, true);
+            if spacePos then
+                cmd = string.sub(msg, 1, spacePos - 1);
+                local valueStr = string.sub(msg, spacePos + 1);
+                value = tonumber(valueStr);
+            else
+                cmd = msg;
+            end
+        end
+
+        if not cmd then
+            DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00[SOTA LootLink] Использование:|r");
+            DEFAULT_CHAT_FRAME:AddMessage("  /sotalootlink quality [0-5] - мин. качество (0=серый, 1=белый, 2=зелёный, 3=синька, 4=эпик, 5=лега)");
+            DEFAULT_CHAT_FRAME:AddMessage("  /sotalootlink mode [1-3] - кто линкует (1=РЛ, 2=МЛ, 3=РЛ+МЛ+Ассист)");
+            DEFAULT_CHAT_FRAME:AddMessage("  /sotalootlink cooldown [60-600] - кулдаун в секундах (по умолчанию 180)");
+            DEFAULT_CHAT_FRAME:AddMessage("Текущие настройки: quality=" .. SOTA_LOOTLINK_MIN_QUALITY .. ", mode=" .. SOTA_LOOTLINK_ROLE_MODE .. ", cooldown=" .. SOTA_LOOTLINK_COOLDOWN);
+            return;
+        end
+
+        cmd = string.lower(cmd);
+        value = tonumber(value);
+
+        if cmd == "quality" then
+            if not value or value < 0 or value > 5 then
+                DEFAULT_CHAT_FRAME:AddMessage("|cFFFF0000[SOTA LootLink] Ошибка: качество должно быть 0-5|r");
+                return;
+            end
+            SOTA_LOOTLINK_MIN_QUALITY = value;
+            DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00[SOTA LootLink] Мин. качество установлено: " .. value .. "|r");
+        elseif cmd == "mode" then
+            if not value or value < 1 or value > 3 then
+                DEFAULT_CHAT_FRAME:AddMessage("|cFFFF0000[SOTA LootLink] Ошибка: режим должен быть 1-3|r");
+                return;
+            end
+            SOTA_LOOTLINK_ROLE_MODE = value;
+            local modeDesc = (value == 1 and "Только РЛ") or (value == 2 and "Только МЛ") or "РЛ+МЛ+Ассист";
+            DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00[SOTA LootLink] Режим установлен: " .. value .. " (" .. modeDesc .. ")|r");
+        elseif cmd == "cooldown" then
+            if not value or value < 60 or value > 600 then
+                DEFAULT_CHAT_FRAME:AddMessage("|cFFFF0000[SOTA LootLink] Ошибка: кулдаун должен быть 60-600 сек|r");
+                return;
+            end
+            SOTA_LOOTLINK_COOLDOWN = value;
+            DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00[SOTA LootLink] Кулдаун установлен: " .. value .. " сек (" .. math.floor(value / 60) .. " мин)|r");
+        else
+            DEFAULT_CHAT_FRAME:AddMessage("|cFFFF0000[SOTA LootLink] Неизвестная команда: " .. cmd .. "|r");
+        end
+    end;
+
+    debugEcho("SOTA LootTracker: модуль загружен");
 end
 
 --[[
@@ -632,12 +699,12 @@ function SOTA_LootTracker_CreateAuctionDialog()
         OnAccept = function()
             -- Пользователь нажал "ДА" - создаём аукцион
             if SOTA_LootTracker_PendingItemLink then
-                debugEcho("LootTracker: создание аукциона на " .. SOTA_LootTracker_PendingItemName);
+                debugEcho("SOTA LootTracker: создание аукциона на " .. SOTA_LootTracker_PendingItemName);
                 -- Вызываем SOTA_StartAuction напрямую
                 if SOTA_StartAuction then
                     SOTA_StartAuction(SOTA_LootTracker_PendingItemLink);
                 else
-                    debugEcho("LootTracker: ОШИБКА - SOTA_StartAuction не доступна!");
+                    debugEcho("SOTA LootTracker: ОШИБКА - SOTA_StartAuction не доступна!");
                 end
                 SOTA_LootTracker_PendingItemLink = nil;
                 SOTA_LootTracker_PendingItemName = nil;
@@ -646,18 +713,18 @@ function SOTA_LootTracker_CreateAuctionDialog()
         end,
         OnCancel = function()
             -- Пользователь нажал "ОТМЕНА"
-            debugEcho("LootTracker: отмена создания аукциона");
+            debugEcho("SOTA LootTracker: отмена создания аукциона");
             SOTA_LootTracker_PendingItemLink = nil;
             SOTA_LootTracker_PendingItemName = nil;
             SOTA_LootTracker_PendingItemColor = nil;
         end,
         OnShow = function()
             -- В WoW 1.12 OnShow для StaticPopupDialog не получает self, используем this
-            debugEcho("LootTracker: OnShow диалога вызван, this = " .. tostring(this));
+            debugEcho("SOTA LootTracker: OnShow диалога вызван, this = " .. tostring(this));
 
             -- Применяем стили при показе диалога
             local dialogName = this:GetName();
-            debugEcho("LootTracker: имя диалога = " .. tostring(dialogName));
+            debugEcho("SOTA LootTracker: имя диалога = " .. tostring(dialogName));
 
             SOTA_StyleStaticPopup(dialogName);
             SOTA_StyleStaticPopupButtons(dialogName);
@@ -669,9 +736,9 @@ function SOTA_LootTracker_CreateAuctionDialog()
                 -- Красим имя предмета в цвет качества (формат: |cAARRGGBB)
                 local itemColor = SOTA_LootTracker_PendingItemColor or "ffffffff";
                 text:SetText("Создать аукцион на предмет:\n\n|c" .. itemColor .. SOTA_LootTracker_PendingItemName .. "|r?");
-                debugEcho("LootTracker: текст установлен для " .. SOTA_LootTracker_PendingItemName .. " (цвет: " .. itemColor .. ")");
+                debugEcho("SOTA LootTracker: текст установлен для " .. SOTA_LootTracker_PendingItemName .. " (цвет: " .. itemColor .. ")");
             else
-                debugEcho("LootTracker: не удалось установить текст (text=" .. tostring(text) .. ", name=" .. tostring(SOTA_LootTracker_PendingItemName) .. ")");
+                debugEcho("SOTA LootTracker: не удалось установить текст (text=" .. tostring(text) .. ", name=" .. tostring(SOTA_LootTracker_PendingItemName) .. ")");
             end
         end,
         timeout = 0, -- Без таймаута
@@ -688,6 +755,156 @@ function SOTA_LootTracker_OnEvent(event, arg1)
     if event == "LOOT_BIND_CONFIRM" then
         SOTA_LootTracker_TrackItem(arg1);
     elseif event == "LOOT_CLOSED" then
-        -- Можно добавить обработку закрытия окна лута
+    elseif event == "LOOT_OPENED" then
+        SOTA_LootLink_OnLootOpen();
+    elseif event == "RAID_ROSTER_UPDATE" then
+        -- Очищаем кулдаун только если рейд распался
+        if GetNumRaidMembers() == 0 then
+            SOTA_LootLink_LastLinkTime = nil;
+            debugEcho("SOTA LootLink: рейд распался, кулдаун сброшен");
+        end
     end
+end
+
+-- =============================================================================
+-- === LOOT LINK: Авто-линки лута в рейд при открытии босса ===
+-- =============================================================================
+-- Функция проверяет роль игрока и таргет на босса, затем линкует в рейд
+-- все предметы указанного качества и выше из лута босса.
+-- =============================================================================
+
+--[[
+--	Проверка прав игрока на линкование лута
+--	Возвращает true, если игрок имеет право линковать
+--]]
+local function SOTA_LootLink_HasPermission()
+    -- Проверка 1: Только в рейде
+    if GetNumRaidMembers() == 0 then
+        return false;
+    end
+
+    -- Проверка 2: Проверяем роль по настройке SOTA_LOOTLINK_ROLE_MODE
+    local mode = SOTA_LOOTLINK_ROLE_MODE;
+
+    if mode == 1 then
+        -- Только Рейд Лидер
+        return IsRaidLeader();
+    elseif mode == 2 then
+        -- Только Мастер Лут — проверяем, что игрок назначен МЛ
+        local lootMethod, lootMaster = GetLootMethod();
+        return lootMethod == "master" and lootMaster == 0;
+    elseif mode == 3 then
+        -- Рейд Лидер + Ассистент + Мастер Лут
+        if IsRaidLeader() then
+            return true;
+        end
+        if IsRaidOfficer() then
+            return true;
+        end
+        -- Проверяем, что игрок назначен МЛ
+        local lootMethod, lootMaster = GetLootMethod();
+        if lootMethod == "master" and lootMaster == 0 then
+            return true;
+        end
+    end
+
+    return false;
+end
+
+--[[
+--	Основная функция LootLink - линкует лут в рейд
+--	Вызывается при событии LOOT_OPENED
+--]]
+function SOTA_LootLink_OnLootOpen()
+    -- Проверка прав
+    if not SOTA_LootLink_HasPermission() then
+        return;
+    end
+
+    -- Проверка кулдауна
+    if SOTA_LootLink_LastLinkTime then
+        local elapsed = GetTime() - SOTA_LootLink_LastLinkTime;
+        if elapsed < SOTA_LOOTLINK_COOLDOWN then
+            debugEcho("SOTA LootLink: кулдаун (" .. math.floor(elapsed) .. "/" .. SOTA_LOOTLINK_COOLDOWN .. " сек)");
+            return;
+        end
+    end
+
+    -- Получаем количество предметов в луте
+    local numLootItems = GetNumLootItems();
+    if numLootItems == 0 then
+        return;
+    end
+
+    -- Определяем источник лута
+    local targetName = UnitName("target");
+    local bossName = nil;
+
+    -- Если есть таргет, проверяем через T-Lib (для будущего с локализацией)
+    if targetName and T_Lib and T_Lib.IsBoss then
+        if T_Lib:IsBoss(targetName) then
+            -- Это босс - используем название из библиотеки
+            bossName = T_Lib:GetBossName(targetName) or targetName;
+        end
+    end
+
+    -- Собираем предметы для линковки
+    local itemsToLink = {};
+    for slot = 1, numLootItems, 1 do
+        -- Получаем информацию о предмете
+        local icon, itemName, quantity, quality = GetLootSlotInfo(slot);
+
+        -- Если качество не определилось — пропускаем
+        if quality then
+            -- Проверяем минимальное качество
+            if quality >= SOTA_LOOTLINK_MIN_QUALITY then
+                -- Получаем itemLink
+                local itemLink = GetLootSlotLink(slot);
+                if itemLink then
+                    -- Добавляем в список
+                    table.insert(itemsToLink, {
+                        link = itemLink,
+                        quantity = quantity
+                    });
+
+                    debugEcho("SOTA LootLink: добавлен предмет " .. itemName .. " (качество: " .. quality .. ")");
+                else
+                    debugEcho("SOTA LootLink: Слот " .. slot .. " - нет itemLink");
+                end
+            else
+                debugEcho("SOTA LootLink: Слот " .. slot .. " (" .. tostring(itemName) .. ") - качество " .. tostring(quality) .. " ниже порога " .. tostring(SOTA_LOOTLINK_MIN_QUALITY));
+            end
+        else
+            debugEcho("SOTA LootLink: Слот " .. slot .. " - не удалось определить качество");
+        end
+    end
+
+    -- Если нет предметов для линковки - выходим
+    if table.getn(itemsToLink) == 0 then
+        return;
+    end
+
+    -- Отправляем заголовок
+    local header;
+    if bossName then
+        header = "Добыча с [" .. bossName .. "]:";
+    else
+        header = "Добыча:";
+    end
+    SendChatMessage(header, "RAID");
+
+    -- Отправляем каждый предмет отдельным сообщением с номером
+    for i = 1, table.getn(itemsToLink), 1 do
+        local item = itemsToLink[i];
+        local lootMessage = i .. ". " .. item.link;
+        if item.quantity and item.quantity > 1 then
+            lootMessage = lootMessage .. " (x" .. item.quantity .. ")";
+        end
+        SendChatMessage(lootMessage, "RAID");
+    end
+
+    -- Запоминаем время линка
+    SOTA_LootLink_LastLinkTime = GetTime();
+
+    debugEcho("SOTA LootLink: залинковано предметов: " .. table.getn(itemsToLink));
 end

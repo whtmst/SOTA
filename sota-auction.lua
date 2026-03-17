@@ -497,9 +497,13 @@ function SOTA_AcceptBid(playername, bid)
 
         AuctionUIFrame:Hide();
 
-        --publicEcho(string.format("%s sold to %s for %d DKP.", AuctionedItemLink, playername, bid));
-        --publicEcho(SOTA_getConfigurableMessage(SOTA_MSG_OnComplete, AuctionedItemLink, bid, playername));
-        SOTA_EchoEvent(SOTA_MSG_OnComplete, AuctionedItemLink, bid, playername);
+        -- Получаем ранг победителя (как для ставок)
+        local playerInfo = SOTA_GetGuildPlayerInfo(playername);
+        local bidderRank = playerInfo and playerInfo[4] or "";
+
+        --publicEcho(string.format("%s sold to %s (%s) for %d DKP.", AuctionedItemLink, playername, bidderRank, bid));
+        --publicEcho(SOTA_getConfigurableMessage(SOTA_MSG_OnComplete, AuctionedItemLink, bid, playername, bidderRank));
+        SOTA_EchoEvent(SOTA_MSG_OnComplete, AuctionedItemLink, bid, playername, bidderRank);
 
         SOTA_SubtractPlayerDKP(playername, bid);
 

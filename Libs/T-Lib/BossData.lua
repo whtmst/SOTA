@@ -681,7 +681,7 @@ T_Lib.Raids = {
 -- =============================================================================
 -- Usage:
 --   local bossType = T_Lib:GetBossType("Ragnaros")           -- returns "Elemental"
---   local classification = T_Lib:GetBossClassification("Ragnaros") -- returns "Elite"
+--   local classification = T_Lib:GetBossClassification("Ragnaros") -- returns "Boss"
 -- =============================================================================
 T_Lib.BossMetadata = {
     -- Raid bosses - Upper Blackrock Spire
@@ -729,7 +729,7 @@ T_Lib.BossMetadata = {
     ["Flamegor"] = { type = "Dragonkin", classification = "Boss" },
     ["Chromaggus"] = { type = "Beast", classification = "Boss" },
     ["Nefarian"] = { type = "Dragon", classification = "Boss" },
-    ["Ezzel Darkbrewer"] = { type = "Humanoid", classification = "Elite" },
+    ["Ezzel Darkbrewer"] = { type = "Humanoid", classification = "Boss" },
 
     -- Raid bosses - Lower Karazhan Halls
     ["Phantom Servant"] = { type = "Undead", classification = "Elite" },

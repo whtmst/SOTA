@@ -85,7 +85,7 @@ SOTA_CLASS_COLORS = {
 
 
 SOTA_MSG_OnAnnounceBid       = "OnAnnounceBid";
-SOTA_MSG_OnAnnounceMinBid    = "OnAnnounceMinBid"; -- Deprecated; add "\n" to break lines!
+SOTA_MSG_OnAnnounceMinBid    = "OnAnnounceMinBid"; -- НЕ ИСПОЛЬЗУЕТСЯ
 SOTA_MSG_On10SecondsLeft     = "On10SecondsLeft";
 SOTA_MSG_On9SecondsLeft      = "On9SecondsLeft";
 SOTA_MSG_On8SecondsLeft      = "On8SecondsLeft";
@@ -145,9 +145,9 @@ SOTA_CONFIG_VersionDate       = nil; -- Date of last change!
 -- Pane 2:
 SOTA_CONFIG_BossDKP               = {}
 local SOTA_CONFIG_DEFAULT_BossDKP = {
-    { "20Mans",        200 },
-    { "MoltenCore",    600 },
-    { "Onyxia",        600 },
+    { "20Mans",        0 },
+    { "MoltenCore",    300 },
+    { "Onyxia",        300 },
     { "EmeraldSanctum", 1000 },
     { "BlackwingLair", 1000 },
     { "AQ40",          1000 },

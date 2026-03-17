@@ -112,7 +112,16 @@ end
 -- Format number with commas (1234567 -> "1,234,567")
 function T_Lib.Utils:FormatNumber(num)
     if not num then return "0" end
-    return tostring(num)
+    local s = tostring(num)
+    local left, right = string.match(s, "^([^%d]*%d+)(%d*)$")
+
+    while true do
+        local res
+        left, res = string.gsub(left, "^(-?%d+)(%d%d%d)", "%1,%2")
+        if (res == 0) then break end
+    end
+
+    return left .. right
 end
 
 -- Short number (1500000 -> "1.5m")
