@@ -1,5 +1,5 @@
 --[[
---	SOTA - State of the Art
+--	SOTA - System Of Treasure Allocation
 --
 --	Unit: sota-raidqueue.lua
 --	The Raid Queue contains a list of people currently in queue for the raid.

@@ -1,5 +1,5 @@
 --[[
---	SOTA - State of the Art
+--	SOTA - System Of Treasure Allocation
 --
 --	Unit: sota-dashboard.lua
 --	This unit displays a minimal UI to control SOTA operation.
@@ -1427,7 +1427,7 @@ function SOTA_OnEvent(event, arg1, arg2, arg3, arg4, arg5)
 end
 
 function SOTA_OnLoad()
-    localEcho(string.format("Аддон распределения лута версии %s от %s", GetAddOnMetadata("SOTA", "Version"),
+    localEcho(string.format("Система распределения сокровищ версии %s от %s", GetAddOnMetadata("SOTA", "Version"),
         GetAddOnMetadata("SOTA", "Author")));
 
     this:RegisterEvent("VARIABLES_LOADED");

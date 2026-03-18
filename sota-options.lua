@@ -1,5 +1,5 @@
 --[[
---	SOTA - State of the Art
+--	SOTA - System Of Treasure Allocation
 --
 --	Unit: sota-options.lua
 --	This holds the options (configuration) dialogue of SOTA plus

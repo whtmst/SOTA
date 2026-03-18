@@ -1,4 +1,4 @@
-# SOTA - State of the Art
+# SOTA - System Of Treasure Allocation (Система распределения сокровищ)
 
 ![Turtle WoW](https://img.shields.io/badge/Server-Turtle%20WoW-green)
 ![Version](https://img.shields.io/badge/Version-1.19.0-blue)

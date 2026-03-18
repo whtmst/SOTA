@@ -1,5 +1,5 @@
 --[[
---	SOTA - State of the Art
+--	SOTA - System Of Treasure Allocation
 --
 --	Unit: sota-core.lua
 --	This unit contains the core functionality such as DKP handling,

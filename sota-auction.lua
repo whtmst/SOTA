@@ -1,5 +1,5 @@
 --[[
---	SOTA - State of the Art
+--	SOTA - System Of Treasure Allocation
 --
 --	Unit: sota-auction.lua
 --	The Auction UI is controlled by this unit, which includes the Bidding
