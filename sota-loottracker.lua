@@ -17,8 +17,8 @@ local SOTA_LOOTTRACKER_MAX_ROWS = 10              -- Максимум строк
 
 -- === НАСТРОЙКИ LOOT LINK (авто-линки лута при открытии босса) ===
 local SOTA_LOOTLINK_MIN_QUALITY = 3               -- Мин. качество для линков: 0 (Poor (серый)), 1 (Common (белый)), 2 (Uncommon (зелёный)), 3 (Rare (синий)), 4 (Epic (фиол)), 5 (Legendary (оранж))
-local SOTA_LOOTLINK_ROLE_MODE = 3                 -- 1 = только Рейд Лидер, 2 = только Мастер Лут, 3 = РЛ + МЛ + Ассист
-local SOTA_LOOTLINK_COOLDOWN = 60                -- Кулдаун между линками (сек), 60 = 1 минута
+local SOTA_LOOTLINK_ROLE_MODE = 3                 -- 1 = только Рейд Лидер, 2 = только Мастер лутер, 3 = РЛ + МЛ + Ассист
+local SOTA_LOOTLINK_COOLDOWN = 180                -- Кулдаун между линками (сек), 60 = 1 минута
 
 -- Переменная для хранения времени последнего линка
 local SOTA_LootLink_LastLinkTime = nil;

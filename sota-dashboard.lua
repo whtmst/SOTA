@@ -1163,18 +1163,39 @@ function SOTA_ReportVersionCheckResults()
     --     SendChatMessage("Версии SOTA: нет ответов (у всех устарел?)", "RAID");
     -- end
 
-    -- Отправка отчета по T-Bidder
+    -- Отправка отчета по T-Bidder (с разбивкой на несколько сообщений при необходимости)
     if table.getn(sortedTBidder) > 0 then
-        local tbidderText = "Версии T-Bidder: ";
+        local MAX_MSG_LENGTH = 220; -- Лимит символов с запасом (лимит WoW ~255)
+        local prefix = "Версии T-Bidder: ";
+        local currentText = prefix;
+        local msgCount = 1;
+
         for i = 1, table.getn(sortedTBidder) do
-            if i > 1 then
-                tbidderText = tbidderText .. ", ";
-            end
             -- Красим ник в цвет класса
             local coloredName = SOTA_FormatPlayerNameWithClass(sortedTBidder[i].name);
-            tbidderText = tbidderText .. coloredName .. " (" .. sortedTBidder[i].version .. ")";
+            local entry = coloredName .. " (" .. sortedTBidder[i].version .. ")";
+
+            -- Добавляем разделитель, если это не первый элемент
+            if i > 1 then
+                entry = ", " .. entry;
+            end
+
+            -- Проверяем, влезет ли запись в текущее сообщение
+            if string.len(currentText .. entry) > MAX_MSG_LENGTH then
+                -- Отправляем текущее сообщение
+                SendChatMessage(currentText, "RAID");
+                -- Начинаем новое сообщение с префиксом и номером
+                msgCount = msgCount + 1;
+                currentText = "Версии T-Bidder (" .. msgCount .. "): " .. entry;
+            else
+                currentText = currentText .. entry;
+            end
         end
-        SendChatMessage(tbidderText, "RAID");
+
+        -- Отправляем последнее сообщение
+        if string.len(currentText) > string.len(prefix) then
+            SendChatMessage(currentText, "RAID");
+        end
     else
         SendChatMessage("Версии T-Bidder: нет ответов", "RAID");
     end
@@ -1185,19 +1206,47 @@ function SOTA_ReportVersionCheckResults()
     --     SendChatMessage(outdatedText, "RAID");
     -- end
 
-    -- Отправка списка устаревших T-Bidder
+    -- Отправка списка устаревших T-Bidder (с разбивкой на несколько сообщений при необходимости)
     if table.getn(outdatedTBidder) > 0 then
-        local outdatedText = "Устаревшие T-Bidder: ";
+        local MAX_MSG_LENGTH = 220; -- Лимит символов с запасом (лимит WoW ~255)
+        local prefix = "Устаревшие T-Bidder: ";
+        local currentText = prefix;
+        local msgCount = 1;
+
         for i = 1, table.getn(outdatedTBidder) do
-            if i > 1 then
-                outdatedText = outdatedText .. ", ";
-            end
             -- Красим ник в цвет класса
             local coloredName = SOTA_FormatPlayerNameWithClass(outdatedTBidder[i]);
-            outdatedText = outdatedText .. coloredName;
+            local entry = coloredName;
+
+            -- Добавляем разделитель, если это не первый элемент
+            if i > 1 then
+                entry = ", " .. entry;
+            end
+
+            -- Проверяем, влезет ли запись в текущее сообщение
+            if string.len(currentText .. entry) > MAX_MSG_LENGTH then
+                -- Отправляем текущее сообщение
+                SendChatMessage(currentText, "RAID");
+                -- Начинаем новое сообщение с префиксом и номером
+                msgCount = msgCount + 1;
+                currentText = "Устаревшие T-Bidder (" .. msgCount .. "): " .. entry;
+            else
+                currentText = currentText .. entry;
+            end
         end
-        outdatedText = outdatedText .. ". (Обновить: https://github.com/whtmst/T-Bidder)";
-        SendChatMessage(outdatedText, "RAID");
+
+        -- Добавляем ссылку на обновление в последнее сообщение
+        currentText = currentText .. ". (Обновить: https://github.com/whtmst/T-Bidder)";
+
+        -- Проверяем, не превысила ли ссылка лимит, и если да - отправляем отдельным сообщением
+        if string.len(currentText) > MAX_MSG_LENGTH then
+            -- Отправляем текущее сообщение без ссылки
+            SendChatMessage(currentText, "RAID");
+            -- Отправляем ссылку отдельным сообщением
+            SendChatMessage("(Обновить: https://github.com/whtmst/T-Bidder)", "RAID");
+        else
+            SendChatMessage(currentText, "RAID");
+        end
     end
 end
 
