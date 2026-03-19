@@ -54,6 +54,10 @@ local function SOTA_LootTracker_CreateEntry(itemLink, itemName, iconTexture, sta
     };
     table.insert(SOTA_LootTracker, entry);
     debugEcho("SOTA LootTracker: создана запись для " .. (itemName or "?") .. " с босса " .. (bossName or "?"));
+
+    -- Автоматически открываем окно при создании записи
+    SOTA_LootTracker_ShowUI();
+
     return entry;
 end
 
@@ -777,7 +781,7 @@ end
 --	Проверка прав игрока на линкование лута
 --	Возвращает true, если игрок имеет право линковать
 --]]
-local function SOTA_LootLink_HasPermission()
+function SOTA_LootLink_HasPermission()
     -- Проверка 1: Только в рейде
     if GetNumRaidMembers() == 0 then
         return false;

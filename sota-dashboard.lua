@@ -58,6 +58,14 @@ local synchronizationState = 0;
 local syncResults          = {};
 local syncRQResults        = {};
 
+--	Version Check: таблица для сбора данных о версиях аддонов
+local SOTA_VersionCheckData = {
+    sota_versions = {},       -- {["Misha"] = "1.5.2", ["Vasya"] = "1.5.1"}
+    tbidder_versions = {},    -- {["Misha"] = "1.18.3", ["Pixer"] = "1.18.1"}
+    raid_members = {},        -- {["Misha"] = true, ["Vasya"] = true, ...}
+    in_progress = false
+}
+
 --
 --	SLASH COMMANDS
 --
@@ -104,6 +112,8 @@ GuildDKP            SOTA /command       SOTA !command       SOTA /w command     
 -                   /SOTA version       -                   -                   Check the SOTA versions running
 -                   /SOTA master        -                   -                   Force player to become Master (if he is raid leader or assistant)
 -                   /SOTA clear         -                   -                   Clears the local history log (not the shared log).
+-                   /SOTA silent        -                   -                   Toggle silent bidding mode (disable whisper confirmations).
+-                   /SOTA vc            -                   -                   Check T-Bidder versions in raid (SOTA: /sota version in personal chat).
 
 /gdhelp             /SOTA help          -                   -                   Show HELP page (more or less this page!)
 ]]
@@ -196,6 +206,14 @@ function SOTA_HandleSOTACommand(msg)
             localEcho(string.format("%s использует версию SOTA %s", UnitName("player"),
                 GetAddOnMetadata("SOTA", "Version")));
         end
+        return;
+    end
+
+
+    --	Command: vc (version check)
+    --	Syntax: "vc"
+    if cmd == "vc" then
+        SOTA_StartVersionCheck();
         return;
     end
 
@@ -433,6 +451,7 @@ function SOTA_DisplayHelp()
     echo(SOTA_COLOUR_MAIN .. "      Log" .. SOTA_COLOUR_CHAT .. " | Открыть журнал транзакций SOTA.");
     echo(SOTA_COLOUR_MAIN .. "      Master" .. SOTA_COLOUR_CHAT .. " | Запросить статус Мастер-лутера SOTA.");
     echo(SOTA_COLOUR_MAIN .. "      Silent" .. SOTA_COLOUR_CHAT .. " | Переключить режим скрытых ставок (отключить подтверждения в шепот).");
+    echo(SOTA_COLOUR_MAIN .. "      VC" .. SOTA_COLOUR_CHAT .. " | Проверить версии T-Bidder в рейде (SOTA: /sota version в личный чат).");
     echo(SOTA_COLOUR_MAIN .. "      <item>" .. SOTA_COLOUR_CHAT .. " | Начать аукцион за <item>.");
     echo(SOTA_COLOUR_MAIN .. "      Version" .. SOTA_COLOUR_CHAT .. " | Показать версию клиента SOTA.");
     echo(SOTA_COLOUR_MAIN .. "      Help" .. SOTA_COLOUR_CHAT .. " | (по умолчанию) Эта справка!");
@@ -580,6 +599,15 @@ function SOTA_OnSecondTimer()
     else
         if SOTA_CONFIG_DisableDashboard == 0 then
             SOTA_CloseDashboard();
+        end
+    end
+
+    -- Обработка таймера проверки версий
+    if SOTA_VersionCheckTimer then
+        SOTA_VersionCheckTimer = SOTA_VersionCheckTimer - 1;
+        if SOTA_VersionCheckTimer <= 0 then
+            SOTA_VersionCheckTimer = nil;
+            SOTA_ReportVersionCheckResults();
         end
     end
 end
@@ -917,6 +945,263 @@ end
 
 
 --[[
+--	Проверка версий аддонов в рейде
+--	Запускает сбор версий SOTA и T-Bidder со всех участников рейда
+--]]
+function SOTA_StartVersionCheck()
+    -- Проверка: только в рейде
+    if not SOTA_IsInRaid(true) then
+        localEcho("Проверка версий возможна только в рейде.");
+        return;
+    end
+
+    -- Проверка прав: РЛ / Ассист / МЛ
+    if not SOTA_LootLink_HasPermission() then
+        localEcho("Только Рейд лидер, Ассистент или Мастер лутер могут запускать проверку версий.");
+        return;
+    end
+
+    -- Проверка: не запущена ли уже проверка
+    if SOTA_VersionCheckData.in_progress then
+        localEcho("Проверка версий уже запущена. Дождитесь завершения.");
+        return;
+    end
+
+    -- Очистка предыдущих данных
+    SOTA_VersionCheckData.sota_versions = {};
+    SOTA_VersionCheckData.tbidder_versions = {};
+    SOTA_VersionCheckData.raid_members = {};
+    SOTA_VersionCheckData.in_progress = true;
+
+    -- Сбор списка участников рейда
+    local numMembers = GetNumRaidMembers();
+    for i = 1, numMembers do
+        local name, rank, subgroup, level, class, fileName, zone, online = GetRaidRosterInfo(i);
+        if name and online then
+            SOTA_VersionCheckData.raid_members[name] = true;
+        end
+    end
+
+    -- Добавляем себя в список участников рейда
+    local playerName = UnitName("player");
+    SOTA_VersionCheckData.raid_members[playerName] = true;
+
+    -- Отвечаем на свой запрос первыми (мгновенно)
+    local version = GetAddOnMetadata("SOTA", "Version") or "unknown";
+    SOTA_VersionCheckData.sota_versions[playerName] = version;
+
+    -- Отправка запроса версий
+    SendAddonMessage(SOTA_MESSAGE_PREFIX, "VC_REQUEST#", "RAID");
+
+    -- Сообщение о начале проверки
+    localEcho("Запрос версий T-Bidder отправлен в рейд. Ожидайте 5 секунд...");
+
+    -- Запуск таймера на 5 секунд
+    SOTA_VersionCheckTimer = 5.0;
+end
+
+-- Таймер для проверки версий
+local SOTA_VersionCheckTimer = nil;
+
+--[[
+--	Обработка запроса версии (VC_REQUEST) - отвечаем своей версией
+--]]
+local function SOTA_HandleTXVersionCheckRequest(sender)
+    -- Отвечаем только если проверка активна или просто запрашивают версию
+    local version = GetAddOnMetadata("SOTA", "Version") or "unknown";
+    local playerName = UnitName("player");
+
+    -- Сразу записываем свою версию (так как аддон-сообщения от себя не приходят)
+    if SOTA_VersionCheckData.in_progress then
+        SOTA_VersionCheckData.sota_versions[playerName] = version;
+    end
+
+    -- Отправляем ответ в рейд
+    SendAddonMessage(SOTA_MESSAGE_PREFIX, "VC_RESPONSE#SOTA:" .. version .. ":" .. playerName, "RAID");
+end
+
+--[[
+--	Обработка ответа версии (VC_RESPONSE) - собираем версии от SOTA и T-Bidder
+--]]
+local function SOTA_HandleRXVersionCheckResponse(message, sender)
+    if not SOTA_VersionCheckData.in_progress then
+        return;
+    end
+
+    -- Формат: SOTA:<version>:<name> или TBidder:<version>:<name>
+    -- Парсим вручную
+    local addonType = nil;
+    local version = nil;
+    local playerName = nil;
+
+    local firstColon = string.find(message, ":");
+    if firstColon then
+        addonType = string.sub(message, 1, firstColon - 1);
+        local rest = string.sub(message, firstColon + 1);
+        local secondColon = string.find(rest, ":");
+        if secondColon then
+            version = string.sub(rest, 1, secondColon - 1);
+            playerName = string.sub(rest, secondColon + 1);
+        end
+    end
+
+    if addonType and version and playerName then
+        if addonType == "SOTA" then
+            SOTA_VersionCheckData.sota_versions[playerName] = version;
+        elseif addonType == "TBidder" then
+            SOTA_VersionCheckData.tbidder_versions[playerName] = version;
+        end
+    end
+end
+
+--[[
+--	Сравнение версий (семантическое)
+--	Возвращает: 1 если v1 > v2, -1 если v1 < v2, 0 если равны
+--	Пример: 1.20.0 > 1.18.3 > 1.18.0
+--]]
+local function SOTA_CompareVersions(v1, v2)
+    local parts1 = {};
+    local parts2 = {};
+
+    -- Разбиваем версии на части
+    local temp = v1;
+    local start = 1;
+    local dotpos = string.find(temp, "%.");
+    while dotpos do
+        table.insert(parts1, tonumber(string.sub(temp, start, dotpos - 1)) or 0);
+        start = dotpos + 1;
+        dotpos = string.find(temp, "%.", start);
+    end
+    table.insert(parts1, tonumber(string.sub(temp, start)) or 0);
+
+    temp = v2;
+    start = 1;
+    dotpos = string.find(temp, "%.");
+    while dotpos do
+        table.insert(parts2, tonumber(string.sub(temp, start, dotpos - 1)) or 0);
+        start = dotpos + 1;
+        dotpos = string.find(temp, "%.", start);
+    end
+    table.insert(parts2, tonumber(string.sub(temp, start)) or 0);
+
+    -- Сравниваем по частям
+    local maxParts = math.max(table.getn(parts1), table.getn(parts2));
+    for i = 1, maxParts do
+        local p1 = parts1[i] or 0;
+        local p2 = parts2[i] or 0;
+        if p1 > p2 then
+            return 1;
+        elseif p1 < p2 then
+            return -1;
+        end
+    end
+    return 0;
+end
+
+--[[
+--	Сортировка игроков по версиям (от новых к старым)
+--	Возвращает таблицу { {name="Misha", version="1.20.0"}, ... }
+--]]
+local function SOTA_SortVersionsByDesc(versionsTable)
+    local sorted = {};
+
+    for name, version in pairs(versionsTable) do
+        table.insert(sorted, {name = name, version = version});
+    end
+
+    -- Сортировка пузырьком (Lua 5.0 не имеет table.sort с кастомным компаратором)
+    local n = table.getn(sorted);
+    for i = 1, n - 1 do
+        for j = 1, n - i do
+            if SOTA_CompareVersions(sorted[j].version, sorted[j + 1].version) < 0 then
+                -- Меняем местами
+                local temp = sorted[j];
+                sorted[j] = sorted[j + 1];
+                sorted[j + 1] = temp;
+            end
+        end
+    end
+
+    return sorted;
+end
+
+--[[
+--	Формирование и отправка отчета в рейд
+--	ВЫВОДИТ ТОЛЬКО T-BIDDER (SOTA проверяется через /sota version в ЛС)
+--]]
+function SOTA_ReportVersionCheckResults()
+    SOTA_VersionCheckData.in_progress = false;
+
+    -- Сортировка версий
+    -- local sortedSOTA = SOTA_SortVersionsByDesc(SOTA_VersionCheckData.sota_versions); -- ЗАКОММЕНТИРОВАНО: SOTA не выводится в рейд
+    local sortedTBidder = SOTA_SortVersionsByDesc(SOTA_VersionCheckData.tbidder_versions);
+
+    -- Формирование списков устаревших (кто не ответил)
+    -- local outdatedSOTA = {}; -- ЗАКОММЕНТИРОВАНО: SOTA не выводится в рейд
+    local outdatedTBidder = {};
+
+    for name, _ in pairs(SOTA_VersionCheckData.raid_members) do
+        -- if not SOTA_VersionCheckData.sota_versions[name] then -- ЗАКОММЕНТИРОВАНО: SOTA не выводится в рейд
+        --     table.insert(outdatedSOTA, name); -- ЗАКОММЕНТИРОВАНО: SOTA не выводится в рейд
+        -- end
+        if not SOTA_VersionCheckData.tbidder_versions[name] then
+            table.insert(outdatedTBidder, name);
+        end
+    end
+
+    -- Отправка отчета по SOTA -- ЗАКОММЕНТИРОВАНО: SOTA проверяется через /sota version в личный чат
+    -- if table.getn(sortedSOTA) > 0 then
+    --     local sotaText = "Версии SOTA: ";
+    --     for i = 1, table.getn(sortedSOTA) do
+    --         if i > 1 then
+    --             sotaText = sotaText .. ", ";
+    --         end
+    --         sotaText = sotaText .. sortedSOTA[i].name .. " (" .. sortedSOTA[i].version .. ")";
+    --     end
+    --     SendChatMessage(sotaText, "RAID");
+    -- else
+    --     SendChatMessage("Версии SOTA: нет ответов (у всех устарел?)", "RAID");
+    -- end
+
+    -- Отправка отчета по T-Bidder
+    if table.getn(sortedTBidder) > 0 then
+        local tbidderText = "Версии T-Bidder: ";
+        for i = 1, table.getn(sortedTBidder) do
+            if i > 1 then
+                tbidderText = tbidderText .. ", ";
+            end
+            -- Красим ник в цвет класса
+            local coloredName = SOTA_FormatPlayerNameWithClass(sortedTBidder[i].name);
+            tbidderText = tbidderText .. coloredName .. " (" .. sortedTBidder[i].version .. ")";
+        end
+        SendChatMessage(tbidderText, "RAID");
+    else
+        SendChatMessage("Версии T-Bidder: нет ответов", "RAID");
+    end
+
+    -- Отправка списка устаревших SOTA -- ЗАКОММЕНТИРОВАНО: SOTA проверяется через /sota version в личный чат
+    -- if table.getn(outdatedSOTA) > 0 then
+    --     local outdatedText = "Устаревшие SOTA: " .. table.concat(outdatedSOTA, ", ") .. ". (Обновить: https://github.com/whtmst/SOTA)";
+    --     SendChatMessage(outdatedText, "RAID");
+    -- end
+
+    -- Отправка списка устаревших T-Bidder
+    if table.getn(outdatedTBidder) > 0 then
+        local outdatedText = "Устаревшие T-Bidder: ";
+        for i = 1, table.getn(outdatedTBidder) do
+            if i > 1 then
+                outdatedText = outdatedText .. ", ";
+            end
+            -- Красим ник в цвет класса
+            local coloredName = SOTA_FormatPlayerNameWithClass(outdatedTBidder[i]);
+            outdatedText = outdatedText .. coloredName;
+        end
+        outdatedText = outdatedText .. ". (Обновить: https://github.com/whtmst/T-Bidder)";
+        SendChatMessage(outdatedText, "RAID");
+    end
+end
+
+--[[
 --	TX_UPDATE: A transaction was broadcasted. Add transaction details to transactions list.
 --]]
 local function SOTA_HandleTXUpdate(message, sender)
@@ -1207,9 +1492,23 @@ function SOTA_HandleRXConfigSyncRequest(message, sender)
 end;
 
 function SOTA_OnChatMsgAddon(event, prefix, msg, channel, sender)
-    --echo(string.format("Prefix=%s, MSG=%s", prefix, msg));
+    -- Обрабатываем сообщения от SOTA и T-Bidder (для VC_RESPONSE)
+    if (prefix == SOTA_MESSAGE_PREFIX) or (prefix == "GuildDKPv1") or (prefix == "TBidder") then
+        -- Специальная обработка для VC_RESPONSE (формат: VC_RESPONSE#data)
+        local vcStart, vcEnd = string.find(msg, "^(VC_RESPONSE)#");
+        if vcStart then
+            local vcData = string.sub(msg, vcEnd + 1);
+            SOTA_HandleRXVersionCheckResponse(vcData, sender);
+            return;
+        end
 
-    if (prefix == SOTA_MESSAGE_PREFIX) or (prefix == "GuildDKPv1") then
+        -- Специальная обработка для VC_REQUEST (формат: VC_REQUEST#)
+        local vcReqStart = string.find(msg, "^VC_REQUEST#?$");
+        if vcReqStart then
+            SOTA_HandleTXVersionCheckRequest(sender);
+            return;
+        end
+
         --	Split incoming message in Command, Payload (message) and Recipient
         local _, _, cmd, message, recipient = string.find(msg, "([^#]*)#([^#]*)#([^#]*)")
 

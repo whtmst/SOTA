@@ -15,5 +15,5 @@ sota-options.xml
 sota-raidqueue.xml
 sota-transactionlog.xml
 sota-auction.xml
-sota-dashboard.xml
 sota-loottracker.xml
+sota-dashboard.xml

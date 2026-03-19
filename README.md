@@ -1,7 +1,7 @@
 # SOTA - System Of Treasure Allocation (Система распределения сокровищ)
 
 ![Turtle WoW](https://img.shields.io/badge/Server-Turtle%20WoW-green)
-![Version](https://img.shields.io/badge/Version-1.19.0-blue)
+![Version](https://img.shields.io/badge/Version-1.20.0-blue)
 ![Interface](https://img.shields.io/badge/Interface-11200-orange)
 
 Аддон для управления системой DKP (Dragon Kill Points) в World of Warcraft 1.12.1
@@ -25,7 +25,7 @@
 
 - Управляет аукционами и очередью в рейд
 - Один мастер на рейд (назначается автоматически)
-- Запрос статуса: `/sota master` или клик по иконке Blessing of Kings
+- Запрос статуса: `/sota master` или клик по иконке Spiritual Guidance
 - Права = права офицера, мастер только обрабатывает фоновые задачи
 
 ---
@@ -152,6 +152,7 @@ DKP начисляется игрокам вне инстанса. При DC и�
 | `/sota version` | Версии аддона |
 | `/sota master` | Назначить мастера |
 | `/sota silent` | Тихий режим (вкл/выкл). Отключает подтверждения ставок в ЛС. |
+| `/sota vc` | Проверка версий T-Bidder в рейде (SOTA: `/sota version` в личный чат) |
 | `/sota help` | Справка |
 
 ---

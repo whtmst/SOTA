@@ -11,7 +11,7 @@ SOTA_MESSAGE_PREFIX           = "SOTAv1"
 SOTA_ID                       = "SOTA"
 SOTA_TITLE                    = "SOTA"
 
-local SOTA_DEBUG_ENABLED = false;      -- Включение дебаг режима
+local SOTA_DEBUG_ENABLED = false;      -- Включение дебаг режима (true = вкл. / false = выкл.)
 
 -- Значения DKP для бонусных кнопок
 local SOTA_WELCOME_DKP_AMOUNT = 60    -- Приветственное DKP
@@ -528,6 +528,43 @@ function SOTA_GetGuildPlayerInfo(player)
     end
 
     return nil;
+end
+
+--[[
+--	Получить класс игрока из рейда
+--	Возвращает: className (англ) или nil если не найден
+--]]
+function SOTA_GetPlayerClassFromRaid(playerName)
+    local numMembers = GetNumRaidMembers();
+    for i = 1, numMembers do
+        local name, _, _, _, class, _, _, online = GetRaidRosterInfo(i);
+        if name and name == playerName and online then
+            return class;
+        end
+    end
+    return nil;
+end
+
+--[[
+--	Форматировать имя игрока с цветом класса
+--	Пример: "|cFFFF7D0AMisha|r" (Druid)
+--]]
+function SOTA_FormatPlayerNameWithClass(playerName)
+    local class = SOTA_GetPlayerClassFromRaid(playerName);
+    if not class then
+        class = SOTA_GetGuildPlayerInfo(playerName);
+        if class then
+            class = class[3];
+        end
+    end
+
+    if class then
+        local color = SOTA_GetClassColorCodes(class);
+        -- color уже в формате {R, G, B} где значения 0-255
+        return string.format("|cFF%02X%02X%02X%s|r", color[1], color[2], color[3], playerName);
+    end
+
+    return playerName;
 end
 
 function SOTA_OnRaidRosterUpdate(event, arg1, arg2, arg3, arg4, arg5)
