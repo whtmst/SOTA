@@ -1,7 +1,7 @@
 # SOTA - System Of Treasure Allocation (Система распределения сокровищ)
 
 ![Turtle WoW](https://img.shields.io/badge/Server-Turtle%20WoW-green)
-![Version](https://img.shields.io/badge/Version-1.20.0-blue)
+![Version](https://img.shields.io/badge/Version-1.20.1-blue)
 ![Interface](https://img.shields.io/badge/Interface-11200-orange)
 
 Аддон для управления системой DKP (Dragon Kill Points) в World of Warcraft 1.12.1
