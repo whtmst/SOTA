@@ -60,16 +60,39 @@ end
 --	Since 0.0.1
 --]]
 function SOTA_StartAuction(itemLink)
-    local rank = SOTA_GetRaidRank(UnitName("player"));
+    local playername = UnitName("player");
+    local rank = SOTA_GetRaidRank(playername);
     if rank < 1 then
-        localEcho("Вы должны быть помощником или лидером рейда, чтобы начинать аукционы.");
+        localEcho("Вы должны быть мастер-лутером рейда, чтобы начинать аукционы.");
         return;
     end
 
+    -- Проверяем режим лута
+    local lootMethod, lootMasterIndex = GetLootMethod();
+    if not lootMethod or lootMethod ~= "master" then
+        localEcho("Аукцион можно запускать только в режиме Мастер-лутер. Попросите РЛ сменить режим лута.");
+        return;
+    end
+
+    -- Проверяем, кто является мастер-лутером
+    if lootMasterIndex then
+        local actualMasterName;
+        if lootMasterIndex == 0 then
+            actualMasterName = playername;
+        else
+            actualMasterName = GetRaidRosterInfo(lootMasterIndex);
+        end
+
+        -- Если мастер-лутер не вы → запрещаем запуск аукциона
+        if actualMasterName and actualMasterName ~= playername then
+            localEcho("Мастер-лутер: " .. actualMasterName .. ". Только он может запускать аукционы.");
+            return;
+        end
+    end
 
     AuctionedItemLink = itemLink;
 
-    --	Poor player, not only must be handle the bidding round but he is now also handling Invites!
+    -- Назначаем себя мастер-лутом (если еще не назначены)
     SOTA_RequestMaster();
 
     -- Extract ItemId from itemLink string:

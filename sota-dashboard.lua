@@ -639,17 +639,12 @@ end
 --
 
 --[[
---	Request MASTER status unconditionally.
---	This is to be called when a DKP command is executed or a bidding round is started.
---	Other clients are notified, and must immediately demote themselves to SLAVE.
+--	Запрос статуса мастер-лутера (для кнопки в дашборде).
+--	Вызывает SOTA_RequestMaster() с проверкой через GetLootMethod().
 --	Since 0.5.2
 --]]
 function SOTA_RequestSOTAMaster()
-    if CLIENT_STATE == CLIENT_STATE_MASTER then
-        localEcho("Вы уже являетесь мастер-лутером SOTA.");
-    else
-        SOTA_RequestMaster();
-    end
+    SOTA_RequestMaster(false);
 end
 
 -- Заглушки для новых кнопок бонусов DKP
@@ -674,24 +669,159 @@ function SOTA_PlaceholderButton()
     echo(jokes[math.random(table.getn(jokes))])
 end
 
+--[[
+--	Поиск Рейд Лидера в рейде
+--	Возвращает: имя РЛ (string) или nil если не найден
+--]]
+local function SOTA_FindRaidLeader()
+    if GetNumRaidMembers() == 0 then
+        return nil;
+    end
+
+    for i = 1, GetNumRaidMembers() do
+        local name, rank = GetRaidRosterInfo(i);
+        if name and rank == 2 then  -- 2 = Raid Leader
+            return name;
+        end
+    end
+
+    return nil;
+end
+
+--[[
+--	Запрос статуса мастер-лутера с проверкой через API WoW
+--	Если режим не Мастер-лутер или мастер не вы — отправляет запрос РЛ
+--	Since 0.5.2
+--]]
 function SOTA_RequestMaster(silentmode)
     local playername = UnitName("player")
     local rank = SOTA_GetRaidRank(playername);
-    --	Requires at least Assistant!
+
+    -- Требуется ранг ассистента или выше
     if rank < 1 then
         if silentmode then
             debugEcho(string.format("Игрок %s имеет ранг рейда %d", playername, rank));
         else
-        localEcho("Для получения прав мастер-лутера SOTA вы должны быть повышены!");
+            localEcho("Для получения прав мастер-лутера вы должны быть повышены в рейде до ассистента!");
         end
         return;
     end
 
+    -- ПРОВЕРКА: Кто фактический мастер-лутер по API WoW
+    local lootMethod, lootMasterIndex = GetLootMethod();
+
+    -- Сценарий 1: Режим лута НЕ Мастер-лутер
+    if not lootMethod or lootMethod ~= "master" then
+        local raidLeader = SOTA_FindRaidLeader();
+
+        if raidLeader == playername then
+            -- Вы сами РЛ — меняем режим лута на Master Loot и назначаем себя
+            -- Команда /master <имя> меняет режим и назначает мастера
+            if ChatFrameEditBox then
+                ChatFrameEditBox:SetText("/master " .. playername);
+                ChatEdit_SendText(ChatFrameEditBox);
+            end
+
+            -- Отправляем TX_SETMASTER для синхронизации
+            addonEcho("TX_SETMASTER#" .. playername .. "#");
+
+            -- Обновляем состояние локально (с задержкой через таймер)
+            SOTA_AddTimer(function()
+                SOTA_SetMasterState(playername, CLIENT_STATE_MASTER);
+            end, 0.5);
+
+            if not silentmode then
+                localEcho("Режим лута изменён на Мастер-лутер. Вы назначены мастер-лутером.");
+            end
+        else
+            -- РЛ другой игрок — отправляем whisper
+            if raidLeader and raidLeader ~= playername then
+                SendChatMessage("SOTA: Пожалуйста, смените режим лута на Мастер-лутера.", "WHISPER", nil, raidLeader);
+            end
+
+            if not silentmode then
+                if raidLeader then
+                    localEcho("Режим лута не Мастер-лутер. Отправлен запрос РЛ (" .. raidLeader .. ") на смену режима.");
+                else
+                    localEcho("Режим лута не Мастер-лутер. Рейд лидер не найден.");
+                end
+            end
+        end
+        return;
+    end
+
+    -- Сценарий 2: Режим Мастер-лутер, проверяем кто мастер
+    if lootMasterIndex then
+        local actualMasterName;
+        if lootMasterIndex == 0 then
+            actualMasterName = playername;  -- Вы мастер-лутер
+        else
+            actualMasterName = GetRaidRosterInfo(lootMasterIndex);
+        end
+
+        -- Если вы уже мастер-лутер по API
+        if actualMasterName == playername then
+            -- Проверяем рассинхронизацию SOTA_Master
+            if SOTA_Master and SOTA_Master ~= playername then
+                if not silentmode then
+                    localEcho("Исправление рассинхронизации...");
+                end
+                -- Отправляем TX_SETMASTER для синхронизации
+                addonEcho("TX_SETMASTER#" .. playername .. "#");
+            else
+                if not silentmode then
+                    localEcho("Вы уже являетесь мастер-лутером.");
+                end
+                return;
+            end
+        else
+            -- Мастер-лутер другой игрок — запрашиваем переназначение
+            local raidLeader = SOTA_FindRaidLeader();
+
+            if raidLeader == playername then
+                -- Вы сами РЛ — назначаем себя мастером через команду /master
+                if ChatFrameEditBox then
+                    ChatFrameEditBox:SetText("/master " .. playername);
+                    ChatEdit_SendText(ChatFrameEditBox);
+                end
+
+                -- Отправляем TX_SETMASTER для синхронизации
+                addonEcho("TX_SETMASTER#" .. playername .. "#");
+
+                -- Обновляем состояние локально (с задержкой через таймер)
+                SOTA_AddTimer(function()
+                    SOTA_SetMasterState(playername, CLIENT_STATE_MASTER);
+                end, 0.5);
+
+                if not silentmode then
+                    localEcho("Вы назначены мастер-лутером.");
+                end
+            else
+                -- РЛ другой игрок — отправляем whisper
+                if raidLeader and raidLeader ~= playername then
+                    SendChatMessage("SOTA: Пожалуйста, назначьте меня (" .. playername .. ") мастер-лутером.", "WHISPER", nil, raidLeader);
+                end
+
+                if not silentmode then
+                    if actualMasterName then
+                        if raidLeader then
+                            localEcho("Мастер-лутер: " .. actualMasterName .. ". Отправлен запрос РЛ (" .. raidLeader .. ") на переназначение.");
+                        else
+                            localEcho("Мастер-лутер: " .. actualMasterName .. ". Рейд лидер не найден.");
+                        end
+                    end
+                end
+            end
+            return;
+        end
+    end
+
+    -- Отправляем TX_SETMASTER для синхронизации
     addonEcho("TX_SETMASTER#" .. playername .. "#");
 
     if not silentmode then
         if not CLIENT_STATE == CLIENT_STATE_MASTER then
-            localEcho("Теперь вы являетесь мастер-лутером SOTA.");
+            localEcho("Теперь вы являетесь мастер-лутером.");
         end
     end
 
@@ -710,7 +840,19 @@ function SOTA_SetMasterState(mastername, masterstate)
 
     -- echo(string.format("Master: %s, state= %d", mastername, CLIENT_STATE));
 
-    getglobal("SOTA_MasterInfoText"):SetText("МАСТЕР ЛУТЕР: " .. mastername);
+    local masterText = getglobal("SOTA_MasterInfoText");
+    if masterText then
+        masterText:SetText("МАСТЕР ЛУТЕР: " .. mastername);
+    else
+        -- Фрейм ещё не создан, пробуем позже
+        debugEcho("[SOTA] SOTA_MasterInfoText не найден, пробуем позже");
+        SOTA_AddTimer(function()
+            local mt = getglobal("SOTA_MasterInfoText");
+            if mt then
+                mt:SetText("МАСТЕР ЛУТЕР: " .. mastername);
+            end
+        end, 0.3);
+    end
 end
 
 -- =================================================================================
@@ -894,10 +1036,7 @@ function SOTA_HandleTXMaster(message, sender)
     local playername = UnitName("player")
     --echo(string.format("TX_MASTER: msg=%s, sender=%s", message, sender));
 
-    if sender == playername then
-        return;
-    end
-
+    -- Обновляем мастера независимо от отправителя
     SOTA_Master = message;
     if message == playername then
         SOTA_SetMasterState(message, CLIENT_STATE_MASTER);

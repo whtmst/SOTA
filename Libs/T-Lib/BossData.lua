@@ -251,6 +251,10 @@ T_Lib.Raids = {
     },
     -- Frostmane Hollow (FH)
     ["Frostmane Hollow"] = {
+        "Tan'sha The Sleek",
+        "Battlemaster Ubukaz",
+        "Kan'za The Seer",
+        "Hailar The Frigid",
     },
     -- Deadmines (VC)
     ["Deadmines"] = {
@@ -319,6 +323,13 @@ T_Lib.Raids = {
     },
     -- Windhorn Canyon (WhC)
     ["Windhorn Canyon"] = {
+        "Pathun Buskhide",
+        "Ahgk'tos the Pure",
+        "Ambassador Vortalus",
+        "Walgan Bloodcaller",
+        "Bonespeaker Narlgom",
+        "Prophet Stormhoof",
+        "Chieftain Shalk Blackwind",
     },
     -- Razorfen Kraul (RFK)
     ["Razorfen Kraul"] = {

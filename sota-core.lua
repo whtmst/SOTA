@@ -573,7 +573,30 @@ function SOTA_OnRaidRosterUpdate(event, arg1, arg2, arg3, arg4, arg5)
     SOTA_RefreshRaidQueue();
     SOTA_RefreshLogElements();
 
+    -- Проверяем актуального мастер-лутера через API WoW
     if SOTA_IsInRaid(true) then
+        local lootMethod, lootMasterIndex = GetLootMethod();
+        if lootMethod == "master" and lootMasterIndex then
+            local actualMasterName;
+            if lootMasterIndex == 0 then
+                actualMasterName = UnitName("player");
+            else
+                actualMasterName = GetRaidRosterInfo(lootMasterIndex);
+            end
+
+            -- Если мастер изменился или ещё не установлен, обновляем SOTA_Master
+            if actualMasterName and (not SOTA_Master or SOTA_Master ~= actualMasterName) then
+                SOTA_Master = actualMasterName;
+                CLIENT_STATE = CLIENT_STATE_MASTER;
+
+                -- Обновляем дашборд через SOTA_SetMasterState
+                SOTA_SetMasterState(actualMasterName, CLIENT_STATE_MASTER);
+            end
+        elseif lootMethod and lootMethod ~= "master" then
+            -- Режим не Master Loot → сбрасываем мастера
+            SOTA_ClearMaster();
+        end
+
         SOTA_Synchronize();
     else
         SOTA_transactionLog = {};
