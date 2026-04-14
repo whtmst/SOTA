@@ -794,7 +794,7 @@ function SOTA_LootLink_HasPermission()
         -- Только Рейд Лидер
         return IsRaidLeader();
     elseif mode == 2 then
-        -- Только Мастер Лут — проверяем, что игрок назначен МЛ
+        -- Только Мастер Лут - проверяем, что игрок назначен МЛ
         local lootMethod, lootMaster = GetLootMethod();
         return lootMethod == "master" and lootMaster == 0;
     elseif mode == 3 then
@@ -858,7 +858,7 @@ function SOTA_LootLink_OnLootOpen()
         -- Получаем информацию о предмете
         local icon, itemName, quantity, quality = GetLootSlotInfo(slot);
 
-        -- Если качество не определилось — пропускаем
+        -- Если качество не определилось - пропускаем
         if quality then
             -- Проверяем минимальное качество
             if quality >= SOTA_LOOTLINK_MIN_QUALITY then

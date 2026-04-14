@@ -1,7 +1,7 @@
 # SOTA - System Of Treasure Allocation (Система распределения сокровищ)
 
 ![Turtle WoW](https://img.shields.io/badge/Server-Turtle%20WoW-green)
-![Version](https://img.shields.io/badge/Version-1.20.2-blue)
+![Version](https://img.shields.io/badge/Version-1.20.3-blue)
 ![Interface](https://img.shields.io/badge/Interface-11200-orange)
 
 Аддон для управления системой DKP (Dragon Kill Points) в World of Warcraft 1.12.1
@@ -72,6 +72,12 @@ DKP начисляется игрокам вне инстанса. При DC и�
 - Клик по транзакции → детали
 - Клик по игроку → включить/исключить из транзакции
 - Для транзакций с одним игроком: замена цели (коррекция ошибок)
+
+### 5️⃣ Подсказки DKP
+
+На панели управления (слева, рядом с Master Info) добавлена кнопка-подсказка - наведите, чтобы просмотреть сводку правил DKP: начисления за рейды, бонусы и штрафы.
+
+> ⚠️ Данные подсказки имеют непосредственное отношение только к гильдии **[ONLINE](https://ruguild.online/)**.
 
 ---
 
