@@ -1,5 +1,5 @@
 -- =============================================================================
--- T-Lib by T-Bidder
+-- T-Lib by Misha (Wht Mst) | Mikhail Palagin
 -- =============================================================================
 -- Universal library for Turtle WoW addons
 --
@@ -16,7 +16,7 @@
 -- =============================================================================
 
 T_Lib = T_Lib or {}
-T_Lib.Version = "1.0.0"
+T_Lib.Version = "1.1.0"
 T_Lib.Author = "Misha (Wht Mst) | Mikhail Palagin"
 T_Lib.Author_URL = "https://dalink.to/whtmst"
 T_Lib.Lib_URL = "https://github.com/whtmst/T-Lib"

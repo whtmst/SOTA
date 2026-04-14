@@ -23,3 +23,7 @@ _IGNORE/
 # Системные файлы
 .DS_Store
 Thumbs.db
+
+# MemPalace (AI memory)
+mempalace.yaml
+entities.json

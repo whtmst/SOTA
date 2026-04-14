@@ -35,8 +35,8 @@ print(raid) -- "Molten Core"
 
 -- Get all bosses in a raid
 local bosses = T_Lib:GetBossesByRaid("MC")
-for _, boss in ipairs(bosses) do
-    print(boss)
+for i = 1, table.getn(bosses) do
+    print(bosses[i])
 end
 ```
 
@@ -59,6 +59,11 @@ end
 | `T_Lib:GetAllRaidAliases()` | Get all raid aliases |
 | `T_Lib:GetBossType(bossName)` | Get boss type (Elemental, Dragon, etc.) |
 | `T_Lib:GetBossClassification(bossName)` | Get boss classification (Elite, Rare Elite, Boss) |
+| `T_Lib:GetBossNPCID(bossName)` | Get boss NPC ID by name |
+| `T_Lib:GetBossNameByID(npcId)` | Get boss name by NPC ID (reverse lookup) |
+| `T_Lib:GetTrashByRaid(raid)` | Get trash mobs of a raid |
+| `T_Lib:GetRaidType(raid)` | Get instance type (Raid, Dungeon) |
+| `T_Lib:GetNPCsByRaid(raid)` | Get NPCs of a raid (trainers, vendors, etc.) |
 
 ### Localization Module
 
@@ -147,7 +152,8 @@ end
 local bossName = UnitName("target")
 if T_Lib:IsBoss(bossName) then
     local raid = T_Lib:GetRaidByBoss(bossName)
-    print("Boss detected: " .. bossName .. " in " .. raid)
+    local npcId = T_Lib:GetBossNPCID(bossName)
+    print("Boss detected: " .. bossName .. " in " .. raid .. " (ID: " .. tostring(npcId) .. ")")
 end
 ```
 
@@ -155,13 +161,23 @@ end
 
 ```lua
 local bosses = T_Lib:GetBossesByRaid("MC")
-local defeated = 0
-for _, boss in ipairs(bosses) do
-    if IsBossDead(boss) then
-        defeated = defeated + 1
+local total = table.getn(bosses)
+
+-- Iterate over bosses
+for i = 1, total do
+    local boss = bosses[i]
+    print(i .. ". " .. boss)
+end
+
+-- Example: track defeated bosses (use your own tracking logic)
+local defeated = {}  -- your saved variable
+local count = 0
+for i = 1, total do
+    if defeated[bosses[i]] then
+        count = count + 1
     end
 end
-print(defeated .. "/" .. #bosses .. " bosses defeated")
+print(count .. "/" .. total .. " bosses defeated")
 ```
 
 ### Get Boss Type and Classification

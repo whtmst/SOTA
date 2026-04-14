@@ -1587,7 +1587,7 @@ function SOTA_RecordDKP()
         StaticPopup_Hide("SOTA_POPUP_SHARE_DKP");
 
         StaticPopupDialogs["SOTA_POPUP_RECORD_DKP"] = {
-            text = "|cFFC84B31ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за побитый рекорд времени прохождения рейда на 2 и более минуты: |cFFC84B31"..SOTA_RECORD_DKP_AMOUNT.." DKP всем участникам|r рейда",
+            text = "|cFFC84B31ВНИМАНИЕ: ДАННЫЙ БОНУС МОЖЕТ БЫТЬ НАЧИСЛЕН ТОЛЬКО ЕСЛИ ИМЕЮТСЯ ЛОГИ ПРОХОЖДЕНИЯ!|r\n\nБудет начислен бонус за побитый рекорд времени прохождения рейда на 120 сек. и более: |cFFC84B31"..SOTA_RECORD_DKP_AMOUNT.." DKP всем участникам|r рейда",
             hasEditBox = false,
             button1 = "Добавить",
             button2 = "Отмена",

@@ -477,18 +477,49 @@ function SOTA_CloseDashboard()
     DashboardUIFrame:Hide();
 end
 
-function SOTA_ShowDashboardToolTip(object, message)
+function SOTA_ShowDashboardToolTip(object, message, compact)
     local tooltip = SOTA_TooltipFrame;
     local tooltipText = getglobal("SOTA_TooltipText");
+
+    -- Фиксированная максимальная ширина тултипа
+    local maxWidth = 500;
+
+    -- Для компактного режима (длинные тексты) - минимальные отступы
+    local paddingX, paddingY, offsetY;
+    if compact then
+        paddingX = 20;   -- горизонтальный отступ
+        paddingY = 20;   -- вертикальный отступ (сверху+снизу)
+        offsetY = 3;     -- смещение якорей
+    else
+        paddingX = 25;
+        paddingY = 20;
+        offsetY = 6;
+    end
+
+    -- В компактном режиме временно меняем якоря на более плотные
+    if compact then
+        tooltipText:ClearAllPoints();
+        tooltipText:SetPoint("TOPLEFT", tooltip, "TOPLEFT", paddingX / 2, -offsetY);
+        tooltipText:SetPoint("BOTTOMRIGHT", tooltip, "BOTTOMRIGHT", -paddingX / 2, offsetY);
+    end
 
     -- Устанавливаем текст
     tooltipText:SetText(message);
 
-    -- Подгоняем размер по содержимому (увеличенные отступы)
+    -- Подгоняем размер по содержимому
     local textWidth = tooltipText:GetStringWidth();
     local textHeight = tooltipText:GetHeight();
-    tooltip:SetWidth(textWidth + 25);
-    tooltip:SetHeight(textHeight + 20);
+
+    -- Если текст шире maxWidth - уменьшаем ширину и пересчитываем высоту
+    if textWidth + paddingX > maxWidth then
+        tooltip:SetWidth(maxWidth);
+        tooltipText:SetWidth(maxWidth - paddingX);
+        textHeight = tooltipText:GetHeight();
+        tooltip:SetHeight(textHeight + paddingY);
+    else
+        tooltip:SetWidth(textWidth + paddingX);
+        tooltip:SetHeight(textHeight + paddingY);
+    end
 
     -- Позиционируем тултип с умной проверкой границ экрана
     tooltip:ClearAllPoints();
@@ -532,6 +563,83 @@ end
 
 function SOTA_HideDashboardToolTip()
     SOTA_TooltipFrame:Hide();
+    -- Возвращаем якоря по умолчанию (для обычных тултипов)
+    local tooltipText = getglobal("SOTA_TooltipText");
+    tooltipText:ClearAllPoints();
+    tooltipText:SetPoint("TOPLEFT", SOTA_TooltipFrame, "TOPLEFT", 12, -6);
+    tooltipText:SetPoint("BOTTOMRIGHT", SOTA_TooltipFrame, "BOTTOMRIGHT", -8, 8);
+end
+
+--[[
+-- Текст правил DKP для кнопки-подсказки на дашборде.
+-- Цвета из SOTA палитры: accent-main, text-main, money-gold, border-main
+--]]
+function SOTA_GetDKPRulesText()
+    local a = "|cFFC84B31";  -- accent-main (заголовки рейдов, секций, штрафы)
+    local t = "|cFFECDBBA";  -- text-main (основной текст)
+    local g = "|cFFFFD100";  -- money-gold (значения DKP)
+    local m = "|cFF9CA3AF";  -- text-muted (пояснения)
+    local r = "|r";          -- сброс цвета
+    local d = "|cFF404040";  -- border-main (разделители)
+
+    local text = "";
+
+    -- Molten Core
+    text = text .. a .. "Molten Core" .. r .. " " .. g .. "+360 DKP" .. r .. t .. " (" .. t .. "30" .. r .. t .. " за босса). Минимальная ставка " .. t .. "30" .. r .. t .. ".\nАктивны все бонусы.";
+    text = text .. "\n";
+    text = text .. d .. "•••••••••••••••••••••••••" .. r .. "\n";
+
+    -- Onyxia's Lair
+    text = text .. a .. "Onyxia's Lair" .. r .. " " .. g .. "+100 DKP" .. r .. t .. " (" .. t .. "50" .. r .. t .. " за босса). Минимальная ставка " .. t .. "30 DKP" .. r .. ".\n";
+    text = text .. m .. "Бонусы DKP не начисляются, только приветственные " .. m .. "60 DKP" .. r .. m .. ".";
+    text = text .. "\n";
+    text = text .. d .. "•••••••••••••••••••••••••" .. r .. "\n";
+
+    -- Emerald Sanctum
+    text = text .. a .. "Emerald Sanctum" .. r .. " " .. g .. "+200 DKP" .. r .. t .. " (обычный) / " .. g .. "+250 DKP" .. r .. t .. " (героический). Минимальная ставка " .. t .. "100 DKP" .. r .. ".\n";
+    text = text .. m .. "Бонусы DKP в Обычном режиме не начисляются, только приветственные " .. m .. "60 DKP" .. r .. m .. ".\nВ героическом режиме активны все бонусы.";
+    text = text .. "\n";
+    text = text .. d .. "•••••••••••••••••••••••••" .. r .. "\n";
+
+    -- Blackwing Lair
+    text = text .. a .. "Blackwing Lair" .. r .. " " .. g .. "+900 DKP" .. r .. t .. " (" .. t .. "100" .. r .. t .. " за босса). Минимальная ставка " .. t .. "100 DKP" .. r .. t .. ".\nАктивны все бонусы.";
+    text = text .. "\n";
+    text = text .. d .. "•••••••••••••••••••••••••" .. r .. "\n";
+
+    -- Мировые боссы
+    text = text .. a .. "Призывные мировые боссы (ВБ)" .. r .. t .. ": с каждого ВБ (где предмет на призыв выпадает из рейда по DKP) можно бидать вещи по DKP c минимальной ставкой " .. t .. "10 DKP" .. r .. ".\n";
+    text = text .. m .. "DKP за ВБ не начисляются.";
+    text = text .. "\n";
+    text = text .. d .. "•••••••••••••••••••••••••" .. r .. "\n\n";
+
+
+    -- Бонусы
+    text = text .. a .. "▎Бонусы, требующие логов прохождения:" .. r;
+    text = text .. "\n" .. t .. " • За рейд без вайпов - " .. g .. "60 DKP" .. r;
+    text = text .. "\n" .. t .. " • За рейд без смертей (в т.ч. на треше) - " .. g .. "100 DKP" .. r;
+    text = text .. "\n" .. t .. " • За побитый рекорд времени рейда на 120 сек. и более - " .. g .. "100 DKP" .. r;
+    text = text .. "\n\n";
+
+    text = text .. a .. "▎Остальные бонусы:" .. r;
+    text = text .. "\n" .. t .. " • Записался, пришёл, но не попал в состав - " .. g .. "60 DKP" .. r;
+    text = text .. "\n" .. t .. " • Если за РТ рейд закрылся не полностью - " .. g .. "50%" .. r .. t .. " DKP от рейда (при полном времени РТ - 2 часа, иначе - только за убитых боссов)";
+    text = text .. "\n" .. t .. " • РЛ рейда - дополнительно " .. g .. "60 DKP" .. r;
+    text = text .. "\n" .. t .. " • Приветственный бонус - " .. g .. "60 DKP" .. r .. m .. " (запись в Discord, нахождение в Discord и в рейде к началу рейда)" .. r;
+    text = text .. "\n\n";
+
+    -- Штрафы
+    text = text .. a .. "▎Штрафы:" .. r;
+    text = text .. "\n" .. t .. " • Без вайпов - в большинстве случаев минусы DKP не начисляются.";
+    text = text .. "\n" .. t .. " • За вайп рейда - от " .. a .. "-100 DKP" .. r .. t .. " до " .. a .. "-500 DKP" .. r .. t .. " на усмотрение РЛа.";
+    text = text .. "\n" .. t .. " • За флуд/игнор РЛа/оскорбления/разжигание конфликтов - до " .. a .. "-100 DKP" .. r .. t .. ".";
+    text = text .. "\n" .. t .. " • За слак на пуллах - от " .. a .. "-20 DKP" .. r .. t .. " до " .. a .. "-150 DKP" .. r .. t .. " на усмотрение РЛа (в т.ч. систематическое отсутствие баффов - лапка/стамина/интеллект/крик и т.п.).";
+    text = text .. "\n" .. t .. " • За афк перед пуллом - " .. a .. "-20 DKP" .. r .. t .. ".";
+    text = text .. "\n" .. t .. " • За повторные нарушения минус DKP может удваиваться" .. r .. t .. " на усмотрение РЛа.";
+
+    text = text .. "\n";
+    text = text .. "\n";
+	text = text .. "\n" .. m .. " Актуальная информация всегда в дискроде (канал система_лута_гильдии), если заметили тут устаревшую информацию, пишите мне в лс " .. a .. "/w Misha" .. r .. m .. " или в дискроде " .. r .. a .. "@whtmst" .. r;
+    return text;
 end
 
 --
@@ -690,7 +798,7 @@ end
 
 --[[
 --	Запрос статуса мастер-лутера с проверкой через API WoW
---	Если режим не Мастер-лутер или мастер не вы — отправляет запрос РЛ
+--	Если режим не Мастер-лутер или мастер не вы - отправляет запрос РЛ
 --	Since 0.5.2
 --]]
 function SOTA_RequestMaster(silentmode)
@@ -715,7 +823,7 @@ function SOTA_RequestMaster(silentmode)
         local raidLeader = SOTA_FindRaidLeader();
 
         if raidLeader == playername then
-            -- Вы сами РЛ — меняем режим лута на Master Loot и назначаем себя
+            -- Вы сами РЛ - меняем режим лута на Master Loot и назначаем себя
             -- Команда /master <имя> меняет режим и назначает мастера
             if ChatFrameEditBox then
                 ChatFrameEditBox:SetText("/master " .. playername);
@@ -734,7 +842,7 @@ function SOTA_RequestMaster(silentmode)
                 localEcho("Режим лута изменён на Мастер-лутер. Вы назначены мастер-лутером.");
             end
         else
-            -- РЛ другой игрок — отправляем whisper
+            -- РЛ другой игрок - отправляем whisper
             if raidLeader and raidLeader ~= playername then
                 SendChatMessage("SOTA: Пожалуйста, смените режим лута на Мастер-лутера.", "WHISPER", nil, raidLeader);
             end
@@ -775,11 +883,11 @@ function SOTA_RequestMaster(silentmode)
                 return;
             end
         else
-            -- Мастер-лутер другой игрок — запрашиваем переназначение
+            -- Мастер-лутер другой игрок - запрашиваем переназначение
             local raidLeader = SOTA_FindRaidLeader();
 
             if raidLeader == playername then
-                -- Вы сами РЛ — назначаем себя мастером через команду /master
+                -- Вы сами РЛ - назначаем себя мастером через команду /master
                 if ChatFrameEditBox then
                     ChatFrameEditBox:SetText("/master " .. playername);
                     ChatEdit_SendText(ChatFrameEditBox);
@@ -797,7 +905,7 @@ function SOTA_RequestMaster(silentmode)
                     localEcho("Вы назначены мастер-лутером.");
                 end
             else
-                -- РЛ другой игрок — отправляем whisper
+                -- РЛ другой игрок - отправляем whisper
                 if raidLeader and raidLeader ~= playername then
                     SendChatMessage("SOTA: Пожалуйста, назначьте меня (" .. playername .. ") мастер-лутером.", "WHISPER", nil, raidLeader);
                 end

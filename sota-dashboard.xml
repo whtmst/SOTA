@@ -101,12 +101,12 @@
 					<!-- Невидимой фрейм для перетаскивания верхней панели (КРАСНЫЙ ДЛЯ ТЕСТА) -->
 					<Frame name="$parentDragArea">
 						<Size>
-							<AbsDimension x="205" y="24" />
+							<AbsDimension x="180" y="24" />
 						</Size>
 						<Anchors>
 							<Anchor point="TOPLEFT">
 								<Offset>
-									<AbsDimension x="0" y="0" />
+									<AbsDimension x="26" y="0" />
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -129,21 +129,49 @@
 				</Frames>
 			</Frame>
 
+			<!-- Кнопка-подсказка с правилами DKP (левая сторона) -->
+			<Button name="$parentDKPRulesButton">
+				<Size>
+					<AbsDimension x="18" y="18" />
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="$parentMasterInfo" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="5" y="3" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<NormalTexture file="Interface\AddOns\SOTA\assets\img\complete.tga" />
+				<HighlightTexture file="Interface\AddOns\SOTA\assets\img\complete_c.tga" />
+				<Scripts>
+					<OnEnter>
+						SOTA_ShowDashboardToolTip(this, SOTA_GetDKPRulesText(), true);
+					</OnEnter>
+					<OnLeave>
+						SOTA_HideDashboardToolTip(this);
+					</OnLeave>
+				</Scripts>
+			</Button>
+
 			<!-- Кнопка сворачивания/разворачивания панели кнопок -->
 			<Button name="$parentToggleButtons">
 				<Size>
-					<AbsDimension x="24" y="24" />
+					<AbsDimension x="18" y="18" />
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" relativeTo="$parentMasterInfo" relativePoint="BOTTOMRIGHT">
 						<Offset>
-							<AbsDimension x="-2" y="0" />
+							<AbsDimension x="-5" y="3" />
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<NormalTexture file="Interface\Buttons\UI-ScrollBar-ScrollDownButton-Up" />
-				<PushedTexture file="Interface\Buttons\UI-ScrollBar-ScrollDownButton-Down" />
+				<NormalTexture file="Interface\AddOns\SOTA\assets\img\bottom.tga" />
+				<PushedTexture file="Interface\AddOns\SOTA\assets\img\bottom.tga" />
 				<Scripts>
+					<OnLoad>
+						this:GetNormalTexture():SetVertexColor(1, 1, 1, 0.35);
+						this:GetPushedTexture():SetVertexColor(1, 1, 1, 0.5);
+					</OnLoad>
 					<OnClick>
 						SOTA_ToggleDashboardButtons();
 					</OnClick>
